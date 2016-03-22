@@ -1,0 +1,87 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+    }
+}
+
+//apply plugin: 'com.android.model.application'
+apply plugin: 'android'
+
+
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+//    packagingOptions {
+//        exclude 'AndroidManifest.xml'
+//    }
+
+    defaultConfig {
+        multiDexEnabled true
+        ndk {
+            //moduleName "detection_based_tracker"
+            moduleName "JniCamera"
+            ldLibs "log", "z", "m", "dl"
+//, "libjpeg", "libwebp", "libpng", "libtiff", "libjasper", "IlmImf", "tbb"
+
+            //ldFlags "-Lsrc/main/jni/libs"
+
+            //cFlags "-Isrc/main/jni/include -fexceptions "
+//            CPPFlags ""
+
+            //stl "stlport_static"
+            //ab
+            //abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src/main', 'src/main/src-gen']
+            resources.srcDirs = ['src/main']
+            aidl.srcDirs = ['src/main']
+            //renderscript.srcDirs = ['src/main']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
+            //jni.srcDirs = ['src/jni']
+            //jniLibs.srcDirs = ['libs']
+            //jniLibs.srcDirs = ['src/main/jniLibs']
+            //jni.includes = ['src/main/jni/include']
+        }
+        // Move the tests to tests/java, tests/res, etc...
+        //instrumentTest.setRoot('tests')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        //debug.setRoot('build-types/debug')
+        //release.setRoot('build-types/release')
+    }
+}
+
+
+
+dependencies {
+    compile fileTree(include: '*.jar', dir: 'libs')
+    compile project(':other:slidingmenu')
+    compile project(':other:xUtils-master:xUtilslibrary')
+    compile project(':other:pulltorefresh')
+    compile project(':EventBus')
+}

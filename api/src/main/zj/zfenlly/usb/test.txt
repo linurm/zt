@@ -1,0 +1,183 @@
+package zj.zfenlly.usb;
+
+
+
+import java.util.HashMap;
+import java.util.Iterator;
+
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbConstants;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbEndpoint;
+import android.hardware.usb.UsbInterface;
+import android.hardware.usb.UsbManager;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+public class test extends Activity {
+
+        private static final String TAG = test.class.getSimpleName();
+        private static final String ACTION_USB_PERMISSION =
+                    "com.android.example.USB_PERMISSION";
+        
+        UsbManager mUsbManager;
+        UsbDevice currentDevice;
+        UsbInterface inf;
+        UsbEndpoint outEp;
+        UsbEndpoint inEp;
+        
+        PendingIntent mPermissionIntent;
+        
+        //UI
+        TextView tv_device;
+        TextView tv_dev_name;
+        TextView tv_pro_id;
+        TextView tv_vendor_id;
+        TextView tv_protocol;
+        TextView tv_interface_count;
+        
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_main);
+                
+                tv_device = (TextView) findViewById(R.id.tv_device);
+                tv_dev_name = (TextView) findViewById(R.id.tv_dev_name);
+                tv_pro_id = (TextView) findViewById(R.id.tv_pro_id);
+                tv_vendor_id = (TextView) findViewById(R.id.tv_vendor_id);
+                tv_protocol = (TextView) findViewById(R.id.tv_protocol);
+                tv_interface_count = (TextView) findViewById(R.id.tv_interface_count);
+                
+                mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+                
+                mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+                IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+                registerReceiver(mUsbReceiver, filter);
+        }
+        
+        private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                        String action = intent.getAction();
+                        if (ACTION_USB_PERMISSION.equals(action)) {
+                                synchronized (this) {
+                                        UsbDevice tmpDevice = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                                        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                                                if(tmpDevice != null){
+                                                        Log.d(TAG, "permission granted for device " + tmpDevice);
+                                                        
+                                                        //call method to set up device communication
+                                                        showDevice(tmpDevice);
+                                                }
+                                        }
+                                        else {
+                                                Log.d(TAG, "permission denied for device " + tmpDevice);
+                                        }
+                                }
+                        } 
+                        else {
+                                if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+                                        UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                                        if (device != null) {
+                                                Log.d(TAG, "device " + device + "have been detached ");
+                                                
+                                // call your method that cleans up and closes communication with the device
+                                                
+                            }
+                                        
+                                }
+                        }
+                }
+                
+        };
+
+        public void sendData(View view) {
+                
+        }
+        
+        
+        protected void showDevice(UsbDevice tmpDevice) {
+                currentDevice = tmpDevice;
+                tv_device.setText("DeviceId: " + UsbDevice.getDeviceId(currentDevice.getDeviceName()));
+                tv_dev_name.setText("DeviceName: " + currentDevice.getDeviceName());
+                tv_pro_id.setText(new StringBuffer().append("ProductId: ").append(currentDevice.getProductId()).toString());
+                tv_vendor_id.setText(new StringBuffer().append("VendorId: ").append(currentDevice.getVendorId()).toString());
+                tv_protocol.setText(new StringBuffer().append("Protocol: ").append(currentDevice.getDeviceProtocol()).toString());
+                tv_interface_count.setText(new StringBuffer().append("UsbInterfaceCount: ").append(currentDevice.getInterfaceCount()).toString());
+                
+                if(currentDevice != null) {
+                        int totalInterface = currentDevice.getInterfaceCount();
+                        if(totalInterface > 0) {
+                                for(int i = 0; i < totalInterface; i++) {
+                                        UsbInterface usbInf = currentDevice.getInterface(i);
+                                        if(usbInf.getEndpointCount() == 2) {
+                                                inf = usbInf;
+                                                break;
+                                        }
+                                }
+                                
+                                if(inf != null) {
+                                        
+                                        int totalEndpoint = inf.getEndpointCount();
+                                        for(int i = 0; i < totalEndpoint; i++) {
+                                                UsbEndpoint ep = inf.getEndpoint(i);
+                                                if(ep.getType() == UsbConstants.USB_ENDPOINT_XFER_BULK ) {
+                                                        if(ep.getDirection() == UsbConstants.USB_DIR_OUT) {
+                                                                // Send data 
+                                                                outEp = ep;
+                                                        } else if(ep.getDirection() == UsbConstants.USB_DIR_IN) {
+                                                                // Receive data
+                                                                inEp = ep;
+                                                        }
+                                                }
+                                        }
+                                        
+                                }
+                                
+                        }
+                }
+        }
+        
+        @Override
+        protected void onStart() {
+                super.onStart();
+                Intent intent = getIntent();
+                String action = intent.getAction();
+                
+                if("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(action)) {
+                        UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                        showDevice(device);
+                } else {
+                        HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
+                        if(deviceList != null) {
+                                Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+                                while(deviceIterator.hasNext()){
+                                    UsbDevice device = deviceIterator.next();
+                                    if(device != null) {
+                                            mUsbManager.requestPermission(device, mPermissionIntent);
+                                            break;
+                                    }
+                                }
+                        }
+                }
+                
+        }
+
+        @Override
+        protected void onDestroy() {
+                unregisterReceiver(mUsbReceiver);
+                super.onDestroy();
+        }
+        
+        
+        
+
+}

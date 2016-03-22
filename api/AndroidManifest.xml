@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="zj.zfenlly.tools"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-feature android:name="android.hardware.usb.host" />
+
+    <permission
+        android:name="android.rockchip.update.permission.SHOW_UI"
+        android:protectionLevel="signature" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+    <!-- 以下是使用wifi访问网络所需的权限 -->
+    <uses-permission android:name="android.rockchip.update.permission.SHOW_UI" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
+    <application
+        android:name="zj.zfenlly.main.MainApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/avatar_leaf"
+        android:label="@string/app_name"
+        android:theme="@style/ExampleTheme">
+        <activity
+            android:name="zj.zfenlly.other.ZfenllyActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name="zj.zfenlly.wifi.WifiFragment"
+            android:label="@string/wifi_conn_activity"></activity>
+        <activity
+            android:name="zj.zfenlly.wifi.WifiConfigDialogFragment"
+            android:label="@string/wifi_conn_activity"></activity>
+        <activity android:name="zj.zfenlly.voice.IatSettings"></activity>
+        <activity
+            android:name="zj.zfenlly.wifi.WifiDeviceList"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.coloradjust.ColorAdjustFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.bluetooth.BluetoothFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.wifi.WifiDeviceConfig"
+            android:label="@string/device_config"></activity>
+        <activity android:name="zj.zfenlly.http.DownloadListActivity" />
+        <activity
+            android:name="zj.zfenlly.stock.StockFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.main.MainActivity"
+            android:label="@string/device_config"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="zj.zfenlly.wifiap.WifiApFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.http.HttpFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.camera.CameraFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.usb.UsbFragment"
+            android:label="@string/device_config">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
+        <activity
+            android:name="zj.zfenlly.voice.SpeechSynthesisFragment"
+            android:label="@string/device_config"></activity>
+        <activity
+            android:name="zj.zfenlly.mobeta.DragsortFragment"
+            android:label="Basic usage" />
+
+
+        <activity
+            android:name="com.others.zxing.client.android.CaptureActivity"
+            android:clearTaskOnLaunch="true"
+            android:label="@string/app_name"
+            android:theme="@style/CaptureTheme">
+            <intent-filter>
+                <action android:name="zj.zfenlly.tools.SCAN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- Allow web apps to launch Barcode Scanner by linking to http://zxing.appspot.com/scan. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="zxing.appspot.com"
+                    android:path="/scan"
+                    android:scheme="http" />
+            </intent-filter>
+            <!-- We also support a Google Product Search URL. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.google.com"
+                    android:path="/m/products/scan"
+                    android:scheme="http" />
+            </intent-filter>
+            <!-- And the UK version. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.google.co.uk"
+                    android:path="/m/products/scan"
+                    android:scheme="http" />
+            </intent-filter>
+            <!-- Support zxing://scan/?... like iPhone app -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="scan"
+                    android:path="/"
+                    android:scheme="zxing" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="InsightApp" />
+        </activity>
+        <activity
+            android:name="com.others.zxing.client.android.PreferencesActivity"
+            android:label="@string/preferences_name"
+            android:stateNotNeeded="true" />
+        <activity
+            android:name="com.others.zxing.client.android.encode.EncodeActivity"
+            android:stateNotNeeded="true">
+            <intent-filter>
+                <action android:name="zj.others.zxing.client.android.ENCODE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- This allows us to handle the Share button in Contacts. -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/x-vcard" />
+            </intent-filter>
+            <!-- This allows us to handle sharing any plain text . -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.others.zxing.client.android.book.SearchBookContentsActivity"
+            android:label="@string/sbc_name"
+            android:screenOrientation="sensorLandscape"
+            android:stateNotNeeded="true">
+            <intent-filter>
+                <action android:name="com.others.zxing.client.android.SEARCH_BOOK_CONTENTS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.others.zxing.client.android.share.ShareActivity"
+            android:screenOrientation="user"
+            android:stateNotNeeded="true">
+            <intent-filter>
+                <action android:name="com.others.zxing.client.android.SHARE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.others.zxing.client.android.history.HistoryActivity"
+            android:label="@string/history_title"
+            android:stateNotNeeded="true" />
+        <activity
+            android:name="com.others.zxing.client.android.share.BookmarkPickerActivity"
+            android:label="@string/bookmark_picker_name"
+            android:stateNotNeeded="true" />
+        <activity
+            android:name="com.others.zxing.client.android.share.AppPickerActivity"
+            android:label="@string/app_picker_name"
+            android:stateNotNeeded="true" />
+        <activity
+            android:name="com.others.zxing.client.android.HelpActivity"
+            android:label="@string/menu_help"
+            android:screenOrientation="user"
+            android:stateNotNeeded="true" />
+
+        <service android:name="zj.zfenlly.http.DownloadService">
+            <intent-filter>
+                <action android:name="httpdownload.service.action" />
+            </intent-filter>
+        </service>
+        <!--
+        android:persistent="true"
+            android:process="zj.stockservice"
+            android:process=":remote"
+        -->
+        <service android:name="zj.zfenlly.stock.StockService">
+            <intent-filter>
+                <action android:name="zj.zfenlly.StockService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        <!-- android:process=":MonitorService" android:process=":StockService"-->
+        <service android:name="zj.zfenlly.main.MonitorService">
+            <intent-filter>
+                <action android:name="zj.zfenlly.MonitorService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+
+        <service android:name="zj.zfenlly.other.ZfenllyService"></service>
+
+        <receiver
+            android:name="zj.zfenlly.main.BootUpReceiver"
+            android:enabled="true"
+            android:priority="1000">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_STATE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="zj.intent.RESTART" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="zj.intent.monitor" />
+            </intent-filter>
+        </receiver>
+
+        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+        <meta-data
+            android:name="IFLYTEK_APPKEY"
+            android:value="&apos;56654492&apos;" />
+        <meta-data
+            android:name="IFLYTEK_CHANNEL"
+            android:value="Android_Demo" />
+    </application>
+</manifest>
