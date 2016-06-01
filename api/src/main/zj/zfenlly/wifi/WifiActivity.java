@@ -24,6 +24,8 @@ public class WifiActivity extends Activity {
     public Button wifion;
     @ViewInject(R.id.wifioff)
     public Button wifioff;
+    @ViewInject(R.id.wifiok)
+    public Button wifiok;
     @ViewInject(R.id.before30)
     public Button before30;
     @ViewInject(R.id.after30)
@@ -64,13 +66,24 @@ public class WifiActivity extends Activity {
         mWifiAdmin.openWifi();
         //finish();
         startOtherActivity();
+        //finish();
     }
 
     @OnClick(R.id.wifioff)
     public void wifioff(View v) {
         mWifiAdmin.closeWifi();
         //finish();
+        wifiok.setVisibility(View.VISIBLE);
         startOtherActivity();
+        //finish();
+    }
+
+    @OnClick(R.id.wifiok)
+    public void wifiok(View v) {
+        mWifiAdmin.openWifi();
+        //finish();
+        //startOtherActivity();
+        finish();
     }
 
     private void startOtherActivity() {
@@ -81,8 +94,8 @@ public class WifiActivity extends Activity {
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         ComponentName cn = new ComponentName("com.teamlava.castlestory", "com.apportable.activity.VerdeActivity");
         intent.setComponent(cn);
-//        startActivity(intent);
-        finish();
+        startActivity(intent);
+
     }
 
     @Override
