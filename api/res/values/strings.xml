@@ -9,6 +9,7 @@
     <string name="have_done">已完成</string>
     <string name="wifi_conn_activity">wifi_config</string>
     <string name="device_config">TEST</string>
+    <string name="wifi_switch">wifi</string>
     <string name="find">find</string>
     <string name="refresh">刷新</string>
     <string name="config">配置</string>

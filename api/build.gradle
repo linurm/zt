@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.1.0'
     }
 }
 
@@ -16,7 +16,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "24.0.0 rc3"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -43,9 +43,23 @@ android {
             //stl "stlport_static"
             //ab
             //abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+            abiFilters "armeabi-v7a"
         }
 
     }
+//    android.sources {
+//        main {
+//            jni {
+//                source {
+//                    srcDirs 'src/main/jni'
+//                }
+//            }
+//        }
+//    }
+//
+//    android.productFlavors {
+//        ndk.abiFilters.add("armeabi-v7a")
+//    }
 
     sourceSets {
         main {
@@ -56,7 +70,7 @@ android {
             //renderscript.srcDirs = ['src/main']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
+            //jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
             //jni.srcDirs = ['src/jni']
             //jniLibs.srcDirs = ['libs']
             //jniLibs.srcDirs = ['src/main/jniLibs']
@@ -84,4 +98,5 @@ dependencies {
     compile project(':other:xUtils-master:xUtilslibrary')
     compile project(':other:pulltorefresh')
     compile project(':EventBus')
+    compile project(':DaoCore')
 }

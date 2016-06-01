@@ -1,5 +1,6 @@
-include ':other:slidingmenu', ':EventBus'
+include ':other:slidingmenu', ':EventBus', ':', ':DaoCore'
 include ':other:xUtils-master:xUtilslibrary'
 include ':other:actionbarsherlock'
 include ':other:pulltorefresh'
 project(':EventBus').projectDir = new File('other/EventBus')
+project(':DaoCore').projectDir = new File('other/DaoCore')

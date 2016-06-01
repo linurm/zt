@@ -1,0 +1,115 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .gitignore
+* DaoCore.iml
+* LICENSE
+* NOTICE
+* build\
+* build\classes\
+* build\classes\main\
+* build\classes\main\de\
+* build\classes\main\de\greenrobot\
+* build\classes\main\de\greenrobot\dao\
+* build\classes\main\de\greenrobot\dao\AbstractDao.class
+* build\classes\main\de\greenrobot\dao\AbstractDaoMaster.class
+* build\classes\main\de\greenrobot\dao\AbstractDaoSession.class
+* build\classes\main\de\greenrobot\dao\DaoException.class
+* build\classes\main\de\greenrobot\dao\DaoLog.class
+* build\classes\main\de\greenrobot\dao\DbUtils.class
+* build\classes\main\de\greenrobot\dao\InternalQueryDaoAccess.class
+* build\classes\main\de\greenrobot\dao\InternalUnitTestDaoAccess.class
+* build\classes\main\de\greenrobot\dao\Property.class
+* build\classes\main\de\greenrobot\dao\async\
+* build\classes\main\de\greenrobot\dao\async\AsyncDaoException.class
+* build\classes\main\de\greenrobot\dao\async\AsyncOperation$OperationType.class
+* build\classes\main\de\greenrobot\dao\async\AsyncOperation.class
+* build\classes\main\de\greenrobot\dao\async\AsyncOperationExecutor$1.class
+* build\classes\main\de\greenrobot\dao\async\AsyncOperationExecutor.class
+* build\classes\main\de\greenrobot\dao\async\AsyncOperationListener.class
+* build\classes\main\de\greenrobot\dao\async\AsyncSession.class
+* build\classes\main\de\greenrobot\dao\converter\
+* build\classes\main\de\greenrobot\dao\converter\PropertyConverter.class
+* build\classes\main\de\greenrobot\dao\identityscope\
+* build\classes\main\de\greenrobot\dao\identityscope\IdentityScope.class
+* build\classes\main\de\greenrobot\dao\identityscope\IdentityScopeLong.class
+* build\classes\main\de\greenrobot\dao\identityscope\IdentityScopeObject.class
+* build\classes\main\de\greenrobot\dao\identityscope\IdentityScopeType.class
+* build\classes\main\de\greenrobot\dao\internal\
+* build\classes\main\de\greenrobot\dao\internal\DaoConfig.class
+* build\classes\main\de\greenrobot\dao\internal\FastCursor.class
+* build\classes\main\de\greenrobot\dao\internal\LongHashMap$Entry.class
+* build\classes\main\de\greenrobot\dao\internal\LongHashMap.class
+* build\classes\main\de\greenrobot\dao\internal\SqlUtils.class
+* build\classes\main\de\greenrobot\dao\internal\TableStatements.class
+* build\classes\main\de\greenrobot\dao\query\
+* build\classes\main\de\greenrobot\dao\query\AbstractQuery.class
+* build\classes\main\de\greenrobot\dao\query\AbstractQueryData.class
+* build\classes\main\de\greenrobot\dao\query\AbstractQueryWithLimit.class
+* build\classes\main\de\greenrobot\dao\query\CloseableListIterator.class
+* build\classes\main\de\greenrobot\dao\query\CountQuery$1.class
+* build\classes\main\de\greenrobot\dao\query\CountQuery$QueryData.class
+* build\classes\main\de\greenrobot\dao\query\CountQuery.class
+* build\classes\main\de\greenrobot\dao\query\CursorQuery$1.class
+* build\classes\main\de\greenrobot\dao\query\CursorQuery$QueryData.class
+* build\classes\main\de\greenrobot\dao\query\CursorQuery.class
+* build\classes\main\de\greenrobot\dao\query\DeleteQuery$1.class
+* build\classes\main\de\greenrobot\dao\query\DeleteQuery$QueryData.class
+* build\classes\main\de\greenrobot\dao\query\DeleteQuery.class
+* build\classes\main\de\greenrobot\dao\query\Join.class
+* build\classes\main\de\greenrobot\dao\query\LazyList$LazyIterator.class
+* build\classes\main\de\greenrobot\dao\query\LazyList.class
+* build\classes\main\de\greenrobot\dao\query\Query$1.class
+* build\classes\main\de\greenrobot\dao\query\Query$QueryData.class
+* build\classes\main\de\greenrobot\dao\query\Query.class
+* build\classes\main\de\greenrobot\dao\query\QueryBuilder.class
+* build\classes\main\de\greenrobot\dao\query\WhereCollector.class
+* build\classes\main\de\greenrobot\dao\query\WhereCondition$AbstractCondition.class
+* build\classes\main\de\greenrobot\dao\query\WhereCondition$PropertyCondition.class
+* build\classes\main\de\greenrobot\dao\query\WhereCondition$StringCondition.class
+* build\classes\main\de\greenrobot\dao\query\WhereCondition.class
+* build\classes\main\de\greenrobot\dao\test\
+* build\classes\main\de\greenrobot\dao\test\AbstractDaoSessionTest.class
+* build\classes\main\de\greenrobot\dao\test\AbstractDaoTest.class
+* build\classes\main\de\greenrobot\dao\test\AbstractDaoTestLongPk.class
+* build\classes\main\de\greenrobot\dao\test\AbstractDaoTestSinglePk.class
+* build\classes\main\de\greenrobot\dao\test\AbstractDaoTestStringPk.class
+* build\classes\main\de\greenrobot\dao\test\DbTest.class
+* build\libs\
+* build\libs\greendao-2.1.1-SNAPSHOT.jar
+* build\tmp\
+* build\tmp\jar\
+* build\tmp\jar\MANIFEST.MF
+* daocore.gradle
+* mybuild.xml
+* proguard.cfg
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => daoCore\src\main\AndroidManifest.xml
+* res\ => daoCore\src\main\res\
+* src\ => daoCore\src\main\java\
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

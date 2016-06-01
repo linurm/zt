@@ -47,14 +47,14 @@ import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
 public class WifiFragment extends Fragment implements Name, Observer {
+    public static final String ACTION_ADD_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
+    public static final String ACTION_CREATE_SHORTCUT = "android.intent.action.CREATE_SHORTCUT";
     private static final int MESSAGE_NETWORK_SCAN = 1;
     private static final int MESSAGE_NETWORK_CONNECT = 2;
     private static final int MESSAGE_NETWORK_CHANGE_STATE = 3;
     private static final int MESSAGE_NETWORK_CONFIG = 4;
     private static final int MESSAGE_DEVICE_CONFIG = 5;
     private final String TAG = this.getClass().getName();
-
-
     private final boolean BUG_T = false;
 
     @ViewInject(R.id.curNetWorkSSID)
@@ -159,7 +159,39 @@ public class WifiFragment extends Fragment implements Name, Observer {
         //if(BUG_T) {
         mApplication = (MainApplication) getActivity().getApplication();
         mApplication.addObserver(this);
+
+        addShortcut("open wifi");
         //}
+    }
+
+    private void addShortcut(String name) {
+        Intent addShortcutIntent = new Intent(ACTION_ADD_SHORTCUT);
+
+        // 不允许重复创建
+        addShortcutIntent.putExtra("duplicate", false);// 经测试不是根据快捷方式的名字判断重复的
+        // 应该是根据快链的Intent来判断是否重复的,即Intent.EXTRA_SHORTCUT_INTENT字段的value
+        // 但是名称不同时，虽然有的手机系统会显示Toast提示重复，仍然会建立快链
+        // 屏幕上没有空间时会提示
+        // 注意：重复创建的行为MIUI和三星手机上不太一样，小米上似乎不能重复创建快捷方式
+
+        // 名字
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+
+        // 图标
+        addShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                Intent.ShortcutIconResource.fromContext(getActivity().getApplicationContext(),
+                        R.drawable.ic_launcher));
+
+        // 设置关联程序
+        Intent launcherIntent = new Intent();
+        launcherIntent.setClass(getActivity().getApplicationContext(), WifiActivity.class);
+        launcherIntent.addCategory(ACTION_CREATE_SHORTCUT);
+
+        addShortcutIntent
+                .putExtra(Intent.EXTRA_SHORTCUT_INTENT, launcherIntent);
+
+        // 发送广播
+        getActivity().sendBroadcast(addShortcutIntent);
     }
 
     @Override
