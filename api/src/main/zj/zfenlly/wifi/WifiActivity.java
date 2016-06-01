@@ -95,7 +95,6 @@ public class WifiActivity extends Activity {
         ComponentName cn = new ComponentName("com.teamlava.castlestory", "com.apportable.activity.VerdeActivity");
         intent.setComponent(cn);
         startActivity(intent);
-
     }
 
     @Override
