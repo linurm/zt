@@ -10,6 +10,8 @@
     <string name="wifi_conn_activity">wifi_config</string>
     <string name="device_config">TEST</string>
     <string name="wifi_switch">wifi</string>
+    <string name="wifi_on">ON</string>
+    <string name="wifi_off">OFF</string>
     <string name="find">find</string>
     <string name="refresh">刷新</string>
     <string name="config">配置</string>

@@ -32,6 +32,9 @@ import zj.zfenlly.tools.R;
 public class WifiConfigDialogFragment extends DialogFragment {
 
 
+    private final String TAG = this.getClass().getName();
+    WifiConfiguration mWifiConfiguration;
+    List<WifiConfiguration> listWCF;
     @ViewInject(R.id.wifi_ssid)
     private TextView wifi_ssid;
     @ViewInject(R.id.wifi_psk)
@@ -44,13 +47,8 @@ public class WifiConfigDialogFragment extends DialogFragment {
     private Button forgetBT;
     @ViewInject(R.id.Cancle)
     private Button ccBT;
-
-
     private String mWifiSsid = "";
     private WifiAdmin mWifiAdmin;
-    WifiConfiguration mWifiConfiguration;
-    List<WifiConfiguration> listWCF;
-    private final String TAG = this.getClass().getName();
 
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private void print(String msg) {

@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import zj.zfenlly.main.MainApplication;
+import zj.zfenlly.net.WifiONActivity;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
@@ -160,7 +161,7 @@ public class WifiFragment extends Fragment implements Name, Observer {
         mApplication = (MainApplication) getActivity().getApplication();
         mApplication.addObserver(this);
 
-        addShortcut("open wifi");
+        //addShortcut("open wifi");
         //}
     }
 
@@ -184,7 +185,7 @@ public class WifiFragment extends Fragment implements Name, Observer {
 
         // 设置关联程序
         Intent launcherIntent = new Intent();
-        launcherIntent.setClass(getActivity().getApplicationContext(), WifiActivity.class);
+        launcherIntent.setClass(getActivity().getApplicationContext(), WifiONActivity.class);
         launcherIntent.addCategory(ACTION_CREATE_SHORTCUT);
 
         addShortcutIntent
@@ -460,7 +461,7 @@ public class WifiFragment extends Fragment implements Name, Observer {
         Intent intent = new Intent();
         // intent.putExtra("ssid", extraStr);
         intent.setClass(getActivity(), WifiDeviceList.class);
-        // intent.setClass(WifiActivity.this, DeviceConfig.class);
+        // intent.setClass(WifiONActivity.this, DeviceConfig.class);
         getActivity().startActivity(intent);
         startActivityForResult(intent, 100);
     }

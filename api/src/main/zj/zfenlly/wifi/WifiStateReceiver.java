@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.view.View;
 
 import zj.zfenlly.tools.R;
+import zj.zfenlly.wifi.WifiFragment;
 
 
 public class WifiStateReceiver extends BroadcastReceiver {
