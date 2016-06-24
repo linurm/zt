@@ -17,12 +17,13 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import java.lang.reflect.Method;
 
 import zj.zfenlly.tools.R;
+import zj.zfenlly.wifi.WifiAdmin;
 
 
 /**
  * Created by Administrator on 2016/5/30.
  */
-public class AirPlaneModeActivity extends Activity {
+public class SelectModeActivity extends Activity {
     private static final int FLAG_START_ACTIVITY = 0x2;
     private static final int FLAG_EXIT = 0x1;
     private final String TAG = "zwifi manual";
@@ -30,13 +31,19 @@ public class AirPlaneModeActivity extends Activity {
     public Button airplane1_btn;
     @ViewInject(R.id.airplane2)
     public Button airplane2_btn;
-    @ViewInject(R.id.airplane3)
+    @ViewInject(R.id.appexit)
     public Button exit;
     @ViewInject(R.id.net3gon)
     public Button net3gon;
-    //    private WifiAdmin mWifiAdmin = null;
     @ViewInject(R.id.net3goff)
     public Button net3goff;
+    @ViewInject(R.id.wifion)
+    public Button wifion_btn;
+    @ViewInject(R.id.wifioff)
+    public Button wifioff_btn;
+    @ViewInject(R.id.wifiok)
+    public Button wifiok_btn;
+    private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
 
     @Override
@@ -74,7 +81,7 @@ public class AirPlaneModeActivity extends Activity {
 
 
         setContentView(R.layout.nettest);
-//        mWifiAdmin = new WifiAdmin(this);
+        mWifiAdmin = new WifiAdmin(this);
         ViewUtils.inject(this);
 
 
@@ -98,12 +105,17 @@ public class AirPlaneModeActivity extends Activity {
             autoMode = false;
             Log.e(TAG, "onstart manual mode");
         }
+        updateView();
+        Log.e(TAG, "onStart wifi activity");
+    }
+
+    private void updateView() {
         if (isAirplaneMode(this)) {
             if (autoMode) {
                 setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
             } else {
                 airplane1_btn.setVisibility(View.INVISIBLE);
-                exit.setVisibility(View.INVISIBLE);
+//                exit.setVisibility(View.INVISIBLE);
                 airplane2_btn.setVisibility(View.VISIBLE);
             }
         } else {
@@ -111,9 +123,18 @@ public class AirPlaneModeActivity extends Activity {
                 setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
             } else {
                 airplane1_btn.setVisibility(View.VISIBLE);
-                exit.setVisibility(View.VISIBLE);
+//                exit.setVisibility(View.VISIBLE);
                 airplane2_btn.setVisibility(View.INVISIBLE);
             }
+        }
+        if (mWifiAdmin.isWifiEnabled()) {
+            wifioff_btn.setVisibility(View.VISIBLE);
+            wifion_btn.setVisibility(View.INVISIBLE);
+            wifiok_btn.setVisibility(View.INVISIBLE);
+        } else {
+            wifioff_btn.setVisibility(View.INVISIBLE);
+            wifion_btn.setVisibility(View.VISIBLE);
+            wifiok_btn.setVisibility(View.VISIBLE);
         }
         if (getMobileNet()) {
             net3gon.setVisibility(View.INVISIBLE);
@@ -123,7 +144,6 @@ public class AirPlaneModeActivity extends Activity {
             net3goff.setVisibility(View.INVISIBLE);
 
         }
-        Log.e(TAG, "onStart wifi activity");
     }
 
     @Override
@@ -221,7 +241,7 @@ public class AirPlaneModeActivity extends Activity {
             toggleMobileData(this, false);
         }
     }
-    
+
     @OnClick(R.id.airplane1)
     public void airplaneOff(View v) {
         setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
@@ -232,8 +252,26 @@ public class AirPlaneModeActivity extends Activity {
         setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
     }
 
-    @OnClick(R.id.airplane3)
+    @OnClick(R.id.appexit)
     public void airplaneModeAndExit(View v) {
-        setAirplaneMode(this, FLAG_EXIT);
+        finish();
+    }
+
+    @OnClick(R.id.wifioff)
+    public void wifiOff(View v) {
+        mWifiAdmin.closeWifi();
+        OtherAPP.startOtherActivity(this);
+    }
+
+    @OnClick(R.id.wifion)
+    public void wifiOn(View v) {
+        mWifiAdmin.openWifi();
+        OtherAPP.startOtherActivity(this);
+    }
+
+    @OnClick(R.id.wifiok)
+    public void wifiOk(View v) {
+        mWifiAdmin.openWifi();
+        finish();
     }
 }

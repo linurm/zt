@@ -15,9 +15,9 @@ public class OtherAPP {
 //        startActivity(intent);
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        //ComponentName cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
+        ComponentName cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
         //ComponentName cn = new ComponentName("zj.zfenlly.tools", "zj.zfenlly.main.MainActivity");
-        ComponentName cn = new ComponentName("com.android.tools.sdkcontroller", "com.android.tools.sdkcontroller.activities.MainActivity");
+        //ComponentName cn = new ComponentName("com.android.tools.sdkcontroller", "com.android.tools.sdkcontroller.activities.MainActivity");
         intent.setComponent(cn);
         act.startActivity(intent);
     }

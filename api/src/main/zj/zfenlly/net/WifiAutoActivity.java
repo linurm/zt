@@ -19,7 +19,7 @@ public class WifiAutoActivity extends Activity {
 
         Intent intent = new Intent();
         //设置传递方向
-        intent.setClass(this, AirPlaneModeActivity.class);
+        intent.setClass(this, SelectModeActivity.class);
 //绑定数据
         intent.putExtra("auto", true);
 

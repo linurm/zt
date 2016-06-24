@@ -1,79 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="1">
-
-            <Button
-                android:id="@+id/airplane1"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:text="airplane mode is off"
-                android:layout_weight="0.25" />
-
-            <Button
-                android:id="@+id/net3gon"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="3g on"
-                android:layout_weight="0.25" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_weight="0.25"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/airplane1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="airplane mode is off" />
+
+        <Button
+            android:id="@+id/wifion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.25"
+            android:text="wifi is off" />
+
+        <Button
+            android:id="@+id/net3gon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.25"
+            android:text="3g is off" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0.25"
         android:weightSum="1">
 
         <Button
             android:id="@+id/airplane2"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:text="airplane mode is on"
-            android:layout_weight="0.25" />
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/wifioff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="wifi is on" />
 
         <Button
             android:id="@+id/net3goff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="3g off"
-            android:layout_weight="0.25" />
+            android:layout_weight="0.25"
+            android:text="3g is on" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_weight="0.25"
         android:weightSum="1">
 
         <Button
-            android:id="@+id/airplane3"
-            android:layout_width="200dp"
+            android:id="@+id/appexit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="exit"
-            android:visibility="invisible"
-            android:layout_weight="0.25" />
+            android:layout_weight="0.25"
+            android:text="exit" />
 
-        <!--<Button-->
-            <!--android:id="@+id/after30"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="+30" />-->
+        <Button
+            android:id="@+id/wifiok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="wifi ok"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/net3gok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:text="3g ok"
+            android:visibility="invisible" />
     </LinearLayout>
 
-
 </LinearLayout>
+
