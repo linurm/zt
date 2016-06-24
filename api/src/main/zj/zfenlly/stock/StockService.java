@@ -40,132 +40,45 @@ import zj.zfenlly.tools.R;
 
 public class StockService extends Service implements Observer {
 
+    private static final int STOCK_DATA_GET = 1;
+    private static final int SCAN_CAMERA_STOP = 2;
+    private static final int STOCK_GETLOOP_TICK = 6;
+    private static final int STOCK_GETNEXTLOOP_TICK = STOCK_GETLOOP_TICK - 1;
+
+    private static final String ST_CODE = "sh600844";
+    private static int numMessages;
+    // private SinaStockClient mClient;
+    private final String TAG = this.getClass().getName();
     public MainApplication mApplication;
-
+    NotificationManager mNotificationManager;
+    Notification mNotification;
+    PendingIntent mPendingIntent;
+    NotificationCompat.Builder mNotifyBuilder;
+    SimulationDisplay sd = null;
     private boolean isstart = false;
-    private StockClient mClient = null;
 
+    // private boolean pause = false;
+
+    // private Cursor cursor;
+    private StockClient mClient = null;
+    //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private SQLiteDatabase db;
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private NoteDao noteDao;
 
-    private static int numMessages;
 
-    NotificationManager mNotificationManager;
-    Notification mNotification;
-    PendingIntent mPendingIntent;
-    NotificationCompat.Builder mNotifyBuilder;
-
-
-    SimulationDisplay sd = null;
-
-    // private boolean pause = false;
-
-    // private Cursor cursor;
-
-    // private SinaStockClient mClient;
-    private final String TAG = this.getClass().getName();
-    //.substring(this.getClass().getName().lastIndexOf(".") + 1);
-
-    private void print(String msg) {
-        Log.i(TAG, msg);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
-        String qualifier = (String) arg;
-        if (qualifier.equals(MainApplication.SERVER_PAUSE)) {
-            ;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    private void initDatabase() {
-        final String DATABASE_PATH = Environment.getExternalStorageDirectory()
-                + "/" + "xxx/";
-        DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_PATH
-                + "notes-db", null);
-        db = helper.getWritableDatabase();
-        daoMaster = new DaoMaster(db);
-        daoSession = daoMaster.newSession();
-        noteDao = daoSession.getNoteDao();
-    }
-
-
-//    private void appRegister() {
+    //    private void appRegister() {
 //        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
 //        AppReceiver myReceiver = new AppReceiver();
 //        print("register APP receiver");
 //        registerReceiver(myReceiver, intentFilter);
 //    }
+    private boolean NetworkAvailable;
+    private sThread mStockThread = new sThread();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-//        Notification notification = new Notification();
-//        startForeground(-1, notification);
-        mApplication = (MainApplication) getApplication();
-        mApplication.addObserver(this);
-        isstart = true;
-        mClient = StockClient.getInstance();
-        initDatabase();
-        mStockThread.start();
-        //mThread.start();
-        print("onCreate");
-    }
-
-    public boolean isNetworkAvailable() {
-        Context context = getApplicationContext();
-        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if (connectivityManager == null) {
-            return false;
-        } else {
-            // 获取NetworkInfo对象
-            NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
-
-            if (networkInfo != null && networkInfo.length > 0) {
-                for (int i = 0; i < networkInfo.length; i++) {
-//                    System.out.println(i + "===状态===" + networkInfo[i].getState());
-//                    System.out.println(i + "===类型===" + networkInfo[i].getTypeName());
-                    // 判断当前网络状态是否为连接状态
-                    if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private void initNotify() {
-        mNotificationManager = (NotificationManager) getApplicationContext()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        int icon = R.drawable.octocat;
-        CharSequence tickerText = "service is run background";
-        mNotification = new Notification(icon, tickerText,
-                System.currentTimeMillis());
-
-        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-                new Intent(getApplicationContext(), MainActivity.class),
-                0);//
-        //PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        mNotification.setLatestEventInfo(getApplicationContext(), "service",
-//                "running on background", mPendingIntent);
-        mNotification.flags |= Notification.FLAG_ONGOING_EVENT;
-        mNotificationManager.notify(0, mNotification);
-//        startForeground(0x111, mNotification);
-
+    private void print(String msg) {
+        Log.i(TAG, msg);
     }
 
 //    private void initNotification() {
@@ -219,6 +132,111 @@ public class StockService extends Service implements Observer {
 //        mNotificationManager.notify(1, notify1);
 //    }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        // TODO Auto-generated method stub
+        String qualifier = (String) arg;
+        if (qualifier.equals(MainApplication.SERVER_PAUSE)) {
+            ;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+//    private int startServiceForeground(Intent intent, int flags, int startId) {
+//
+//        Intent notificationIntent = new Intent(this, getApplicationContext().getClass());
+//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//
+//        Notification notification = new NotificationCompat.Builder(this)
+//                .setContentTitle("Observer Service")
+//                .setContentIntent(pendingIntent)
+//                .setOngoing(true).getNotification();
+//
+//        startForeground(300, notification);
+//
+//        return START_STICKY;
+//    }
+
+    private void initDatabase() {
+        final String DATABASE_PATH = Environment.getExternalStorageDirectory()
+                + "/" + "xxx/";
+        DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_PATH
+                + "notes-db", null);
+        db = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        noteDao = daoSession.getNoteDao();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+//        Notification notification = new Notification();
+//        startForeground(-1, notification);
+        mApplication = (MainApplication) getApplication();
+        mApplication.addObserver(this);
+        isstart = true;
+        mClient = StockClient.getInstance();
+        print(mClient.getUrlString(new String[]{ST_CODE}));
+        initDatabase();
+        mStockThread.start();
+        //mThread.start();
+        print("onCreate");
+    }
+
+    public boolean isNetworkAvailable() {
+        Context context = getApplicationContext();
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) {
+            return false;
+        } else {
+            // 获取NetworkInfo对象
+            NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
+
+            if (networkInfo != null && networkInfo.length > 0) {
+                for (int i = 0; i < networkInfo.length; i++) {
+//                    System.out.println(i + "===状态===" + networkInfo[i].getState());
+//                    System.out.println(i + "===类型===" + networkInfo[i].getTypeName());
+                    // 判断当前网络状态是否为连接状态
+                    if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void initNotify() {
+        mNotificationManager = (NotificationManager) getApplicationContext()
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int icon = R.drawable.octocat;
+        CharSequence tickerText = "service is run background";
+        mNotification = new Notification(icon, tickerText,
+                System.currentTimeMillis());
+
+        mPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(getApplicationContext(), MainActivity.class),
+                0);//
+        //PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        mNotification.setLatestEventInfo(getApplicationContext(), "service",
+//                "running on background", mPendingIntent);
+        mNotification.flags |= Notification.FLAG_ONGOING_EVENT;
+        mNotificationManager.notify(0, mNotification);
+//        startForeground(0x111, mNotification);
+
+    }
+
     private void notificationSend2() {
 
         mNotificationManager = (NotificationManager) getApplicationContext()
@@ -229,11 +247,11 @@ public class StockService extends Service implements Observer {
         // API11之后才支持
         Notification notify2 = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.newquest_icon) // 设置状态栏中的小图片，尺寸一般建议在24×24，这个图片同样也是在下拉状态栏中所显示，如果在那里需要更换更大的图片，可以使用setLargeIcon(Bitmap
-                        // icon)
+                // icon)
                 .setTicker("TickerText:" + "您有新短消息，请注意查收！")// 设置在status
-                        // bar上显示的提示文字
+                // bar上显示的提示文字
                 .setContentTitle("Notification Title")// 设置在下拉status
-                        // bar后Activity，本例子中的NotififyMessage的TextView中显示的标题
+                // bar后Activity，本例子中的NotififyMessage的TextView中显示的标题
                 .setContentText("This is the notification message")// TextView中显示的详细内容
                 .setContentIntent(pendingIntent2) // 关联PendingIntent
                 .setNumber(1) // 在TextView的右方显示的数字，可放大图片看，在最右侧。这个number同时也起到一个序列号的左右，如果多个触发多个通知（同一ID），可以指定显示哪一个。
@@ -242,7 +260,6 @@ public class StockService extends Service implements Observer {
         notify2.flags |= Notification.FLAG_AUTO_CANCEL;
         mNotificationManager.notify(1, notify2);
     }
-
 
     private void notificationSend4() {
         mNotificationManager = (NotificationManager) getApplicationContext()
@@ -262,22 +279,6 @@ public class StockService extends Service implements Observer {
         myNotify.contentIntent = contentIntent;
         mNotificationManager.notify(1, myNotify);
     }
-
-//    private int startServiceForeground(Intent intent, int flags, int startId) {
-//
-//        Intent notificationIntent = new Intent(this, getApplicationContext().getClass());
-//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-//
-//        Notification notification = new NotificationCompat.Builder(this)
-//                .setContentTitle("Observer Service")
-//                .setContentIntent(pendingIntent)
-//                .setOngoing(true).getNotification();
-//
-//        startForeground(300, notification);
-//
-//        return START_STICKY;
-//    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -357,59 +358,6 @@ public class StockService extends Service implements Observer {
         }
     }
 
-    public class SimulationDisplay {
-        private boolean isInit = false;
-        private QueryBuilder<Note> qb;
-        public int db_num;
-        public int db_index;
-
-        private boolean simulationDisplayInit(String stockId) {
-            if (!isInit) {
-                qb = noteDao.queryBuilder();
-                qb.where(Properties.Stockid.eq(stockId));
-                db_num = qb.list().size();
-                db_index = 0;
-                isInit = true;
-            }
-            return isInit;
-        }
-
-        // 10s one time
-        public SimulationDisplay(String stockId) {
-            simulationDisplayInit(stockId);
-        }
-
-        public Note getNoteFromDB() {
-
-            if (db_num < db_index)
-                return null;
-            Note note = qb.list().get(db_index);
-            db_index += 1;
-            print("db_index: " + db_index);
-            StockInfo stockInfo = StockInfo.parseNoteInfo(note);
-            if (EventBus.getDefault().hasSubscriberForEvent(StockEvent.class)) {
-                EventBus.getDefault().post(new StockEvent(stockInfo));
-            }
-            return note;
-        }
-
-        public void SimulationOFF() {
-            isInit = false;
-            qb = null;
-            db_num = 0;
-            db_index = 0;
-        }
-
-    }
-
-    private static final int STOCK_DATA_GET = 1;
-    private static final int SCAN_CAMERA_STOP = 2;
-
-    private static final int STOCK_GETLOOP_TICK = 6;
-    private static final int STOCK_GETNEXTLOOP_TICK = STOCK_GETLOOP_TICK - 1;
-
-    private boolean NetworkAvailable;
-
 //    @SuppressLint("HandlerLeak")
 //    public Handler mHandler = new Handler() {
 //        @Override
@@ -453,107 +401,6 @@ public class StockService extends Service implements Observer {
 //        ;
 //    };
 
-    private sThread mStockThread = new sThread();
-
-    public class sThread extends Thread {
-        int times;
-        int sm_times;
-        long tmp_times = 0, last_times = 0;//, cmp_times = 1000;
-
-        public void set_times(int times) {
-            this.times = times;
-        }
-
-        @Override
-        public void run() {
-            // rs.Poll(1);
-            print("mStockThread thread run");
-            //List<Note> list = null;
-            while (isstart) {
-
-                try {
-                    Thread.sleep(10);// 10ms
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                tmp_times = System.currentTimeMillis();
-                if (last_times + 1000 < tmp_times) {//1s
-                    sm_times++;
-                    times++;
-                    last_times = last_times + 1000 * ((tmp_times - last_times) / 1000);
-                }
-                // 10s
-
-                if (sm_times > 3) {
-                    sm_times = 0;
-
-                    if (mApplication.isServerDisplayRun()) {
-//                        print("?????????????");
-
-                        if (mApplication.isServerSimulation()) {
-//                            print("!!!!!!!!!!!!!!!!!");
-                            if (sd == null) {
-                                print("new");
-                                sd = new SimulationDisplay("sh601006");
-                            }
-                            sd.getNoteFromDB();
-                        }
-                    }
-                }
-                if (times > STOCK_GETLOOP_TICK) {
-                    times = 0;
-                    try {
-                        if (mClient != null) {
-                            List<Note> list = null;
-                            if (StockTime.checkTime()) {
-                                if (isNetworkAvailable() == false) {
-                                    print("network is unavaliable");
-                                    break;
-                                }
-                                try {
-                                    list = mClient.getStockInfoDB(new String[]{"sh601006"});
-                                } catch (HttpException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                } catch (StockInfo.ParseStockInfoException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                                if (list != null) {
-                                    if (storeNotes(list) == -1) {
-                                        mStockThread.set_times(STOCK_GETNEXTLOOP_TICK);
-                                    }
-                                }
-                            } else {
-                                print("is out of time");
-                            }
-                            if (!mApplication.isServerSimulation() && mApplication.isServerDisplayRun()) {
-
-                                if (sd instanceof SimulationDisplay) {
-                                    sd.SimulationOFF();
-                                    print("off");
-                                    sd = null;
-                                }
-                                Display(list);
-                            }
-                        }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-            print("mStockThread thread exit");
-        }
-    }
-
-    ;
-
     @Override
     public void onLowMemory() {
         super.onLowMemory();
@@ -571,6 +418,8 @@ public class StockService extends Service implements Observer {
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         getApplicationContext().sendBroadcast(intentScan);
     }
+
+    ;
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
@@ -627,6 +476,148 @@ public class StockService extends Service implements Observer {
 //        localIntent.setClass(this, StockService.class);  //销毁时重新启动Service
 //        this.startService(localIntent);
 
+    }
+
+    public class SimulationDisplay {
+        public int db_num;
+        public int db_index;
+        private boolean isInit = false;
+        private QueryBuilder<Note> qb;
+
+        // 10s one time
+        public SimulationDisplay(String stockId) {
+            simulationDisplayInit(stockId);
+        }
+
+        private boolean simulationDisplayInit(String stockId) {
+            if (!isInit) {
+                qb = noteDao.queryBuilder();
+                qb.where(Properties.Stockid.eq(stockId));
+                db_num = qb.list().size();
+                db_index = 0;
+                isInit = true;
+            }
+            return isInit;
+        }
+
+        public Note getNoteFromDB() {
+
+            if (db_num < db_index)
+                return null;
+            Note note = qb.list().get(db_index);
+            db_index += 1;
+            print("db_index: " + db_index);
+            StockInfo stockInfo = StockInfo.parseNoteInfo(note);
+            if (EventBus.getDefault().hasSubscriberForEvent(StockEvent.class)) {
+                EventBus.getDefault().post(new StockEvent(stockInfo));
+            }
+            return note;
+        }
+
+        public void SimulationOFF() {
+            isInit = false;
+            qb = null;
+            db_num = 0;
+            db_index = 0;
+        }
+
+    }
+
+    public class sThread extends Thread {
+        int times;
+        int sm_times;
+        long tmp_times = 0, last_times = 0;//, cmp_times = 1000;
+
+        public void set_times(int times) {
+            this.times = times;
+        }
+
+        @Override
+        public void run() {
+            // rs.Poll(1);
+            print("mStockThread thread run");
+            //List<Note> list = null;
+            while (isstart) {
+
+                try {
+                    Thread.sleep(10);// 10ms
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                tmp_times = System.currentTimeMillis();
+                if (last_times + 1000 < tmp_times) {//1s
+                    sm_times++;
+                    times++;
+                    last_times = last_times + 1000 * ((tmp_times - last_times) / 1000);
+                }
+                // 10s
+
+                if (sm_times > 3) {
+                    sm_times = 0;
+
+                    if (mApplication.isServerDisplayRun()) {
+//                        print("?????????????");
+
+                        if (mApplication.isServerSimulation()) {
+//                            print("!!!!!!!!!!!!!!!!!");
+                            if (sd == null) {
+                                print("new");
+                                sd = new SimulationDisplay(ST_CODE);
+                            }
+                            sd.getNoteFromDB();
+                        }
+                    }
+                }
+                if (times >= STOCK_GETLOOP_TICK) {
+                    times = 0;
+                    try {
+                        if (mClient != null) {
+                            List<Note> list = null;
+                            if (StockTime.checkTime()) {
+                                if (isNetworkAvailable() == false) {
+                                    print("network is unavaliable");
+                                    break;
+                                }
+                                try {
+                                    list = mClient.getStockInfoDB(new String[]{ST_CODE});
+                                } catch (HttpException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                } catch (StockInfo.ParseStockInfoException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                                if (list != null) {
+                                    if (storeNotes(list) == -1) {
+                                        mStockThread.set_times(STOCK_GETNEXTLOOP_TICK);
+                                    }
+                                }
+                            } else {
+                                print("is out of time");
+                            }
+                            if (!mApplication.isServerSimulation() && mApplication.isServerDisplayRun()) {
+
+                                if (sd instanceof SimulationDisplay) {
+                                    sd.SimulationOFF();
+                                    print("off");
+                                    sd = null;
+                                }
+                                Display(list);
+                            }
+                        }
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+            print("mStockThread thread exit");
+        }
     }
 
 

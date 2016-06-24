@@ -12,6 +12,8 @@
     <string name="wifi_switch">wifi</string>
     <string name="wifi_on">ON</string>
     <string name="wifi_off">OFF</string>
+    <string name="wifi_auto">AUTO</string>
+    <string name="wifi_manual">MANUAL</string>
     <string name="find">find</string>
     <string name="refresh">刷新</string>
     <string name="config">配置</string>

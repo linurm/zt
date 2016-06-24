@@ -39,37 +39,24 @@ import java.util.List;
 
 import zj.zfenlly.stock.StockInfo.ParseStockInfoException;
 
-/**
- * 新浪数据获取客户端，提供个股行情查询、大盘指数查询、个股分时图、K线图等基本数据查询服务。
- *
- * @author <a href="http://www.blogjava.net/zh-weir/"
- *         target="_blank">zh.weir的技术博客</a> </br> </br> <a
- *         href="http://weibo.com/1779382071?s=6uyXnP" target="_blank"><img
- *         border="0" src=
- *         "http://service.t.sina.com.cn/widget/qmd/1779382071/9c2d28b9/1.png"
- *         /></a>
- */
+
 public final class StockClient {
-
-    private final static String STOCK_URL = "http://hq.sinajs.cn/list=";
-
-    private final static String STOCK_MINITE_URL = "http://image.sinajs.cn/newchart/min/n/";
-    private final static String STOCK_DAILY_URL = "http://image.sinajs.cn/newchart/daily/n/";
-    private final static String STOCK_WEEKLY_URL = "http://image.sinajs.cn/newchart/weekly/n/";
-    private final static String STOCK_MONTHLY_URL = "http://image.sinajs.cn/newchart/monthly/n/";
 
     public final static int IMAGE_TYPE_MINITE = 0x85;
     public final static int IMAGE_TYPE_DAILY = 0x86;
     public final static int IMAGE_TYPE_WEEKLY = 0x87;
     public final static int IMAGE_TYPE_MONTHLY = 0x88;
-
+    private final static String STOCK_URL = "http://hq.sinajs.cn/list=";
+    private final static String STOCK_MINITE_URL = "http://image.sinajs.cn/newchart/min/n/";
+    private final static String STOCK_DAILY_URL = "http://image.sinajs.cn/newchart/daily/n/";
+    private final static String STOCK_WEEKLY_URL = "http://image.sinajs.cn/newchart/weekly/n/";
+    private final static String STOCK_MONTHLY_URL = "http://image.sinajs.cn/newchart/monthly/n/";
     private final static int CONNECTION_TIMEOUT = 5000;
     private final static int SO_TIMEOUT = 30000;
+    private static StockClient mInstance;
     private final String TAG = this.getClass().getName();
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private HttpClient mHttpClient;
-
-    private static StockClient mInstance;
 
     private StockClient() {
         mHttpClient = new HttpClient();
@@ -97,45 +84,40 @@ public final class StockClient {
     }
 
     private void print(String msg) {
-        Log.i(TAG, msg);
+        Log.e(TAG, msg);
     }
 
-    /**
-     * 通过股票代码，获取行情信息。
-     *
-     * @param stockCodes 股票代码数组。沪市股票代码以"sh+股票代码", 深市股票代码以"sz+股票代码"。
-     * @return 成功返回List<SinaStockInfo>，失败返回null。
-     * @throws IOException
-     * @throws HttpException
-     * @throws ParseStockInfoException
-     */
-    public List<StockInfo> getStockInfo(String[] stockCodes)
-            throws HttpException, IOException, ParseStockInfoException {
-        String url = STOCK_URL + generateStockCodeRequest(stockCodes);
-        // print("url: " + url);
-        HttpMethod method = new GetMethod(url);
-        int statusCode = mHttpClient.executeMethod(method);
-        if (statusCode != HttpStatus.SC_OK) {
-            method.releaseConnection();
-            return null;
-        }
+//    public List<StockInfo> getStockInfo2(String[] stockCodes)
+//            throws HttpException, IOException, ParseStockInfoException {
+//        String url = STOCK_URL + generateStockCodeRequest(stockCodes);
+//        print("url: " + url);
+//        HttpMethod method = new GetMethod(url);
+//        int statusCode = mHttpClient.executeMethod(method);
+//        if (statusCode != HttpStatus.SC_OK) {
+//            method.releaseConnection();
+//            return null;
+//        }
+//
+//        InputStream is = method.getResponseBodyAsStream();
+//        InputStreamReader reader = new InputStreamReader(
+//                new BufferedInputStream(is), Charset.forName("gbk"));
+//        BufferedReader bReader = new BufferedReader(reader);
+//
+//        List<StockInfo> list = parseSinaStockInfosFromReader(bReader);
+//        bReader.close();
+//        method.releaseConnection();
+//
+//        return list;
+//    }
 
-        InputStream is = method.getResponseBodyAsStream();
-        InputStreamReader reader = new InputStreamReader(
-                new BufferedInputStream(is), Charset.forName("gbk"));
-        BufferedReader bReader = new BufferedReader(reader);
-
-        List<StockInfo> list = parseSinaStockInfosFromReader(bReader);
-        bReader.close();
-        method.releaseConnection();
-
-        return list;
+    public String getUrlString(String[] stockCodes){
+        return  STOCK_URL + generateStockCodeRequest(stockCodes);
     }
 
     public List<Note> getStockInfoDB(String[] stockCodes) throws HttpException,
             IOException, ParseStockInfoException {
         String url = STOCK_URL + generateStockCodeRequest(stockCodes);
-        //print("url: " + url);
+        print("url: " + url);
         HttpMethod method = new GetMethod(url);
         int statusCode = 0;
         try {
@@ -161,16 +143,7 @@ public final class StockClient {
         return list;
     }
 
-    /**
-     * 获取股票分时图或K线图。
-     *
-     * @param stockCode 股票代码。沪市股票代码以"sh+股票代码", 深市股票代码以"sz+股票代码"。
-     * @param imageType 指明请求的图像类型。 IMAGE_TYPE_MINITE 为分时图。 IMAGE_TYPE_DAILY 为日K线图。
-     *                  IMAGE_TYPE_WEEKLY 为周K线图。 IMAGE_TYPE_MONTHLY 为月K线图。
-     * @return 如果成功则返回Bitmap图像，失败返回null。
-     * @throws IOException
-     * @throws HttpException
-     */
+
     public Bitmap getStockImage(String stockCode, int imageType)
             throws HttpException, IOException {
         String baseRequestUrl = null;

@@ -15,16 +15,17 @@
     <!-- 以下是使用wifi访问网络所需的权限 -->
     <uses-permission android:name="android.rockchip.update.permission.SHOW_UI" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -34,12 +35,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
-    <!-- 添加快捷方式 -->
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    <!-- 移除快捷方式 -->
-    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
-    <!-- 查询快捷方式 -->
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
     <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
     <application
@@ -71,24 +66,22 @@
             android:name="zj.zfenlly.wifi.WifiDeviceConfig"
             android:label="@string/device_config"></activity>
         <activity
-            android:name="zj.zfenlly.net.WifiONActivity"
-            android:label="@string/wifi_on"
-            android:screenOrientation="landscape"
-            >
+            android:name="zj.zfenlly.net.AirPlaneModeActivity"
+            android:label="@string/wifi_manual"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="zj.zfenlly.net.WifiOFFActivity"
-            android:label="@string/wifi_off"
-            android:screenOrientation="landscape"
-            >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name="zj.zfenlly.net.WifiAutoActivity"
+            android:label="@string/wifi_auto"
+            android:screenOrientation="landscape">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity android:name="zj.zfenlly.http.DownloadListActivity" />
         <activity
@@ -97,8 +90,7 @@
         <activity
             android:name="zj.zfenlly.main.MainActivity"
             android:label="@string/device_config"
-            android:launchMode="singleTask"
-            >
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

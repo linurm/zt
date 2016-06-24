@@ -15,10 +15,10 @@
             android:weightSum="1">
 
             <Button
-                android:id="@+id/wifion"
+                android:id="@+id/airplane1"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="wifi on"
+                android:text="airplane mode is off"
                 android:layout_weight="0.25" />
 
             <Button
@@ -40,10 +40,10 @@
         android:weightSum="1">
 
         <Button
-            android:id="@+id/wifioff"
+            android:id="@+id/airplane2"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="wifi off"
+            android:text="airplane mode is on"
             android:layout_weight="0.25" />
 
         <Button
@@ -61,10 +61,10 @@
         android:weightSum="1">
 
         <Button
-            android:id="@+id/wifiok"
+            android:id="@+id/airplane3"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="OK"
+            android:text="exit"
             android:visibility="invisible"
             android:layout_weight="0.25" />
 

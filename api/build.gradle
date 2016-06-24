@@ -16,7 +16,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "24.0.0 rc3"
+    buildToolsVersion "24.0.0"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
