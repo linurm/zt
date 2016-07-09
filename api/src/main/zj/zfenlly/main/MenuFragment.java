@@ -18,8 +18,6 @@ import zj.zfenlly.mobeta.DragsortFragment;
 import zj.zfenlly.stock.StockFragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.usb.UsbFragment;
-import zj.zfenlly.voice.SpeechRecognitionFragment;
-import zj.zfenlly.voice.SpeechSynthesisFragment;
 import zj.zfenlly.wifi.WifiFragment;
 import zj.zfenlly.wifiap.WifiApFragment;
 
@@ -58,7 +56,7 @@ public class MenuFragment extends ListFragment {
                 newContent = new BluetoothFragment(R.color.white, "Bluetooth");
                 break;
             case 3:
-                newContent = new SpeechSynthesisFragment(android.R.color.white, "voice");
+                //newContent = new SpeechSynthesisFragment(android.R.color.white, "voice");
                 break;
             case 4:
                 newContent = new UsbFragment(android.R.color.black, "usb");
@@ -76,7 +74,7 @@ public class MenuFragment extends ListFragment {
                 newContent = new WifiFragment(R.color.white, "wifi");
                 break;
             case 9:
-                newContent = new SpeechRecognitionFragment(R.color.white, "speech");
+                //newContent = new SpeechRecognitionFragment(R.color.white, "speech");
                 break;
             case 10:
                 newContent = new StockFragment();

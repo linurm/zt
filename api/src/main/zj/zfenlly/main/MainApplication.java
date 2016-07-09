@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.iflytek.cloud.SpeechUtility;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -81,8 +80,7 @@ public class MainApplication extends Application implements Observable {
 
     @Override
     public void onCreate() {
-        SpeechUtility.createUtility(MainApplication.this, "appid="
-                + getString(R.string.app_id));
+
 
         super.onCreate();
 

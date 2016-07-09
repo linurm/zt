@@ -9,7 +9,7 @@ import android.content.Intent;
  */
 public class OtherAPP {
 
-    static void startOtherActivity(Activity act) {
+    static void startOtherActivity(Activity act, boolean autostart) {
 //        Intent intent = new Intent();
 //        intent.setClass(this, MainActivity.class);
 //        startActivity(intent);
@@ -19,6 +19,10 @@ public class OtherAPP {
         //ComponentName cn = new ComponentName("zj.zfenlly.tools", "zj.zfenlly.main.MainActivity");
         //ComponentName cn = new ComponentName("com.android.tools.sdkcontroller", "com.android.tools.sdkcontroller.activities.MainActivity");
         intent.setComponent(cn);
-        act.startActivity(intent);
+        if (autostart) {
+            act.startActivityForResult(intent, 0x618);
+        } else {
+            act.startActivity(intent);
+        }
     }
 }

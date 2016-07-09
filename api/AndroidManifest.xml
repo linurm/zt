@@ -52,7 +52,6 @@
         <activity
             android:name="zj.zfenlly.wifi.WifiConfigDialogFragment"
             android:label="@string/wifi_conn_activity"></activity>
-        <activity android:name="zj.zfenlly.voice.IatSettings"></activity>
         <activity
             android:name="zj.zfenlly.wifi.WifiDeviceList"
             android:label="@string/device_config"></activity>
@@ -115,9 +114,7 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-        <activity
-            android:name="zj.zfenlly.voice.SpeechSynthesisFragment"
-            android:label="@string/device_config"></activity>
+
         <activity
             android:name="zj.zfenlly.mobeta.DragsortFragment"
             android:label="Basic usage" />

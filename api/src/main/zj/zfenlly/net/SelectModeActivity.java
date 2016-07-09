@@ -9,10 +9,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.lidroid.xutils.view.annotation.event.OnCompoundButtonCheckedChange;
 
 import java.lang.reflect.Method;
 
@@ -26,7 +29,7 @@ import zj.zfenlly.wifi.WifiAdmin;
 public class SelectModeActivity extends Activity {
     private static final int FLAG_START_ACTIVITY = 0x2;
     private static final int FLAG_EXIT = 0x1;
-    private final String TAG = "zwifi manual";
+    private final String TAG = "SelectModeActivity";
     @ViewInject(R.id.airplane1)
     public Button airplane1_btn;
     @ViewInject(R.id.airplane2)
@@ -43,13 +46,25 @@ public class SelectModeActivity extends Activity {
     public Button wifioff_btn;
     @ViewInject(R.id.wifiok)
     public Button wifiok_btn;
+    @ViewInject(R.id.startapp)
+    public Button startApp_btn;
+    @ViewInject(R.id.autostart)
+    public CheckBox autostart;
+    private boolean mAutoStart = false;
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "_______________________________" + requestCode);
+
         if ((requestCode & FLAG_START_ACTIVITY) == FLAG_START_ACTIVITY) {
-            OtherAPP.startOtherActivity(this);
+            OtherAPP.startOtherActivity(this, mAutoStart);
+        } else {
+            if (mAutoStart) {
+                mWifiAdmin.openWifi();
+                OtherAPP.startOtherActivity(this, mAutoStart);
+            }
         }
         if ((requestCode & FLAG_EXIT) == FLAG_EXIT) {
             finish();
@@ -78,13 +93,9 @@ public class SelectModeActivity extends Activity {
             autoMode = intent.getBooleanExtra("auto", false);
             Log.e(TAG, "auto mode");
         }
-
-
         setContentView(R.layout.nettest);
         mWifiAdmin = new WifiAdmin(this);
         ViewUtils.inject(this);
-
-
         Log.e(TAG, "onCreate wifi activity");
         //finish();
     }
@@ -110,6 +121,7 @@ public class SelectModeActivity extends Activity {
     }
 
     private void updateView() {
+        startApp_btn.setVisibility(View.VISIBLE);
         if (isAirplaneMode(this)) {
             if (autoMode) {
                 setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
@@ -142,15 +154,11 @@ public class SelectModeActivity extends Activity {
         } else {
             net3gon.setVisibility(View.VISIBLE);
             net3goff.setVisibility(View.INVISIBLE);
-
         }
     }
 
     @Override
     protected void onResume() {
-        /**
-         * 设置为横屏
-         */
         super.onResume();
         Log.e(TAG, "onResume");
     }
@@ -260,18 +268,33 @@ public class SelectModeActivity extends Activity {
     @OnClick(R.id.wifioff)
     public void wifiOff(View v) {
         mWifiAdmin.closeWifi();
-        OtherAPP.startOtherActivity(this);
+        OtherAPP.startOtherActivity(this, mAutoStart);
+    }
+
+    @OnClick(R.id.startapp)
+    public void startApp(View v) {
+        mWifiAdmin.openWifi();
+        OtherAPP.startOtherActivity(this, mAutoStart);
+        //finish();
     }
 
     @OnClick(R.id.wifion)
     public void wifiOn(View v) {
         mWifiAdmin.openWifi();
-        OtherAPP.startOtherActivity(this);
+        OtherAPP.startOtherActivity(this, mAutoStart);
     }
 
     @OnClick(R.id.wifiok)
     public void wifiOk(View v) {
         mWifiAdmin.openWifi();
         finish();
+    }
+
+    @OnCompoundButtonCheckedChange(R.id.autostart)
+    public void autoStart(CompoundButton buttonView,
+                          boolean isChecked) {
+
+        mAutoStart = isChecked;
+
     }
 }

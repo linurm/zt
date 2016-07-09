@@ -7,15 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="0.25"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <Button
             android:id="@+id/airplane1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="airplane mode is off" />
 
         <Button
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="wifi is off" />
 
         <Button
@@ -31,16 +31,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="3g is off" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="auto start"
+            android:id="@+id/autostart"
+            android:layout_gravity="center_horizontal"
+            android:checked="false" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="0.25"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <Button
@@ -69,8 +77,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_weight="0.25"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <Button
@@ -89,11 +97,11 @@
             android:visibility="invisible" />
 
         <Button
-            android:id="@+id/net3gok"
+            android:id="@+id/startapp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-            android:text="3g ok"
+            android:text="start app"
             android:visibility="invisible" />
     </LinearLayout>
 
