@@ -19,6 +19,8 @@ public class BootUpReceiver extends BroadcastReceiver {
     }
 
     public void onReceive(Context context, Intent intent) {
+
+        print(intent.toString());
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
 //            Intent i = new Intent(context, MainActivity.class);
             print("boot_completed");

@@ -15,6 +15,7 @@ import zj.zfenlly.camera.CameraFragment;
 import zj.zfenlly.coloradjust.ColorAdjustFragment;
 import zj.zfenlly.http.HttpFragment;
 import zj.zfenlly.mobeta.DragsortFragment;
+import zj.zfenlly.record.RecordFragment;
 import zj.zfenlly.stock.StockFragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.usb.UsbFragment;
@@ -74,7 +75,7 @@ public class MenuFragment extends ListFragment {
                 newContent = new WifiFragment(R.color.white, "wifi");
                 break;
             case 9:
-                //newContent = new SpeechRecognitionFragment(R.color.white, "speech");
+                newContent = new RecordFragment(R.color.white, "record");
                 break;
             case 10:
                 newContent = new StockFragment();

@@ -285,7 +285,7 @@ public class StockService extends Service implements Observer {
         flags = START_STICKY;
         print("onStartCommand:" + intent);
         //initNotify();
-        notificationSend4();
+        //notificationSend4();
 //        startServiceForeground(intent, flags, startId);
 //        if(intent == null) {
 //            return Service.START_NOT_STICKY;

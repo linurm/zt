@@ -43,7 +43,7 @@ android {
             //stl "stlport_static"
             //ab
             //abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
-            abiFilters "armeabi-v7a"
+            //abiFilters "armeabi-v7a"
         }
 
     }

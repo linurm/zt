@@ -6,7 +6,7 @@
     <color name="blue">#0000ff</color>
     <color name="white">#FFFfff</color>
     <color name="black">#000000</color>
-    <color name="yellow">#009999</color>
+    <color name="yellow">#00ffff</color>
     <color name="grey">#33A045</color>
 
     <color name="contents_text">#ff000000</color>
@@ -24,4 +24,5 @@
     <color name="viewfinder_mask">#60000000</color>
     <color name="bg_handle_pressed">#a0a0a0</color>
     <color name="darkblue">#0099cc</color>
+    <color name="hui">#40ffffff</color>
 </resources>
