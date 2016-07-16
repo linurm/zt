@@ -27,6 +27,7 @@ public class RecordFragment extends Fragment implements Name {
     private boolean mSortEnabled = true;
     private boolean mDragEnabled = true;
     private int mColorRes = -1;
+    private MSCDialog mMSCDialog;
 
     //    public RecordFragment() {
 //        RecordFragmentInit(R.color.white, "color");
@@ -49,13 +50,18 @@ public class RecordFragment extends Fragment implements Name {
 
     @OnClick(R.id.mscEdit_btn)
     public void mscEdit_btn(View v) {
-        MSCDialog.Builder builder = new MSCDialog.Builder(getActivity());
+        final MSCDialog.Builder builder = new MSCDialog.Builder(getActivity());
         builder.setMessage("MSC");
         builder.setTitle("MSC");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                //builder.addMSCDate();
+                ((MSCDialog)dialog).addMSCDate();
                 dialog.dismiss();
                 //设置你的操作事项
+
+
+                print("record fragment onclick");
             }
         });
 
@@ -77,6 +83,7 @@ public class RecordFragment extends Fragment implements Name {
         builder.setTitle("WB");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                //builder.addMSCDate();//.addMSCDate();
                 dialog.dismiss();
                 //设置你的操作事项
             }

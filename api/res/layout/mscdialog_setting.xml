@@ -27,7 +27,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/mscminites"
+            android:id="@+id/last7minites"
             style="@style/text_18_ffffff"
             android:layout_width="fill_parent"
             android:layout_height="40.0dp"

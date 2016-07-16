@@ -3,37 +3,94 @@ package zj.zfenlly.record;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.zfenlly.msc.DaoMaster;
+import com.zfenlly.msc.DaoSession;
+import com.zfenlly.msc.MSC;
+import com.zfenlly.msc.MSCDao;
 
 import zj.zfenlly.tools.R;
 
 
 public class MSCDialog extends Dialog {
+    public Context mContext;
+    public View contentView;
+    private SQLiteDatabase db;
+    private DaoMaster daoMaster;
+    private DaoSession daoSession;
+    private MSCDao mscDao;
 
     public MSCDialog(Context context) {
         super(context);
+        mContext = context;
     }
 
     public MSCDialog(Context context, int theme) {
         super(context, theme);
+        mContext = context;
     }
 
+    public void initDatabase() {
+        final String DATABASE_PATH = Environment.getExternalStorageDirectory()
+                + "/" + "xxx/";
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH + "msc-db", null);
+        db = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        mscDao = daoSession.getMSCDao();
+    }
+
+    public boolean addMSCDate() {
+
+        if (contentView == null) {
+            //print("444444444444444444444444444444444444444444444");
+            Toast.makeText(mContext, "444444444444", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        EditText et = (EditText) (contentView.findViewById(R.id.last7minites));
+        String s = et.getText().toString();
+        if (!s.equals("") || s.length() != 0) {
+            String d = "s";
+            initDatabase();
+            MSC mMsc = new MSC(null, s, "", d);
+            mscDao.insert(mMsc);
+            Toast.makeText(mContext, "55555555555555555555555555", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        Toast.makeText(mContext, "33333333333", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+
     public static class Builder {
+
+        private final String TAG = this.getClass().getName();
         private Context context;
         private String title;
         private String message;
         private String positiveButtonText;
         private String negativeButtonText;
-        private View contentView;
+
         private OnClickListener positiveButtonClickListener;
         private OnClickListener negativeButtonClickListener;
 
+
         public Builder(Context context) {
             this.context = context;
+        }
+
+        private void print(String msg) {
+            Log.i(TAG, msg);
         }
 
         public Builder setMessage(String message) {
@@ -56,18 +113,18 @@ public class MSCDialog extends Dialog {
             return this;
         }
 
-        public Builder setContentView(View v) {
-            this.contentView = v;
+        public Builder setContentView(MSCDialog dialog, View v) {
+            dialog.contentView = v;
             return this;
         }
 
-        public Builder setPositiveButton(int positiveButtonText,
-                                         OnClickListener listener) {
-            this.positiveButtonText = (String) context
-                    .getText(positiveButtonText);
-            this.positiveButtonClickListener = listener;
-            return this;
-        }
+//        public Builder setPositiveButton(int positiveButtonText,
+//                                         OnClickListener listener) {
+//            this.positiveButtonText = (String) context
+//                    .getText(positiveButtonText);
+//            this.positiveButtonClickListener = listener;
+//            return this;
+//        }
 
         public Builder setPositiveButton(String positiveButtonText,
                                          OnClickListener listener) {
@@ -76,13 +133,13 @@ public class MSCDialog extends Dialog {
             return this;
         }
 
-        public Builder setNegativeButton(int negativeButtonText,
-                                         OnClickListener listener) {
-            this.negativeButtonText = (String) context
-                    .getText(negativeButtonText);
-            this.negativeButtonClickListener = listener;
-            return this;
-        }
+//        public Builder setNegativeButton(int negativeButtonText,
+//                                         OnClickListener listener) {
+//            this.negativeButtonText = (String) context
+//                    .getText(negativeButtonText);
+//            this.negativeButtonClickListener = listener;
+//            return this;
+//        }
 
         public Builder setNegativeButton(String negativeButtonText,
                                          OnClickListener listener) {
@@ -90,6 +147,7 @@ public class MSCDialog extends Dialog {
             this.negativeButtonClickListener = listener;
             return this;
         }
+
 
         public MSCDialog create() {
             LayoutInflater inflater = (LayoutInflater) context
