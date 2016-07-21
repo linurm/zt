@@ -6,95 +6,119 @@
 
 
     <ListView
+        android:id="@+id/mscListView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:id="@+id/mscListView"
         android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp" />
 
     <ListView
+        android:id="@+id/wbListView"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:id="@+id/wbListView"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="300dp"
-        android:layout_alignRight="@+id/mscListView"
         android:layout_alignEnd="@+id/mscListView"
-        android:layout_marginBottom="30dp" />
+        android:layout_alignRight="@+id/mscListView"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="300dp" />
 
     <TextView
+        android:id="@+id/tw_music_seven_day_minites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView"
         android:layout_alignTop="@+id/mscListView"
-        android:layout_toRightOf="@+id/mscListView"
-        android:layout_toEndOf="@+id/mscListView"
         android:layout_marginLeft="26dp"
-        android:layout_marginStart="26dp" />
-
+        android:layout_marginStart="26dp"
+        android:layout_toEndOf="@+id/mscListView"
+        android:layout_toRightOf="@+id/mscListView"
+        android:text="7d: " />
     <TextView
+        android:id="@+id/music_seven_day_minites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:layout_alignTop="@+id/tw_music_seven_day_minites"
+        android:layout_toEndOf="@+id/tw_music_seven_day_minites"
+        android:layout_toRightOf="@+id/tw_music_seven_day_minites"
+        android:text="f" />
+    <TextView
         android:id="@+id/textView6"
-        android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit"
+        android:layout_alignLeft="@+id/tw_music_seven_day_minites"
+        android:layout_alignStart="@+id/tw_music_seven_day_minites"
+        android:layout_below="@+id/tw_music_seven_day_minites"
+        android:text="v" />
+
+    <Button
         android:id="@+id/mscEdit_btn"
-        android:layout_alignBottom="@+id/mscListView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit"
-        android:id="@+id/wbEdit_btn"
-        android:layout_alignBottom="@+id/wbListView"
+        android:layout_alignBottom="@+id/mscListView"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="Edit" />
+
+    <Button
+        android:id="@+id/wbEdit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/wbListView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="Edit" />
 
     <TextView
+        android:id="@+id/tw_weibo_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView7"
-        android:layout_alignTop="@+id/wbListView"
         android:layout_alignLeft="@+id/textView6"
         android:layout_alignStart="@+id/textView6"
-        android:layout_marginTop="49dp" />
+        android:layout_alignTop="@+id/wbListView"
+        android:text="Lv: " />
 
     <TextView
+        android:id="@+id/weibo_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView8"
-        android:layout_below="@+id/textView7"
-        android:layout_alignLeft="@+id/textView7"
-        android:layout_alignStart="@+id/textView7" />
+        android:layout_alignTop="@+id/tw_weibo_level"
+        android:layout_toEndOf="@+id/tw_weibo_level"
+        android:layout_toRightOf="@+id/tw_weibo_level"
+        android:text="l" />
 
     <TextView
+        android:id="@+id/tw_next_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView9"
-        android:layout_alignTop="@+id/textView7"
-        android:layout_toRightOf="@+id/textView7"
-        android:layout_toEndOf="@+id/textView7" />
+        android:layout_alignLeft="@+id/tw_weibo_level"
+        android:layout_alignStart="@+id/tw_weibo_level"
+        android:layout_below="@+id/tw_weibo_level"
+        android:text="S:" />
 
     <TextView
+        android:id="@+id/next_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView13"
-        android:layout_alignTop="@+id/textView8"
-        android:layout_toRightOf="@+id/textView8"
-        android:layout_toEndOf="@+id/textView8" />
+        android:layout_alignLeft="@+id/weibo_score"
+        android:layout_alignStart="@+id/weibo_score"
+        android:layout_below="@+id/weibo_score"
+        android:text="n" />
+    <TextView
+        android:id="@+id/tw_weibo_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tw_next_score"
+        android:layout_alignStart="@+id/tw_next_score"
+        android:layout_below="@+id/tw_next_score"
+        android:text="N:" />
+    <TextView
+        android:id="@+id/weibo_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/weibo_level"
+        android:layout_alignStart="@+id/weibo_level"
+        android:layout_below="@+id/weibo_level"
+        android:text="s" />
+
+
 </RelativeLayout>

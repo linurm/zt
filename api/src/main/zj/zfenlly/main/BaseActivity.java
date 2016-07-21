@@ -16,20 +16,28 @@ import zj.zfenlly.tools.R;
 
 public class BaseActivity extends SlidingFragmentActivity {
 
-    private int mTitleRes;
+
     protected ListFragment mFrag;
+    private int mTitleRes;
+
 
     public BaseActivity(int titleRes) {
         mTitleRes = titleRes;
     }
+
+    private static String pad(int c) {
+        if (c >= 10)
+            return String.valueOf(c);
+        else
+            return "0" + String.valueOf(c);
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setTitle(mTitleRes);
-
-
         // customize the SlidingMenu
         SlidingMenu sm = getSlidingMenu();
         sm.setShadowWidthRes(R.dimen.shadow_width);

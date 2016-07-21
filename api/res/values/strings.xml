@@ -368,5 +368,39 @@
         <item>Click remove</item>
         <item>Fling remove</item>
     </string-array>
+    <string name="alert_dialog_ok">OK</string>
+    <string name="alert_dialog_hide">Hide</string>
+    <string name="alert_dialog_something">Something</string>
+    <string name="alert_dialog_cancel">Cancel</string>
 
+    <string name="select_dialog">Header title</string>
+    <string name="select_dialog_show">List dialog</string>
+
+
+    <string name="activity_alert_dialog">App/Alert Dialogs</string>
+    <string name="alert_dialog_two_buttons">OK Cancel dialog with a message</string>
+    <string name="alert_dialog_two_buttons_old_school">OK Cancel dialog with traditional theme</string>
+    <string name="alert_dialog_two_buttons_holo_light">OK Cancel dialog with Holo Light theme</string>
+    <string name="alert_dialog_two_buttons_default_light">OK Cancel dialog with DeviceDefault Light theme</string>
+    <string name="alert_dialog_two_buttons_default_dark">OK Cancel dialog with DeviceDefault theme</string>
+    <string name="alert_dialog_two_buttons2">OK Cancel dialog with a long message</string>
+    <string name="alert_dialog_two_buttons2ultra">OK Cancel dialog with ultra long message</string>
+    <string name="alert_dialog_select_button">List dialog</string>
+    <string name="alert_dialog_single_choice">Single choice list</string>
+    <string name="alert_dialog_multi_choice">Repeat alarm</string>
+    <string name="alert_dialog_multi_choice_cursor">Send Call to VoiceMail</string>
+    <string name="alert_dialog_progress_button">Progress bar dialog</string>
+    <string name="alert_dialog_progress_spinner_button">Progress spinner dialog</string>
+    <string name="alert_dialog_text_entry">Text Entry dialog</string>
+    <string name="alert_dialog_username">Name:</string>
+    <string name="alert_dialog_password">Password:</string>
+    <string name="alert_dialog_two_buttons_title">
+        Lorem ipsum dolor sit aie consectetur adipiscing\nPlloaso mako nuto
+        siwuf cakso dodtos anr koop.
+    </string>
+    <string name="show">Show</string>
+    <string name="date_widgets_example_dateDisplay_text"></string>
+    <string name="date_widgets_example_pickTime12_text">change the time (12 hour)</string>
+    <string name="date_widgets_example_pickTime24_text">change the time (24 hour)</string>
+    <string name="date_widgets_example_pickDate_text">change the date</string>
 </resources>

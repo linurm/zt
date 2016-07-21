@@ -10,7 +10,7 @@
         android:name="android.rockchip.update.permission.SHOW_UI"
         android:protectionLevel="signature" />
     <uses-sdk
-        android:minSdkVersion="21"
+        android:minSdkVersion="19"
         android:targetSdkVersion="22" />
     <!-- 以下是使用wifi访问网络所需的权限 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -66,13 +66,22 @@
             android:name="zj.zfenlly.wifi.WifiDeviceConfig"
             android:label="@string/device_config"></activity>
         <activity
-            android:name="zj.zfenlly.net.SelectModeActivity"
-            android:label="@string/wifi_manual"
-            android:screenOrientation="landscape">
+            android:name="zj.zfenlly.main.MainActivity"
+            android:label="@string/device_config"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="zj.zfenlly.net.SelectModeActivity"
+            android:label="@string/wifi_manual"
+            android:screenOrientation="landscape">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name="zj.zfenlly.net.WifiAutoActivity"
@@ -87,15 +96,7 @@
         <activity
             android:name="zj.zfenlly.stock.StockFragment"
             android:label="@string/device_config"></activity>
-        <activity
-            android:name="zj.zfenlly.main.MainActivity"
-            android:label="@string/device_config"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
         <activity
             android:name="zj.zfenlly.wifiap.WifiApFragment"
             android:label="@string/device_config"></activity>

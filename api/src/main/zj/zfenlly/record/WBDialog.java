@@ -3,52 +3,91 @@ package zj.zfenlly.record;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zfenlly.wb.WB;
+
+import zj.zfenlly.main.MainActivity;
 import zj.zfenlly.tools.R;
 
 
 public class WBDialog extends Dialog {
+    public Context mContext;
+    public View contentView;
 
     public WBDialog(Context context) {
         super(context);
+        mContext = context;
     }
 
     public WBDialog(Context context, int theme) {
         super(context, theme);
+        mContext = context;
     }
+
+    public void initDatabase(WB mWb) {
+        DataBaseImpl.WBDataBaseOp mWBOp = new DataBaseImpl.WBDataBaseOp();
+        mWBOp.insert(mContext, mWb);
+    }
+
+    public boolean openDialogDate() {
+        ((MainActivity) mContext).showDialog(contentView);
+        Log.e("11111111", "" + mContext);
+        return true;
+    }
+
+    public boolean addWBDate() {
+
+        if (contentView == null) {
+            Toast.makeText(mContext, "error", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        EditText ts = (EditText) (contentView.findViewById(R.id.totalscore));
+        //EditText ns = (EditText) (contentView.findViewById(R.id.nextscore));
+        String t = ts.getText().toString();
+        //String n = ns.getText().toString();
+        String n = CaculateLevel.getNextLevelScore(t);
+        if (t.equals("") || t.length() == 0 || n.equals("") || n.length() == 0) {
+            Toast.makeText(mContext, t + ":" + n, Toast.LENGTH_SHORT).show();
+            return false;
+
+        }
+
+        TextView mTv = (TextView) contentView.findViewById(R.id.date_value);
+        String s = mTv.getText().toString();
+        String d = null;
+        if (s.equals("") || s == null) {
+            d = NowDataTime.getDataTime();
+        } else {
+            d = s + " " + NowDataTime.getTime();
+        }
+
+        WB mWb = new WB(null, t, n, d);
+        initDatabase(mWb);
+        Toast.makeText(mContext, t + ":" + n + " add successed!!!", Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
 
     public static class Builder {
         private Context context;
         private String title;
-        private String message;
         private String positiveButtonText;
         private String negativeButtonText;
-        private View contentView;
+
         private DialogInterface.OnClickListener positiveButtonClickListener;
         private DialogInterface.OnClickListener negativeButtonClickListener;
+        private DialogInterface.OnClickListener dataPickClickListener;
 
         public Builder(Context context) {
             this.context = context;
-        }
-
-        public Builder setMessage(String message) {
-            this.message = message;
-            return this;
-        }
-
-        public Builder setMessage(int message) {
-            this.message = (String) context.getText(message);
-            return this;
-        }
-
-        public Builder setTitle(int title) {
-            this.title = (String) context.getText(title);
-            return this;
         }
 
         public Builder setTitle(String title) {
@@ -56,18 +95,11 @@ public class WBDialog extends Dialog {
             return this;
         }
 
-        public Builder setContentView(View v) {
-            this.contentView = v;
+        public Builder setContentView(WBDialog dialog, View v) {
+            dialog.contentView = v;
             return this;
         }
 
-        public Builder setPositiveButton(int positiveButtonText,
-                                         DialogInterface.OnClickListener listener) {
-            this.positiveButtonText = (String) context
-                    .getText(positiveButtonText);
-            this.positiveButtonClickListener = listener;
-            return this;
-        }
 
         public Builder setPositiveButton(String positiveButtonText,
                                          DialogInterface.OnClickListener listener) {
@@ -76,18 +108,15 @@ public class WBDialog extends Dialog {
             return this;
         }
 
-        public Builder setNegativeButton(int negativeButtonText,
-                                         DialogInterface.OnClickListener listener) {
-            this.negativeButtonText = (String) context
-                    .getText(negativeButtonText);
-            this.negativeButtonClickListener = listener;
-            return this;
-        }
-
         public Builder setNegativeButton(String negativeButtonText,
                                          DialogInterface.OnClickListener listener) {
             this.negativeButtonText = negativeButtonText;
             this.negativeButtonClickListener = listener;
+            return this;
+        }
+
+        public Builder setDatePickerButton(String DataPickerText, DialogInterface.OnClickListener listener) {
+            this.dataPickClickListener = listener;
             return this;
         }
 
@@ -137,6 +166,19 @@ public class WBDialog extends Dialog {
                 layout.findViewById(R.id.negativeButton).setVisibility(
                         View.GONE);
             }
+
+            if (dataPickClickListener != null) {
+                ((Button) layout.findViewById(R.id.datepick)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dataPickClickListener.onClick(dialog, 0);
+                    }
+                });
+            } else {
+                layout.findViewById(R.id.datepick).setVisibility(View.GONE);
+            }
+
+            layout.findViewById(R.id.date_value);
             // set the content message
 //            if (message != null) {
 //                ((TextView) layout.findViewById(R.id.nextscore)).setText(message);
@@ -148,7 +190,7 @@ public class WBDialog extends Dialog {
 //                ((LinearLayout) layout.findViewById(R.id.content))
 //                        .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 //            }
-            dialog.setContentView(layout);
+            setContentView(dialog, layout);
             return dialog;
         }
     }
