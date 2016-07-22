@@ -11,7 +11,9 @@
         android:layout_height="200dp"
         android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="30dp"
+        android:visibility="visible"
+        android:background="#3F1717" />
 
     <ListView
         android:id="@+id/wbListView"
@@ -21,7 +23,9 @@
         android:layout_alignRight="@+id/mscListView"
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="300dp" />
+        android:layout_marginTop="300dp"
+        android:visibility="visible"
+        android:background="#3f1717" />
 
     <TextView
         android:id="@+id/tw_music_seven_day_minites"

@@ -9,14 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.zfenlly.msc.MSC;
-import com.zfenlly.wb.WB;
+import com.zfenlly.db.MSC;
+import com.zfenlly.db.WB;
 
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
@@ -36,11 +37,18 @@ public class RecordFragment extends Fragment implements Name {
     @ViewInject(R.id.weibo_level)
     TextView mWeiboLevel;
 
+    @ViewInject(R.id.wbListView)
+    ListView mWbListView;
 
+    @ViewInject(R.id.mscListView)
+    ListView mMscListView;
+
+    WBDataAdapter mWBDataAdapter;
+    MSCDataAdapter mMSCDataAdapter;
     private int mColorRes = -1;
 
     public RecordFragment() {
-        this(R.color.white, "color");
+        this(R.color.black, "color");
     }
 
     public RecordFragment(int colorRes, String name) {
@@ -69,7 +77,12 @@ public class RecordFragment extends Fragment implements Name {
                         dialog.dismiss();
                     }
                 });
-
+        builder.setDatePickerButton("data picker", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ((MSCDialog) dialog).openDialogDate();
+            }
+        });
         builder.create().show();
     }
 
@@ -140,6 +153,13 @@ public class RecordFragment extends Fragment implements Name {
         ViewUtils.inject(this, view);
 
 
+        mWBDataAdapter = new WBDataAdapter(getActivity().getApplicationContext());
+        mWbListView.setAdapter(mWBDataAdapter);
+
+        mMSCDataAdapter = new MSCDataAdapter(getActivity().getApplicationContext());
+        mMscListView.setAdapter(mMSCDataAdapter);
+
+
         return view;
     }
 
@@ -155,9 +175,11 @@ public class RecordFragment extends Fragment implements Name {
         DataBaseImpl.MSCDataBaseOp mMSCOp = new DataBaseImpl.MSCDataBaseOp();
         MSC mMSC = mMSCOp.getCurrMSC(getActivity());
         //mMSC.getLast7minites().toCharArray();
-        if (mMSC != null)
+        if (mMSC != null) {
             mMusic7DayMinites.setText(mMSC.getLast7minites()); //.setText(mMSC.getLast7minites() != null ? mMSC.getLast7minites().toString() : "e");
 
+            mMSCDataAdapter.setAliases(mMSCOp.getListMSC(getActivity()));
+        }
         DataBaseImpl.WBDataBaseOp mWBOp = new DataBaseImpl.WBDataBaseOp();
         WB mWB = mWBOp.getCurrWB(getActivity());
         if (mWB != null) {
@@ -165,12 +187,14 @@ public class RecordFragment extends Fragment implements Name {
             mNextScore.setText(mWB.getNextscore());
             String lv = CaculateLevel.getCaculateLevel(mWB.getTotalscore());
             mWeiboLevel.setText(lv);
+            mWBDataAdapter.setAliases(mWBOp.getListWB(getActivity()));
         }
 
-        Configuration config = getResources().getConfiguration();
-        int smallestScreenWidth = config.smallestScreenWidthDp;
 
-        Toast.makeText(getActivity(), "small: " + smallestScreenWidth, Toast.LENGTH_SHORT).show();
+//        Configuration config = getResources().getConfiguration();
+//        int smallestScreenWidth = config.smallestScreenWidthDp;
+//
+//        Toast.makeText(getActivity(), "small: " + smallestScreenWidth, Toast.LENGTH_SHORT).show();
 
     }
 

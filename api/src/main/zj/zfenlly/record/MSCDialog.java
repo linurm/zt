@@ -12,8 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zfenlly.msc.MSC;
+import com.zfenlly.db.MSC;
 
+import zj.zfenlly.main.MainActivity;
 import zj.zfenlly.tools.R;
 
 
@@ -37,7 +38,11 @@ public class MSCDialog extends Dialog {
         DataBaseImpl.MSCDataBaseOp mMSCOp = new DataBaseImpl.MSCDataBaseOp();
         mMSCOp.insert(mContext, mMsc);
     }
-
+    public boolean openDialogDate() {
+        ((MainActivity) mContext).showDialog(contentView);
+        Log.e("22222222", "" + mContext);
+        return true;
+    }
     public boolean addMSCDate() {
 
         if (contentView == null) {
@@ -45,10 +50,19 @@ public class MSCDialog extends Dialog {
             return false;
         }
         EditText et = (EditText) (contentView.findViewById(R.id.last7minites));
-        String s = et.getText().toString();
-        if (!s.equals("") || s.length() != 0) {
-            String d = NowDataTime.getDataTime();
+        String l = et.getText().toString();
 
+
+        if (!l.equals("") || l.length() != 0) {
+            //d = NowDataTime.getDataTime();
+            String d = null;
+            TextView mTv = (TextView) contentView.findViewById(R.id.date_value);
+            String s = mTv.getText().toString();
+            if (s.equals("") || s == null) {
+                d = NowDataTime.getDataTime();
+            } else {
+                d = s + " " + NowDataTime.getTime();
+            }
             MSC mMsc = new MSC(null, s, "", d);
             initDatabase(mMsc);
             Toast.makeText(mContext, "add successed!!!", Toast.LENGTH_SHORT).show();
@@ -69,7 +83,7 @@ public class MSCDialog extends Dialog {
 
         private OnClickListener positiveButtonClickListener;
         private OnClickListener negativeButtonClickListener;
-
+        private DialogInterface.OnClickListener dataPickClickListener;
 
         public Builder(Context context) {
             this.context = context;
@@ -104,7 +118,10 @@ public class MSCDialog extends Dialog {
             this.negativeButtonClickListener = listener;
             return this;
         }
-
+        public Builder setDatePickerButton(String DataPickerText, DialogInterface.OnClickListener listener) {
+            this.dataPickClickListener = listener;
+            return this;
+        }
         public MSCDialog create() {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -151,7 +168,16 @@ public class MSCDialog extends Dialog {
                 layout.findViewById(R.id.negativeButton).setVisibility(
                         View.GONE);
             }
-
+            if (dataPickClickListener != null) {
+                ((Button) layout.findViewById(R.id.datepick)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dataPickClickListener.onClick(dialog, 0);
+                    }
+                });
+            } else {
+                layout.findViewById(R.id.datepick).setVisibility(View.GONE);
+            }
             setContentView(dialog, layout);
             return dialog;
         }

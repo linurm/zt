@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zfenlly.wb.WB;
+import com.zfenlly.db.WB;
 
 import zj.zfenlly.main.MainActivity;
 import zj.zfenlly.tools.R;
@@ -74,7 +74,6 @@ public class WBDialog extends Dialog {
         Toast.makeText(mContext, t + ":" + n + " add successed!!!", Toast.LENGTH_SHORT).show();
         return true;
     }
-
 
     public static class Builder {
         private Context context;
@@ -178,7 +177,7 @@ public class WBDialog extends Dialog {
                 layout.findViewById(R.id.datepick).setVisibility(View.GONE);
             }
 
-            layout.findViewById(R.id.date_value);
+            //layout.findViewById(R.id.date_value);
             // set the content message
 //            if (message != null) {
 //                ((TextView) layout.findViewById(R.id.nextscore)).setText(message);
