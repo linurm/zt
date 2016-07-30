@@ -28,7 +28,7 @@ public class DataBaseImpl {
     public static class MSCDataBaseOp {
 
 
-        public void insert(Context mContext, MSC mMsc) {
+        public static void insert(Context mContext, MSC mMsc) {
             SQLiteDatabase db;
             DaoMaster daoMaster;
             DaoSession daoSession;
@@ -42,13 +42,27 @@ public class DataBaseImpl {
             mscDao.insert(mMsc);
         }
 
-        public MSC getCurrMSC(Context mContext) {
+        public static void delete(Context mContext, MSC mMSC) {
+            SQLiteDatabase db;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            MSCDao mscDao;
+
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getWritableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            mscDao = daoSession.getMSCDao();
+            mscDao.deleteByKey(mMSC.getId());
+        }
+
+        public static MSC getCurrMSC(Context mContext) {
             SQLiteDatabase db;
             DaoMaster daoMaster;
             DaoSession daoSession;
             MSCDao mscDao;
             DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
-            db = helper.getWritableDatabase();
+            db = helper.getReadableDatabase();
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             mscDao = daoSession.getMSCDao();
@@ -59,13 +73,31 @@ public class DataBaseImpl {
             return mMSC;
         }
 
-        public List<MSC> getListMSC(Context mContext) {
+        public static MSC getMSC(Context mContext, int id) {
+            SQLiteDatabase db;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            MSCDao mscDao;
+            if (id < 0) return null;
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getReadableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            mscDao = daoSession.getMSCDao();
+            QueryBuilder<MSC> qb = mscDao.queryBuilder();
+            MSC mMSC = null;
+            if (qb.list().size() >= 1)
+                mMSC = qb.list().get(id);
+            return mMSC;
+        }
+
+        public static List<MSC> getListMSC(Context mContext) {
             SQLiteDatabase db;
             DaoMaster daoMaster;
             DaoSession daoSession;
             MSCDao mscDao;
             DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
-            db = helper.getWritableDatabase();
+            db = helper.getReadableDatabase();
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             mscDao = daoSession.getMSCDao();
@@ -79,7 +111,7 @@ public class DataBaseImpl {
     }
 
     public static class WBDataBaseOp {
-        public void insert(Context mContext, WB mWb) {
+        public static void insert(Context mContext, WB mWb) {
             SQLiteDatabase db;
             DaoMaster daoMaster;
             DaoSession daoSession;
@@ -92,13 +124,28 @@ public class DataBaseImpl {
             wbDao.insert(mWb);
         }
 
-        public WB getCurrWB(Context mContext) {
+        public static void delete(Context mContext, WB mWB) {
+            SQLiteDatabase db;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            WBDao wbDao;
+
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getWritableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWBDao();
+
+            wbDao.deleteByKey(mWB.getId());
+        }
+
+        public static WB getCurrWB(Context mContext) {
             SQLiteDatabase db;
             WBDao wbDao;
             DaoMaster daoMaster;
             DaoSession daoSession;
             DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
-            db = helper.getWritableDatabase();
+            db = helper.getReadableDatabase();
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             wbDao = daoSession.getWBDao();
@@ -109,13 +156,31 @@ public class DataBaseImpl {
             return mWB;
         }
 
-        public List<WB> getListWB(Context mContext) {
+        public static WB getWB(Context mContext, int id) {
+            SQLiteDatabase db;
+            WBDao wbDao;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            if (id < 0) return null;
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getReadableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWBDao();
+            QueryBuilder<WB> qb = wbDao.queryBuilder();
+            WB mWB = null;
+            if (qb.list().size() >= 1)
+                mWB = qb.list().get(id);
+            return mWB;
+        }
+
+        public static List<WB> getListWB(Context mContext) {
             SQLiteDatabase db;
             WBDao wbDao;
             DaoMaster daoMaster;
             DaoSession daoSession;
             DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
-            db = helper.getWritableDatabase();
+            db = helper.getReadableDatabase();
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             wbDao = daoSession.getWBDao();

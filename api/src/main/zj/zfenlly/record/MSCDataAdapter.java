@@ -24,7 +24,7 @@ public class MSCDataAdapter extends ArrayAdapter<String> {
         List<String> list = new ArrayList<String>();
         Iterator it1 = items.iterator();
         while(it1.hasNext()){
-            list.add(it1.next().toString());
+            list.add(((MSC)it1.next()).toStrings());
         }
         addAll(list);
         notifyDataSetChanged();

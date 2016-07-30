@@ -35,9 +35,10 @@ public class MSCDialog extends Dialog {
 
 
     public void initDatabase(MSC mMsc) {
-        DataBaseImpl.MSCDataBaseOp mMSCOp = new DataBaseImpl.MSCDataBaseOp();
-        mMSCOp.insert(mContext, mMsc);
+        DataBaseImpl.MSCDataBaseOp.insert(mContext, mMsc);
     }
+
+
     public boolean openDialogDate() {
         ((MainActivity) mContext).showDialog(contentView);
         Log.e("22222222", "" + mContext);
@@ -63,7 +64,7 @@ public class MSCDialog extends Dialog {
             } else {
                 d = s + " " + NowDataTime.getTime();
             }
-            MSC mMsc = new MSC(null, s, "", d);
+            MSC mMsc = new MSC(null, l, "", d);
             initDatabase(mMsc);
             Toast.makeText(mContext, "add successed!!!", Toast.LENGTH_SHORT).show();
             return true;

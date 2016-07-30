@@ -67,7 +67,7 @@ public class MSC {
         this.date = date;
     }
 
-    public String toString() {
+    public String toStrings() {
         String s = this.date + " " + this.last7minites + " ";
         return s;
     }

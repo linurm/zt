@@ -13,8 +13,7 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="22" />
     <!-- 以下是使用wifi访问网络所需的权限 -->
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.rockchip.update.permission.SHOW_UI" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -31,13 +30,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
     <application
         android:name="zj.zfenlly.main.MainApplication"
         android:allowBackup="true"
@@ -78,10 +75,10 @@
             android:name="zj.zfenlly.net.SelectModeActivity"
             android:label="@string/wifi_manual"
             android:screenOrientation="landscape">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="zj.zfenlly.net.WifiAutoActivity"

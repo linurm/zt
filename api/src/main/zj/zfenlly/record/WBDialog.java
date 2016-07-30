@@ -33,8 +33,8 @@ public class WBDialog extends Dialog {
     }
 
     public void initDatabase(WB mWb) {
-        DataBaseImpl.WBDataBaseOp mWBOp = new DataBaseImpl.WBDataBaseOp();
-        mWBOp.insert(mContext, mWb);
+        //DataBaseImpl.WBDataBaseOp mWBOp = new DataBaseImpl.WBDataBaseOp();
+        DataBaseImpl.WBDataBaseOp.insert(mContext, mWb);
     }
 
     public boolean openDialogDate() {
