@@ -40,7 +40,7 @@
             android:text="auto start"
             android:id="@+id/autostart"
             android:layout_gravity="center_horizontal"
-            android:checked="false" />
+            android:checked="true" />
     </LinearLayout>
 
 
