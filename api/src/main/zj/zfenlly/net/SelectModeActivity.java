@@ -160,6 +160,7 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        mAutoStart = autostart.isChecked();
         Log.e(TAG, "onResume");
     }
 
