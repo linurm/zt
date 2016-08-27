@@ -4,7 +4,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.1.3'
+        //classpath 'com.android.tools.build:gradle-experimental:0.4.0'
     }
 }
 
@@ -27,8 +28,10 @@ android {
 //        exclude 'AndroidManifest.xml'
 //    }
 
+
+
     defaultConfig {
-        multiDexEnabled true
+        //multiDexEnabled true
         ndk {
             //moduleName "detection_based_tracker"
             moduleName "JniCamera"
@@ -43,7 +46,7 @@ android {
             //stl "stlport_static"
             //ab
             //abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
-            //abiFilters "armeabi-v7a"
+            abiFilters "armeabi-v7a"
         }
 
     }
@@ -70,7 +73,7 @@ android {
             //renderscript.srcDirs = ['src/main']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            //jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
+            jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
             //jni.srcDirs = ['src/jni']
             //jniLibs.srcDirs = ['libs']
             //jniLibs.srcDirs = ['src/main/jniLibs']

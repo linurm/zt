@@ -34,6 +34,7 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name="zj.zfenlly.main.MainApplication"
@@ -76,8 +77,8 @@
             android:label="@string/wifi_manual"
             android:screenOrientation="landscape">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -266,9 +267,17 @@
             </intent-filter>
         </service>
 
+        <service android:name="zj.zfenlly.net.FloatWinService"></service>
+
 
         <service android:name="zj.zfenlly.other.ZfenllyService"></service>
 
+        <receiver android:name="zj.zfenlly.wifi.WifiChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <receiver
             android:name="zj.zfenlly.main.BootUpReceiver"
             android:enabled="true"

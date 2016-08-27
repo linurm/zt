@@ -41,10 +41,12 @@ public class WifiAdmin {
     }
 
     // 打开wifi
-    public void openWifi() {
+    public boolean openWifi() {
         if (!mWifiManager.isWifiEnabled()) {
             mWifiManager.setWifiEnabled(true);
+            return true;
         }
+        return false;
     }
 
     // 关闭wifi

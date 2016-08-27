@@ -55,7 +55,7 @@
             android:id="@+id/airplane2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="airplane mode is on"
             android:visibility="invisible" />
 
@@ -63,15 +63,22 @@
             android:id="@+id/wifioff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="wifi is on" />
 
         <Button
             android:id="@+id/net3goff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="3g is on" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="auto start"
+            android:id="@+id/floatwin"
+            android:layout_gravity="center_horizontal"
+            android:checked="false" />
     </LinearLayout>
 
     <LinearLayout
@@ -85,14 +92,14 @@
             android:id="@+id/appexit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="exit" />
 
         <Button
             android:id="@+id/wifiok"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="wifi ok"
             android:visibility="invisible" />
 
@@ -100,7 +107,7 @@
             android:id="@+id/startapp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.3"
             android:text="start app"
             android:visibility="invisible" />
     </LinearLayout>

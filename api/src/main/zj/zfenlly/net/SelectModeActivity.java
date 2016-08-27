@@ -59,12 +59,7 @@ public class SelectModeActivity extends Activity {
         Log.e(TAG, "_______________________________" + requestCode);
 
         if ((requestCode & FLAG_START_ACTIVITY) == FLAG_START_ACTIVITY) {
-            OtherAPP.startOtherActivity(this, mAutoStart);
         } else {
-            if (mAutoStart) {
-                mWifiAdmin.openWifi();
-                OtherAPP.startOtherActivity(this, mAutoStart);
-            }
         }
         if ((requestCode & FLAG_EXIT) == FLAG_EXIT) {
             finish();
@@ -160,8 +155,18 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mAutoStart = autostart.isChecked();
+        if (mAutoStart) {
+            openWifiAndStartAPP();
+        }
         Log.e(TAG, "onResume");
+    }
+
+    public void openWifiAndStartAPP() {
+        if (mWifiAdmin.openWifi()) {
+            OtherAPP.setWillStartAPP(this);
+        } else {
+            OtherAPP.startOtherActivity(this);
+        }
     }
 
     @Override
@@ -196,8 +201,6 @@ public class SelectModeActivity extends Activity {
 
     public boolean getMobileNet() {
         boolean isMobileDataEnable = false;
-
-
         Object[] arg = null;
         try {
             isMobileDataEnable = invokeMethod("getMobileDataEnabled", arg);
@@ -269,20 +272,20 @@ public class SelectModeActivity extends Activity {
     @OnClick(R.id.wifioff)
     public void wifiOff(View v) {
         mWifiAdmin.closeWifi();
-        OtherAPP.startOtherActivity(this, mAutoStart);
+        OtherAPP.startOtherActivity(this);
     }
 
     @OnClick(R.id.startapp)
     public void startApp(View v) {
-        mWifiAdmin.openWifi();
-        OtherAPP.startOtherActivity(this, mAutoStart);
+
+        mAutoStart = autostart.isChecked();
+        openWifiAndStartAPP();
         //finish();
     }
 
     @OnClick(R.id.wifion)
     public void wifiOn(View v) {
-        mWifiAdmin.openWifi();
-        OtherAPP.startOtherActivity(this, mAutoStart);
+        openWifiAndStartAPP();
     }
 
     @OnClick(R.id.wifiok)
@@ -297,5 +300,17 @@ public class SelectModeActivity extends Activity {
 
         mAutoStart = isChecked;
 
+    }
+
+    @OnCompoundButtonCheckedChange(R.id.floatwin)
+    public void floatWin(CompoundButton buttonView,
+                         boolean isChecked) {
+        if (isChecked) {
+            Intent intent = new Intent(this, FloatWinService.class);
+            startService(intent);
+        } else {
+            Intent intent = new Intent(this, FloatWinService.class);
+            stopService(intent);
+        }
     }
 }
