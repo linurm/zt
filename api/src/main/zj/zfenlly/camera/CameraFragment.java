@@ -125,8 +125,7 @@ public class CameraFragment extends Fragment implements Name {
         super.onStart();
         print("onStart");
 
-        CameraJni camerajni = new CameraJni();
-        print(""+camerajni.getCLanguageString());
+
     }
 
     @Override

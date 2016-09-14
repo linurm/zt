@@ -26,10 +26,20 @@ public class MyAlertDialogFragment extends DialogFragment {
 
                 public void onDateSet(DatePicker view, int year, int monthOfYear,
                                       int dayOfMonth) {
+                    String m = null;
+                    String d = null;
                     mYear = year;
                     mMonth = monthOfYear + 1;
                     mDay = dayOfMonth;
-                    mtw.setText("" + mYear + "-" + mMonth + "-" + mDay);
+                    if (mMonth < 10)
+                        m = "0" + mMonth;
+                    else
+                        m = "" + mMonth;
+                    if (mDay < 10)
+                        d = "0" + mDay;
+                    else
+                        d = "" + mDay;
+                    mtw.setText("" + mYear + "-" + m + "-" + d);
                 }
             };
 

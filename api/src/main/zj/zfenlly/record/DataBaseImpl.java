@@ -66,7 +66,7 @@ public class DataBaseImpl {
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             mscDao = daoSession.getMSCDao();
-            QueryBuilder<MSC> qb = mscDao.queryBuilder();
+            QueryBuilder<MSC> qb = mscDao.queryBuilder().orderAsc(MSCDao.Properties.Date);
             MSC mMSC = null;
             if (qb.list().size() >= 1)
                 mMSC = qb.list().get(qb.list().size() - 1);
@@ -84,7 +84,7 @@ public class DataBaseImpl {
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             mscDao = daoSession.getMSCDao();
-            QueryBuilder<MSC> qb = mscDao.queryBuilder();
+            QueryBuilder<MSC> qb = mscDao.queryBuilder().orderAsc(MSCDao.Properties.Date);
             MSC mMSC = null;
             if (qb.list().size() >= 1)
                 mMSC = qb.list().get(id);
@@ -101,7 +101,7 @@ public class DataBaseImpl {
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             mscDao = daoSession.getMSCDao();
-            QueryBuilder<MSC> qb = mscDao.queryBuilder();
+            QueryBuilder<MSC> qb = mscDao.queryBuilder().orderAsc(MSCDao.Properties.Date);
 //            MSC mMSC = null;
 //            if (qb.list().size() >= 1)
 //                mMSC = qb.list().get(qb.list().size() - 1);
@@ -149,7 +149,7 @@ public class DataBaseImpl {
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             wbDao = daoSession.getWBDao();
-            QueryBuilder<WB> qb = wbDao.queryBuilder();
+            QueryBuilder<WB> qb = wbDao.queryBuilder().orderAsc(WBDao.Properties.Date);;
             WB mWB = null;
             if (qb.list().size() >= 1)
                 mWB = qb.list().get(qb.list().size() - 1);
@@ -167,7 +167,7 @@ public class DataBaseImpl {
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             wbDao = daoSession.getWBDao();
-            QueryBuilder<WB> qb = wbDao.queryBuilder();
+            QueryBuilder<WB> qb = wbDao.queryBuilder().orderAsc(WBDao.Properties.Date);;
             WB mWB = null;
             if (qb.list().size() >= 1)
                 mWB = qb.list().get(id);
@@ -184,7 +184,7 @@ public class DataBaseImpl {
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
             wbDao = daoSession.getWBDao();
-            QueryBuilder<WB> qb = wbDao.queryBuilder();
+            QueryBuilder<WB> qb = wbDao.queryBuilder().orderAsc(WBDao.Properties.Date);
             return qb.list();
         }
     }

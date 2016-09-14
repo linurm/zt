@@ -42,8 +42,9 @@ public class MainApplication extends Application implements Observable {
     public static enum APPUpdateParam {
         AAA
     }
-
-    ;
+    static {
+        System.loadLibrary("JniCamera");   //defaultConfig.ndk.moduleName
+    }
 
     public static final String DEVICE_CONFIG_FIND = "DEVICE_CONFIG_FIND";
     public static final String DEVICE_CONFIG_GET = "DEVICE_CONFIG_GET";

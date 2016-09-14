@@ -7,7 +7,5 @@ public class CameraJni {
 
     public native String getCLanguageString();
 
-    static {
-        System.loadLibrary("JniCamera");   //defaultConfig.ndk.moduleName
-    }
+
 }

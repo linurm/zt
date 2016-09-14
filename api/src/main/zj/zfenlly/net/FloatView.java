@@ -39,6 +39,7 @@ public class FloatView extends ImageView {
         windowManagerParams = wmParams;
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //获取到状态栏的高度
@@ -75,7 +76,7 @@ public class FloatView extends ImageView {
                 mTouchX = mTouchY = 0;
                 Log.e("tag", "up:[" + (x - mStartX) + ", "
                         + (y - mStartY) + "]");
-                if ((x - mStartX) < 5 && (y - mStartY) < 5) {
+                if ((x - mStartX) < 10 && (y - mStartY) < 10) {
                     if (mClickListener != null) {
                         mClickListener.onClick(this);
                     }

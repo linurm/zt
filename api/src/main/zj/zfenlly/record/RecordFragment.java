@@ -20,6 +20,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.zfenlly.db.MSC;
 import com.zfenlly.db.WB;
 
+import zj.zfenlly.camera.CameraJni;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
@@ -249,6 +250,9 @@ public class RecordFragment extends Fragment implements Name {
             mWeiboLevel.setText(lv);
             mWBDataAdapter.setAliases(DataBaseImpl.WBDataBaseOp.getListWB(getActivity()));
         }
+
+        CameraJni camerajni = new CameraJni();
+        print("" + camerajni.getCLanguageString());
     }
 
     @Override
