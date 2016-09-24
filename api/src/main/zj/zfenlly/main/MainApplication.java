@@ -86,7 +86,7 @@ public class MainApplication extends Application implements Observable {
         super.onCreate();
 
 
-        appRegister();
+        //appRegister();
 
     }
 
