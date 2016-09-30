@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import zj.zfenlly.arc.ArcFragment;
 import zj.zfenlly.bluetooth.BluetoothFragment;
 import zj.zfenlly.camera.CameraFragment;
 import zj.zfenlly.coloradjust.ColorAdjustFragment;
@@ -82,6 +83,9 @@ public class MenuFragment extends ListFragment {
                 break;
             case 11:
                 newContent = new DragsortFragment();
+                break;
+            case 12:
+                newContent = new ArcFragment();
                 break;
 
         }

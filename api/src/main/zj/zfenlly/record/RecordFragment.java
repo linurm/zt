@@ -252,7 +252,7 @@ public class RecordFragment extends Fragment implements Name {
         }
 
         CameraJni camerajni = new CameraJni();
-        print("" + camerajni.getCLanguageString());
+        print("" + camerajni.getCLanguageString("123456"));
     }
 
     @Override

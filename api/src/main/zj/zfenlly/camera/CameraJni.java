@@ -5,7 +5,7 @@ package zj.zfenlly.camera;
  */
 public class CameraJni {
 
-    public native String getCLanguageString();
+    public native String getCLanguageString(String name);
 
 
 }

@@ -14,6 +14,7 @@
         <item>Speech</item>
         <item>Stock</item>
         <item>Drag Drog</item>
+        <item>ARC</item>
     </string-array>
     <string-array name="birds">
         <item>Eagle</item>

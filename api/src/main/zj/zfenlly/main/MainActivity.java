@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import zj.zfenlly.arc.ArcFragment;
 import zj.zfenlly.mobeta.DragsortFragment;
 import zj.zfenlly.record.MyAlertDialogFragment;
 import zj.zfenlly.tools.R;
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity {
             print("have");
         }
         if (mContent == null)
-            mContent = new DragsortFragment();
+            mContent = new ArcFragment();
         ;//mContent = new ColorFragment(R.color.red, "color");
         // set the Above View
 

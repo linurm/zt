@@ -8,16 +8,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /*
  * Class:     zj_zfenlly_camera_CameraJni
  * Method:    getCLanguageString
  * Signature: ()Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_camera_CameraJni_getCLanguageString
-  (JNIEnv *, jobject);
+JNIEXPORT jstring
+JNICALL Java_zj_zfenlly_camera_CameraJni_getCLanguageString
+        (JNIEnv * , jobject, jstring);
+
 
 #ifdef __cplusplus
 }
 #endif
-
 #endif
