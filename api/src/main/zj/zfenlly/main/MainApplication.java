@@ -2,15 +2,23 @@ package zj.zfenlly.main;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -20,43 +28,124 @@ import java.util.List;
 
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
-import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
 public class MainApplication extends Application implements Observable {
 
-    private List<Observer> mObservers = new ArrayList<Observer>();
-    private final String TAG = this.getClass().getName();
+    public static final String DEVICE_CONFIG_FIND = "DEVICE_CONFIG_FIND";
+    public static final String DEVICE_CONFIG_GET = "DEVICE_CONFIG_GET";
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
+    public static final String DEVICE_WIFI_SCAN_RESULTS = "DEVICE_WIFI_SCAN_RESULTS";
+    public static final String SERVER_PAUSE = "SERVER_PAUSE";
+    private static final int HANDLE_SEND_MULTICAST_FIND = 0;
+    private static String soName = "libjiagu";
 
-    //private boolean server_pause = false;
-    private boolean server_display_run = true;
-    private boolean server_simulation = false;
-
-    private WifiAdmin mWifiAdmin;
-
-    public String SSIDNAME;
-
-    public int port = 9111;
-
-    public static enum APPUpdateParam {
-        AAA
-    }
     static {
         System.loadLibrary("JniCamera");   //defaultConfig.ndk.moduleName
     }
 
-    public static final String DEVICE_CONFIG_FIND = "DEVICE_CONFIG_FIND";
-    public static final String DEVICE_CONFIG_GET = "DEVICE_CONFIG_GET";
-    public static final String DEVICE_WIFI_SCAN_RESULTS = "DEVICE_WIFI_SCAN_RESULTS";
+    private final String TAG = this.getClass().getName();
+    public String SSIDNAME;
+    public int port = 9111;
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
 
-    public static final String SERVER_PAUSE = "SERVER_PAUSE";
+            switch (msg.what) {
+                case HANDLE_SEND_MULTICAST_FIND:
+                    // sendMulticast();
 
-    private void print(String msg) {
-        Log.i(TAG, msg);
-    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+    private List<Observer> mObservers = new ArrayList<Observer>();
+    //private boolean server_pause = false;
+    private boolean server_display_run = true;
+    private boolean server_simulation = false;
+    private WifiAdmin mWifiAdmin;
 
     // private ComponentName mAPService;
+    private List<String> mfinds = new ArrayList<String>();
+
+    public static boolean isSameFile(BufferedInputStream paramBufferedInputStream1, BufferedInputStream paramBufferedInputStream2) {
+        try {
+            int j = paramBufferedInputStream1.available();
+            int i = paramBufferedInputStream2.available();
+            byte[] arrayOfByte1 = null;
+            byte[] arrayOfByte2 = null;
+            if (j == i) {
+                arrayOfByte1 = new byte[j];
+                arrayOfByte2 = new byte[i];
+                paramBufferedInputStream1.read(arrayOfByte1);
+                paramBufferedInputStream2.read(arrayOfByte2);
+                i = 0;
+            }
+            while (i < j) {
+                int k = arrayOfByte1[i];
+                int m = arrayOfByte2[i];
+                if (k != m) {
+                    return false;
+                }
+                i += 1;
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /*public static boolean copy(Context paramContext, String paramString1, String paramString2, String paramString3) {
+        paramString3 = paramString2 + "/" + paramString3;
+        File paramS = new File(paramString2);
+        if (!paramS.exists()) {
+            paramS.mkdir();
+        }
+        try {
+            Object localObject = new File(paramString3);
+            if (((File) localObject).exists()) {
+                paramString2 = paramContext.getResources().getAssets().open(paramString1);
+                localObject = new FileInputStream((File) localObject);
+                BufferedInputStream localBufferedInputStream1 = new BufferedInputStream(paramString2);
+                BufferedInputStream localBufferedInputStream2 = new BufferedInputStream((InputStream) localObject);
+                if (isSameFile(localBufferedInputStream1, localBufferedInputStream2)) {
+                    paramString2.close();
+                    ((InputStream) localObject).close();
+                    localBufferedInputStream1.close();
+                    localBufferedInputStream2.close();
+                    return true;
+                }
+            }
+            paramContext = paramContext.getResources().getAssets().open(paramString1);
+            paramString1 = new FileOutputStream(paramString3);
+            paramString2 = new byte['ᰀ'];
+            for (; ; ) {
+                int i = paramContext.read(paramString2);
+                if (i <= 0) {
+                    break;
+                }
+                paramString1.write(paramString2, 0, i);
+            }
+            paramString1.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        paramContext.close();
+        return true;
+    }*/
+
+    private void print(String msg) {
+        Log.e(TAG, msg);
+    }
 
     public synchronized void addObserver(Observer obs) {
         print("addObserver(" + obs + ")");
@@ -64,6 +153,32 @@ public class MainApplication extends Application implements Observable {
             mObservers.add(obs);
         }
     }
+
+    /*protected void attachBaseContext(Context paramContext) {
+        super.attachBaseContext(paramContext);
+        print("attachBaseContext");
+
+        context = paramContext;
+        String str;
+        Object localObject;
+        if (newApp == null) {
+            str = paramContext.getFilesDir().getAbsolutePath();
+            Boolean localBoolean = isX86Arch();
+            localObject = Boolean.valueOf(false);
+            if ((Build.CPU_ABI.contains("arm64")) || (Build.CPU_ABI2.contains("arm64"))) {
+                localObject = Boolean.valueOf(true);
+            }
+            if (!localBoolean.booleanValue()) {
+                break label290;
+            }
+            copy(paramContext, soName + "_x86.so", str, soName + ".so");
+            if (!((Boolean) localObject).booleanValue()) {
+                break label343;
+            }
+            copy(paramContext, soName + "_64.so", str, soName + "_64.so");
+            System.load(str + "/" + soName + "_64.so");
+        }
+    }*/
 
     public void startWifi() {
         mWifiAdmin = new WifiAdmin(this);
@@ -85,7 +200,7 @@ public class MainApplication extends Application implements Observable {
 
         super.onCreate();
 
-
+        print("onCreate");
         //appRegister();
 
     }
@@ -95,7 +210,6 @@ public class MainApplication extends Application implements Observable {
         super.onTerminate();
         print("onTerminate");
     }
-
 
     private void appRegister() {
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
@@ -120,25 +234,6 @@ public class MainApplication extends Application implements Observable {
         notifyObservers(DEVICE_WIFI_SCAN_RESULTS);
     }
 
-    private static final int HANDLE_SEND_MULTICAST_FIND = 0;
-
-    @SuppressLint("HandlerLeak")
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            switch (msg.what) {
-                case HANDLE_SEND_MULTICAST_FIND:
-                    // sendMulticast();
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
     public String getLocalHostIp() {
         if (mWifiAdmin == null) return null;
         int ipAddress = mWifiAdmin.getIpAddress();
@@ -160,38 +255,6 @@ public class MainApplication extends Application implements Observable {
             }
         };
         new Thread(networkTask).start();
-    }
-
-    public class Client implements Runnable {
-        private final String SERVERIP = "10.10.10.254";
-        private final int SERVERPORT = 9112;
-
-        @Override
-        public void run() {
-
-            try {
-                InetAddress serverAddr = InetAddress.getByName(SERVERIP);
-                // Log.i(TAG, "Client: Start connecting\n");
-                @SuppressWarnings("resource")
-                DatagramSocket socket = new DatagramSocket();
-                // byte[] buf;
-
-                String localip = getLocalHostIp();
-                String x = "GETUNIQINFO:" + localip + ";"
-                        + String.valueOf(port) + ";" + SERVERIP;
-                Log.i(TAG, "==>  " + x);
-                byte[] buf = x.getBytes();
-                DatagramPacket packet = new DatagramPacket(buf, buf.length,
-                        serverAddr, SERVERPORT);
-                // Log.i(TAG, "Client: Sending ��" + new String(buf) + "��\n");
-                socket.send(packet);
-                // Log.i(TAG, "Client: Message sent\n");
-                // Log.i(TAG, "Client: Succeed!\n");
-            } catch (Exception e) {
-                ;// Log.i(TAG, "Client: Error!\n");
-                e.printStackTrace();
-            }
-        }
     }
 
     public void sendUDP() {
@@ -343,8 +406,6 @@ public class MainApplication extends Application implements Observable {
         notifyObservers(DEVICE_CONFIG_FIND);
     }
 
-    private List<String> mfinds = new ArrayList<String>();
-
     public synchronized List<String> getFinds() {
         return mfinds;
     }
@@ -370,7 +431,6 @@ public class MainApplication extends Application implements Observable {
         return clone;
     }
 
-
     /**
      * When an observer wants to unregister to stop receiving change
      * notifications, it calls here.
@@ -389,11 +449,21 @@ public class MainApplication extends Application implements Observable {
         }
     }
 
+    public synchronized boolean isServerDisplayRun() {
+//        print("is server_display_run:" + (this.server_display_run ? "true" : "false"));
+        return this.server_display_run;
+    }
+
     public synchronized void setServerDisplayRun(boolean Running) {
 
         //this.server_pause = !Running;
         this.server_display_run = Running;
         print("setServerDisplayRun:" + (this.server_display_run ? "true" : "false"));
+    }
+
+    public synchronized boolean isServerSimulation() {
+//        print("is server_simulation:" + (this.server_simulation ? "true" : "false"));
+        return this.server_simulation;
     }
 
     public synchronized void setServerSimulation(boolean Simulaiton) {
@@ -402,15 +472,40 @@ public class MainApplication extends Application implements Observable {
         print("setServerSimulation:" + (this.server_simulation ? "true" : "false"));
     }
 
-    public synchronized boolean isServerDisplayRun() {
-//        print("is server_display_run:" + (this.server_display_run ? "true" : "false"));
-        return this.server_display_run;
+    public static enum APPUpdateParam {
+        AAA
     }
 
+    public class Client implements Runnable {
+        private final String SERVERIP = "10.10.10.254";
+        private final int SERVERPORT = 9112;
 
-    public synchronized boolean isServerSimulation() {
-//        print("is server_simulation:" + (this.server_simulation ? "true" : "false"));
-        return this.server_simulation;
+        @Override
+        public void run() {
+
+            try {
+                InetAddress serverAddr = InetAddress.getByName(SERVERIP);
+                // Log.i(TAG, "Client: Start connecting\n");
+                @SuppressWarnings("resource")
+                DatagramSocket socket = new DatagramSocket();
+                // byte[] buf;
+
+                String localip = getLocalHostIp();
+                String x = "GETUNIQINFO:" + localip + ";"
+                        + String.valueOf(port) + ";" + SERVERIP;
+                Log.i(TAG, "==>  " + x);
+                byte[] buf = x.getBytes();
+                DatagramPacket packet = new DatagramPacket(buf, buf.length,
+                        serverAddr, SERVERPORT);
+                // Log.i(TAG, "Client: Sending ��" + new String(buf) + "��\n");
+                socket.send(packet);
+                // Log.i(TAG, "Client: Message sent\n");
+                // Log.i(TAG, "Client: Succeed!\n");
+            } catch (Exception e) {
+                ;// Log.i(TAG, "Client: Error!\n");
+                e.printStackTrace();
+            }
+        }
     }
 
 

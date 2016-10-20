@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
     }
 }
 //apply plugin: 'com.android.model.application'
@@ -21,13 +21,13 @@ android {
 
     defaultConfig {
 
-        ndk {
+        /*ndk {
             //moduleName "detection_based_tracker"
             moduleName "JniCamera"
             ldLibs "log", "z", "m", "dl"
 
             abiFilters "armeabi-v7a"
-        }
+        }*/
     }
 
     sourceSets {
@@ -38,7 +38,8 @@ android {
             aidl.srcDirs = ['src/main']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
-            jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
+            //jni.srcDirs = ['src/main/jni']//disable automatic ndk-build call
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
