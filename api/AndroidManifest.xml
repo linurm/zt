@@ -51,6 +51,7 @@
         <activity
             android:name="zj.zfenlly.wifi.WifiConfigDialogFragment"
             android:label="@string/wifi_conn_activity"></activity>
+
         <activity
             android:name="zj.zfenlly.wifi.WifiDeviceList"
             android:label="@string/device_config"></activity>

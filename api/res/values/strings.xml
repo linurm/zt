@@ -403,4 +403,6 @@
     <string name="date_widgets_example_pickTime12_text">change the time (12 hour)</string>
     <string name="date_widgets_example_pickTime24_text">change the time (24 hour)</string>
     <string name="date_widgets_example_pickDate_text">change the date</string>
+    <string name="radio1app">winter</string>
+    <string name="radio2app">default</string>
 </resources>

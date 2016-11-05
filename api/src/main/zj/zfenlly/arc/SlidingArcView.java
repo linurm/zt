@@ -161,12 +161,12 @@ public class SlidingArcView extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        print("onLayout: " + l + ":" + t + ":" + r + ":" + b);
+        //print("onLayout: " + l + ":" + t + ":" + r + ":" + b);
     }
 
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        print("onMeasure: " + widthMeasureSpec + ":" + heightMeasureSpec);
+        //print("onMeasure: " + widthMeasureSpec + ":" + heightMeasureSpec);
         //mSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
         //setMeasuredDimension(mSize, mSize);
     }
@@ -180,7 +180,7 @@ public class SlidingArcView extends ViewGroup {
         CentX = ScreenUtils.getScreenW() / 2;
         CentY = ScreenUtils.getScreenH() / 2;
         RADIUS = ScreenUtils.getScreenW();
-        print("CentX:" + CentX + " CentY:" + CentY + " RADIUS:" + RADIUS + " viewTopChange:" + viewTopChange);
+        //print("CentX:" + CentX + " CentY:" + CentY + " RADIUS:" + RADIUS + " viewTopChange:" + viewTopChange);
         for (int i = 0, len = src.length; i < len; i++) {
             View v = new View(getContext());
             v.setBackgroundResource(src[i]);
@@ -196,7 +196,7 @@ public class SlidingArcView extends ViewGroup {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        print("onDraw");
+        //print("onDraw");
         drawBg(canvas);
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
@@ -296,8 +296,6 @@ public class SlidingArcView extends ViewGroup {
                     chooseView = signView;
                     autoScrollX = ScreenUtils.getScreenW() / 2 - signView.centX;
                     handler.sendEmptyMessageDelayed(0, 10);
-
-
                 }
             }
         }

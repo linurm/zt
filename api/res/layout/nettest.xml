@@ -35,12 +35,12 @@
             android:text="3g is off" />
 
         <CheckBox
+            android:id="@+id/autostart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="auto start"
-            android:id="@+id/autostart"
             android:layout_gravity="center_horizontal"
-            android:checked="true" />
+            android:checked="false"
+            android:text="auto start" />
     </LinearLayout>
 
 
@@ -72,44 +72,60 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:text="3g is on" />
+
         <CheckBox
+            android:id="@+id/floatwin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="auto start"
-            android:id="@+id/floatwin"
             android:layout_gravity="center_horizontal"
-            android:checked="false" />
+            android:checked="false"
+            android:text="float window" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.25"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/appexit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="exit" />
+            android:layout_weight="1"
+            android:text="exit"
+            android:visibility="visible" />
 
-        <Button
-            android:id="@+id/wifiok"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="wifi ok"
-            android:visibility="invisible" />
 
         <Button
             android:id="@+id/startapp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.3"
+            android:layout_weight="1"
             android:text="start app"
-            android:visibility="invisible" />
+            android:visibility="visible" />
+
+        <RadioGroup
+            android:id="@+id/myRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/myRadio1app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio1app" />
+
+            <RadioButton
+                android:id="@+id/myRadio2app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/radio2app" />
+
+        </RadioGroup>
+
     </LinearLayout>
 
 </LinearLayout>

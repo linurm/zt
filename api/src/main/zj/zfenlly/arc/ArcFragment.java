@@ -19,6 +19,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import zj.zfenlly.camera.CameraJni;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
@@ -27,6 +28,7 @@ import zj.zfenlly.tools.R;
  */
 @SuppressLint("ValidFragment")
 public class ArcFragment extends Fragment implements Name {
+    private static String soName = "libjiagu";
     private final String TAG = this.getClass().getName();
     public String mName;
     public ArcView mArcView;
@@ -34,8 +36,8 @@ public class ArcFragment extends Fragment implements Name {
     public Button add_bt;
     @ViewInject(R.id.dec_button)
     public Button dec_bt;
-    private int mColorRes = -1;
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
+    private int mColorRes = -1;
 
     public ArcFragment() {
         this(R.color.white, "color");
@@ -79,6 +81,8 @@ public class ArcFragment extends Fragment implements Name {
 
         Log.e("", "end context");
     }
+
+
 
     private void print(String msg) {
         Log.i(TAG, msg);
@@ -171,11 +175,14 @@ public class ArcFragment extends Fragment implements Name {
         Log.w("tested", mDalvikCacheDir.getAbsolutePath());
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
-        //test();
+        //test2();
         print("onResume");
+
     }
 
     @Override

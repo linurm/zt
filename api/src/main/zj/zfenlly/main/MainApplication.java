@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -26,6 +26,7 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.List;
 
+import zj.zfenlly.camera.CameraJni;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
 import zj.zfenlly.wifi.WifiAdmin;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements Observable {
     public static final String DEVICE_WIFI_SCAN_RESULTS = "DEVICE_WIFI_SCAN_RESULTS";
     public static final String SERVER_PAUSE = "SERVER_PAUSE";
     private static final int HANDLE_SEND_MULTICAST_FIND = 0;
+    static private final String STAG = "zj Application";
     private static String soName = "libjiagu";
 
     static {
@@ -103,45 +105,50 @@ public class MainApplication extends Application implements Observable {
         return false;
     }
 
-    /*public static boolean copy(Context paramContext, String paramString1, String paramString2, String paramString3) {
-        paramString3 = paramString2 + "/" + paramString3;
+    public static boolean copy(Context paramContext, String paramString1, String paramString2, String paramString3) {
+        String paramString4 = paramString2 + "/" + paramString3;
+        InputStream strs;
+        InputStream isstr;
         File paramS = new File(paramString2);
         if (!paramS.exists()) {
             paramS.mkdir();
         }
         try {
-            Object localObject = new File(paramString3);
+            Object localObject = new File(paramString4);
             if (((File) localObject).exists()) {
-                paramString2 = paramContext.getResources().getAssets().open(paramString1);
+                strs = paramContext.getResources().getAssets().open(paramString1);
                 localObject = new FileInputStream((File) localObject);
-                BufferedInputStream localBufferedInputStream1 = new BufferedInputStream(paramString2);
+                BufferedInputStream localBufferedInputStream1 = new BufferedInputStream(strs);
                 BufferedInputStream localBufferedInputStream2 = new BufferedInputStream((InputStream) localObject);
                 if (isSameFile(localBufferedInputStream1, localBufferedInputStream2)) {
-                    paramString2.close();
+                    strs.close();
                     ((InputStream) localObject).close();
                     localBufferedInputStream1.close();
                     localBufferedInputStream2.close();
+                    Log.e(STAG, "is the Same file");
                     return true;
                 }
+                strs.close();
             }
-            paramContext = paramContext.getResources().getAssets().open(paramString1);
-            paramString1 = new FileOutputStream(paramString3);
-            paramString2 = new byte['ᰀ'];
+            isstr = paramContext.getResources().getAssets().open(paramString1);
+            OutputStream opstr = new FileOutputStream(paramString4);
+            byte[] abs = new byte['ᰀ'];
             for (; ; ) {
-                int i = paramContext.read(paramString2);
+                int i = isstr.read(abs);
                 if (i <= 0) {
                     break;
                 }
-                paramString1.write(paramString2, 0, i);
+                opstr.write(abs, 0, i);
             }
-            paramString1.close();
+            Log.e(STAG, "copy so ");
+            opstr.close();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        paramContext.close();
+        //isstr.close();
         return true;
-    }*/
+    }
 
     private void print(String msg) {
         Log.e(TAG, msg);
@@ -154,31 +161,20 @@ public class MainApplication extends Application implements Observable {
         }
     }
 
-    /*protected void attachBaseContext(Context paramContext) {
+    protected void attachBaseContext(Context paramContext) {
         super.attachBaseContext(paramContext);
         print("attachBaseContext");
+        //String str = paramContext.getFilesDir().getAbsolutePath();
+        //Context context = paramContext;
 
-        context = paramContext;
-        String str;
-        Object localObject;
-        if (newApp == null) {
-            str = paramContext.getFilesDir().getAbsolutePath();
-            Boolean localBoolean = isX86Arch();
-            localObject = Boolean.valueOf(false);
-            if ((Build.CPU_ABI.contains("arm64")) || (Build.CPU_ABI2.contains("arm64"))) {
-                localObject = Boolean.valueOf(true);
-            }
-            if (!localBoolean.booleanValue()) {
-                break label290;
-            }
-            copy(paramContext, soName + "_x86.so", str, soName + ".so");
-            if (!((Boolean) localObject).booleanValue()) {
-                break label343;
-            }
-            copy(paramContext, soName + "_64.so", str, soName + "_64.so");
-            System.load(str + "/" + soName + "_64.so");
-        }
-    }*/
+        //copy(context, soName + ".so", str, soName + "_copy.so");
+        //test2(str + "/" + soName + "_copy.so");
+    }
+
+    public void test2(String a) {
+        CameraJni camerajni = new CameraJni();
+        print("sssssssss:" + camerajni.getCLanguageString(a));
+    }
 
     public void startWifi() {
         mWifiAdmin = new WifiAdmin(this);

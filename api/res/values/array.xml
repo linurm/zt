@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
+    <string-array name="department">
+        <item>IT</item>
+        <item>Commerce</item>
+        <item>HR</item>
+    </string-array>
+    <string-array name="department_value">
+        <item>001</item>
+        <item>002</item>
+        <item>003</item>
+    </string-array>
     <string-array name="color_names">
         <item>Red</item>
         <item>Camera</item>
