@@ -8,7 +8,6 @@ android {
     compileSdkVersion 23
     buildToolsVersion '24.0.2'
 
-    //useLibrary 'org.apache.http.legacy'
     useLibrary 'org.apache.http.legacy'
     sourceSets {
         main {
