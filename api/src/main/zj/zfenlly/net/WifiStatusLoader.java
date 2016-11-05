@@ -2,7 +2,6 @@ package zj.zfenlly.net;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 import zj.zfenlly.tools.R;
 
@@ -15,6 +14,7 @@ public class WifiStatusLoader {
     private FloatView mFloatView;
     private boolean isStartApp = false;
     private Activity theActivity;
+    private int selectId = 1;
 
     private WifiStatusLoader(Context context) {
         mContext = context;
@@ -31,9 +31,10 @@ public class WifiStatusLoader {
         mFloatView = fv;
     }
 
-    public void setIsStartAPP(Activity act) {
+    public void setIsStartAPP(Activity act, int id) {
         isStartApp = true;
         theActivity = act;
+        selectId = id;
     }
 
 
@@ -59,7 +60,7 @@ public class WifiStatusLoader {
 
         if (isStartApp) {
             isStartApp = false;
-            OtherAPP.startActivity(theActivity);
+            OtherAPP.startActivity2(theActivity, selectId);
         }
     }
 

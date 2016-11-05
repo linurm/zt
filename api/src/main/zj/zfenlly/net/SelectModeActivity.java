@@ -3,6 +3,7 @@ package zj.zfenlly.net;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,11 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.lidroid.xutils.view.annotation.event.OnCompoundButtonCheckedChange;
+import com.lidroid.xutils.view.annotation.event.OnRadioGroupCheckedChange;
 
 import java.lang.reflect.Method;
 
@@ -44,15 +48,28 @@ public class SelectModeActivity extends Activity {
     public Button wifion_btn;
     @ViewInject(R.id.wifioff)
     public Button wifioff_btn;
-    @ViewInject(R.id.wifiok)
-    public Button wifiok_btn;
+    @ViewInject(R.id.myRadioGroup)
+    public RadioGroup mRadioGroup;
     @ViewInject(R.id.startapp)
     public Button startApp_btn;
     @ViewInject(R.id.autostart)
     public CheckBox autostart;
+    @ViewInject(R.id.myRadio1app)
+    public RadioButton mRB1app;
+    @ViewInject(R.id.myRadio2app)
+    public RadioButton mRB2app;
     private boolean mAutoStart = false;
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
+    private int selectId = 1;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        onTheCreate(savedInstanceState);
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -79,9 +96,7 @@ public class SelectModeActivity extends Activity {
         return (isAirplaneMode == 1) ? true : false;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    void onTheCreate(Bundle savedInstanceState) {
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -137,11 +152,9 @@ public class SelectModeActivity extends Activity {
         if (mWifiAdmin.isWifiEnabled()) {
             wifioff_btn.setVisibility(View.VISIBLE);
             wifion_btn.setVisibility(View.INVISIBLE);
-            wifiok_btn.setVisibility(View.INVISIBLE);
         } else {
             wifioff_btn.setVisibility(View.INVISIBLE);
             wifion_btn.setVisibility(View.VISIBLE);
-            wifiok_btn.setVisibility(View.VISIBLE);
         }
         if (getMobileNet()) {
             net3gon.setVisibility(View.INVISIBLE);
@@ -149,6 +162,29 @@ public class SelectModeActivity extends Activity {
         } else {
             net3gon.setVisibility(View.VISIBLE);
             net3goff.setVisibility(View.INVISIBLE);
+        }
+
+        //mAutoStart = autostart.isChecked();
+        if (getGuaAutoStart().equals("true")) {
+            mAutoStart = true;
+            autostart.setChecked(true);
+        } else {
+            mAutoStart = false;
+            autostart.setChecked(false);
+        }
+        Log.e(TAG, "start check: " + (mAutoStart ? "true" : "false"));
+
+        selectId = getStartAppNumber();
+
+        if (selectId == 1) {
+            mRB1app.setChecked(true);
+            mRB2app.setChecked(false);
+        } else if (selectId == 2) {
+            mRB2app.setChecked(true);
+            mRB1app.setChecked(false);
+        } else {
+            mRB1app.setChecked(false);
+            mRB2app.setChecked(false);
         }
     }
 
@@ -163,9 +199,10 @@ public class SelectModeActivity extends Activity {
 
     public void openWifiAndStartAPP() {
         if (mWifiAdmin.openWifi()) {
-            OtherAPP.setWillStartAPP(this);
+            OtherAPP.setWillStartAPP(this, selectId);
         } else {
-            OtherAPP.startOtherActivity(this);
+            Log.e(TAG, "startOtherActivity selectId: " + selectId);
+            OtherAPP.startOtherActivity(this, selectId);
         }
     }
 
@@ -272,13 +309,30 @@ public class SelectModeActivity extends Activity {
     @OnClick(R.id.wifioff)
     public void wifiOff(View v) {
         mWifiAdmin.closeWifi();
-        OtherAPP.startOtherActivity(this);
+        OtherAPP.startOtherActivity(this, selectId);
+    }
+
+    @OnRadioGroupCheckedChange(R.id.myRadioGroup)
+    public void radioGroup(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.myRadio1app:
+                selectId = 1;
+                break;
+            case R.id.myRadio2app:
+                selectId = 2;
+                break;
+            default:
+                selectId = getStartAppNumber();
+                break;
+        }
+        Log.e(TAG, "selectId: " + selectId);
+        setStartAppNumber(selectId);
     }
 
     @OnClick(R.id.startapp)
     public void startApp(View v) {
 
-        mAutoStart = autostart.isChecked();
+        //mAutoStart = autostart.isChecked();
         openWifiAndStartAPP();
         //finish();
     }
@@ -288,18 +342,42 @@ public class SelectModeActivity extends Activity {
         openWifiAndStartAPP();
     }
 
-    @OnClick(R.id.wifiok)
-    public void wifiOk(View v) {
-        mWifiAdmin.openWifi();
-        finish();
-    }
 
     @OnCompoundButtonCheckedChange(R.id.autostart)
     public void autoStart(CompoundButton buttonView,
                           boolean isChecked) {
-
         mAutoStart = isChecked;
+        Log.e(TAG, "set check: " + (isChecked ? "true" : "false"));
+        setGuaAutoStart(mAutoStart);
+    }
 
+    int getStartAppNumber() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getInt("app_num", 1);
+    }
+
+    void setStartAppNumber(int n) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putInt("app_num", n);
+        editor.commit();
+    }
+
+    String getGuaAutoStart() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getString("autostart", "false");
+    }
+
+    void setGuaAutoStart(boolean autostart) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString("autostart", autostart ? "true" : "false");
+        editor.putString("reverse", "nouse");
+        editor.commit();
     }
 
     @OnCompoundButtonCheckedChange(R.id.floatwin)
@@ -312,5 +390,8 @@ public class SelectModeActivity extends Activity {
             Intent intent = new Intent(this, FloatWinService.class);
             stopService(intent);
         }
+
     }
+
+
 }

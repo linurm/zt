@@ -251,8 +251,7 @@ public class RecordFragment extends Fragment implements Name {
             mWBDataAdapter.setAliases(DataBaseImpl.WBDataBaseOp.getListWB(getActivity()));
         }
 
-        CameraJni camerajni = new CameraJni();
-        print("" + camerajni.getCLanguageString("123456"));
+
     }
 
     @Override

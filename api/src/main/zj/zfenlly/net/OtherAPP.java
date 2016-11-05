@@ -10,38 +10,32 @@ import android.content.Intent;
  */
 public class OtherAPP {
 
-    static void setWillStartAPP(Activity act){
-//        Intent mIntent = new Intent("zj.zfenlly.net.openwifi.startAct");
-//        act.sendBroadcast(mIntent);
+    static void setWillStartAPP(Activity act, int id) {
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
-        mWifiStatusLoader.setIsStartAPP(act);
-
-    }
-    static void startOtherActivity(Activity act) {
-//        Intent intent = new Intent();
-//        intent.setClass(this, MainActivity.class);
-//        startActivity(intent);
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        ComponentName cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
-        //ComponentName cn = new ComponentName("zj.zfenlly.tools", "zj.zfenlly.main.MainActivity");
-        //ComponentName cn = new ComponentName("com.android.tools.sdkcontroller", "com.android.tools.sdkcontroller.activities.MainActivity");
-        intent.setComponent(cn);
-
-        act.startActivity(intent);
+        mWifiStatusLoader.setIsStartAPP(act, id);
     }
 
-    public static void startActivity(Context mContext) {
-//        Intent intent = new Intent();
-//        intent.setClass(this, MainActivity.class);
-//        startActivity(intent);
+    static void startOtherActivity(Activity act, int select_id) {
+        act.startActivity(prepareIntent(select_id));
+    }
+
+    static Intent prepareIntent(int id) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        ComponentName cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
-        //ComponentName cn = new ComponentName("zj.zfenlly.tools", "zj.zfenlly.main.MainActivity");
-        //ComponentName cn = new ComponentName("com.android.tools.sdkcontroller", "com.android.tools.sdkcontroller.activities.MainActivity");
+        ComponentName cn = null;
+        if (id == 1) {
+            cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
+        } else if (id == 2) {
+            //ComponentName cn = new ComponentName("zj.zfenlly.tools", "zj.zfenlly.main.MainActivity");
+            cn = new ComponentName("com.teamlava.castlestory", "com.teamlava.castlestory.Main");
+        }
         intent.setComponent(cn);
 
-        mContext.startActivity(intent);
+
+        return intent;
+    }
+
+    public static void startActivity2(Context mContext, int id) {
+        mContext.startActivity(prepareIntent(id));
     }
 }
