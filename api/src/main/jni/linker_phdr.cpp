@@ -36,7 +36,7 @@
 #include <android/log.h>
 
 #define TAG    "JNI" // 这个是自定义的LOG的标识
-#define DL_ERR(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__) // 定义LOGD类型
+#define DL_DBG(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__) // 定义LOGD类型
 #define DL_ERR(...)  __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__) // 定义LOGD类型
 /**
   TECHNICAL NOTE ON ELF LOADING.
