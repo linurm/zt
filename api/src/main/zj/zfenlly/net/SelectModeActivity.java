@@ -34,6 +34,8 @@ public class SelectModeActivity extends Activity {
     private static final int FLAG_START_ACTIVITY = 0x2;
     private static final int FLAG_EXIT = 0x1;
     private final String TAG = "SelectModeActivity";
+    @ViewInject(R.id.floatwin)
+    public CheckBox floatWin;
     @ViewInject(R.id.airplane1)
     public Button airplane1_btn;
     @ViewInject(R.id.airplane2)
@@ -172,6 +174,17 @@ public class SelectModeActivity extends Activity {
             mAutoStart = false;
             autostart.setChecked(false);
         }
+        if (getGuaFloatWin().equals("true")) {
+            //mAutoStart = true;
+            startFloatWinAndSet();
+            floatWin.setChecked(true);
+        } else {
+            //mAutoStart = false;
+            stopFloatWin();
+            floatWin.setChecked(false);
+        }
+
+
         Log.e(TAG, "start check: " + (mAutoStart ? "true" : "false"));
 
         selectId = getStartAppNumber();
@@ -304,6 +317,7 @@ public class SelectModeActivity extends Activity {
     @OnClick(R.id.appexit)
     public void airplaneModeAndExit(View v) {
         finish();
+        stopFloatWin();
     }
 
     @OnClick(R.id.wifioff)
@@ -380,16 +394,48 @@ public class SelectModeActivity extends Activity {
         editor.commit();
     }
 
+    String getGuaFloatWin() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getString("floatwin", "false");
+    }
+
+    void setGuaFloatWin(boolean floatWin) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString("floatwin", floatWin ? "true" : "false");
+        editor.putString("reverse", "nouse");
+        editor.commit();
+    }
+
     @OnCompoundButtonCheckedChange(R.id.floatwin)
     public void floatWin(CompoundButton buttonView,
                          boolean isChecked) {
         if (isChecked) {
-            Intent intent = new Intent(this, FloatWinService.class);
-            startService(intent);
+            startFloatWinAndSet();
         } else {
-            Intent intent = new Intent(this, FloatWinService.class);
-            stopService(intent);
+            stopFloatWinAndSet();
         }
+    }
+    private void startFloatWin(){
+        Intent intent = new Intent(this, FloatWinService.class);
+        startService(intent);
+    }
+
+    private void startFloatWinAndSet() {
+        startFloatWin();
+        setGuaFloatWin(true);
+    }
+
+    private void stopFloatWinAndSet(){
+        stopFloatWin();
+        setGuaFloatWin(false);
+    }
+
+    private void stopFloatWin() {
+        Intent intent = new Intent(this, FloatWinService.class);
+        stopService(intent);
 
     }
 
