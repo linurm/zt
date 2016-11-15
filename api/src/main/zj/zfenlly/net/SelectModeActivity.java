@@ -170,21 +170,16 @@ public class SelectModeActivity extends Activity {
         if (getGuaAutoStart().equals("true")) {
             mAutoStart = true;
             autostart.setChecked(true);
-        } else {
-            mAutoStart = false;
-            autostart.setChecked(false);
-        }
-        if (getGuaFloatWin().equals("true")) {
-            //mAutoStart = true;
             startFloatWinAndSet();
             floatWin.setChecked(true);
         } else {
-            //mAutoStart = false;
-            stopFloatWin();
-            floatWin.setChecked(false);
+            mAutoStart = false;
+            autostart.setChecked(false);
+            if (!getGuaFloatWin().equals("true")) {
+                startFloatWinAndSet();
+                floatWin.setChecked(true);
+            }
         }
-
-
         Log.e(TAG, "start check: " + (mAutoStart ? "true" : "false"));
 
         selectId = getStartAppNumber();
@@ -418,7 +413,8 @@ public class SelectModeActivity extends Activity {
             stopFloatWinAndSet();
         }
     }
-    private void startFloatWin(){
+
+    private void startFloatWin() {
         Intent intent = new Intent(this, FloatWinService.class);
         startService(intent);
     }
@@ -428,7 +424,7 @@ public class SelectModeActivity extends Activity {
         setGuaFloatWin(true);
     }
 
-    private void stopFloatWinAndSet(){
+    private void stopFloatWinAndSet() {
         stopFloatWin();
         setGuaFloatWin(false);
     }
