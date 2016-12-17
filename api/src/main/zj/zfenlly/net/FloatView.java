@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * Created by Administrator on 2016/8/17.
@@ -18,6 +19,19 @@ public class FloatView extends ImageView {
     private float y;
     private float mStartX;
     private float mStartY;
+    private boolean bClickable;
+    private OnClickListener mClickListener;
+    private LinearLayout mLinearLayout;
+    private WindowManager windowManager = null;
+    // 此windowManagerParams变量为获取的全局变量，用以保存悬浮窗口的属性
+    private WindowManager.LayoutParams windowManagerParams;
+
+    public FloatView(Context context, LinearLayout mLinearLayout, WindowManager mWindowManager, WindowManager.LayoutParams wmParams) {
+        super(context);
+        this.windowManager = mWindowManager;
+        this.mLinearLayout = mLinearLayout;
+        this.windowManagerParams = wmParams;
+    }
 
     public boolean isbClickable() {
         return bClickable;
@@ -26,19 +40,6 @@ public class FloatView extends ImageView {
     public void setbClickable(boolean bClickable) {
         this.bClickable = bClickable;
     }
-
-    private boolean bClickable;
-    private OnClickListener mClickListener;
-    private WindowManager windowManager = (WindowManager) getContext()
-            .getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-    // 此windowManagerParams变量为获取的全局变量，用以保存悬浮窗口的属性
-    private WindowManager.LayoutParams windowManagerParams;
-
-    public FloatView(Context context, WindowManager.LayoutParams wmParams) {
-        super(context);
-        windowManagerParams = wmParams;
-    }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -97,7 +98,7 @@ public class FloatView extends ImageView {
             // 更新浮动窗口位置参数
             windowManagerParams.x = (int) (x - mTouchX);
             windowManagerParams.y = (int) (y - mTouchY);
-            windowManager.updateViewLayout(this, windowManagerParams); // 刷新显示
+            this.windowManager.updateViewLayout(this.mLinearLayout, this.windowManagerParams); // 刷新显示
         }
     }
 

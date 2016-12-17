@@ -1,7 +1,9 @@
 package zj.zfenlly.net;
 
+import android.app.AlarmManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
@@ -12,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
@@ -24,13 +28,13 @@ public class FloatWinService extends Service {
     private static final String TAG = "FloatWinService";
     LinearLayout mFloatLayout;
     WindowManager.LayoutParams wmParams;
-    // ���������������ò��ֲ����Ķ���
     WindowManager mWindowManager;
     Button mFloatView;
     private FloatView floatView = null;
     private BroadcastReceiver wifiReceiver;
     //Button mRecentView;
     private WifiAdmin mWifiAdmin = null;
+
 
     @Override
     public void onCreate() {
@@ -40,7 +44,7 @@ public class FloatWinService extends Service {
         // Toast.makeText(FxService.this, "create FxService",
         // Toast.LENGTH_LONG);
         mWifiAdmin = new WifiAdmin(this);
-        createView2();
+        createView2(this);
 
 
     }
@@ -51,7 +55,41 @@ public class FloatWinService extends Service {
         return null;
     }
 
-    private void createView2() {
+    private void initViewBox(Context context) {
+        mFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mFloatLayoutLP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mFloatLayout.setLayoutParams(mFloatLayoutLP);
+        mFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+//        floatView = new FloatButton(context);
+//        LinearLayout.LayoutParams floatViewLp = new LinearLayout.LayoutParams(
+//                MetricUtil.getDip(context, 50), MetricUtil.getDip(context, 50));
+//        floatView.setLayoutParams(floatViewLp);
+//        mFloatLayout.addView(floatView);
+    }
+
+    void setTimeAfter30Minites() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(c.getTimeInMillis() + 1795000);//10second
+        long when = c.getTimeInMillis();
+
+        if (when / 1000 < Integer.MAX_VALUE) {
+            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
+        }
+    }
+
+    void setTimeBefore30Minites() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(c.getTimeInMillis() - 1795000);//10second
+        long when = c.getTimeInMillis();
+
+        if (when / 1000 < Integer.MAX_VALUE) {
+            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
+        }
+    }
+
+    private void createView2(Context mContext) {
 
         // 获取WindowManager
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(getApplicationContext().WINDOW_SERVICE);
@@ -82,7 +120,12 @@ public class FloatWinService extends Service {
         // 显示myFloatView图像
 
 
-        floatView = new FloatView(getApplicationContext(), wmParams);
+        initViewBox(mContext);
+
+//        mWindowManager.addView(mFloatLayout, wmParams);
+
+
+        floatView = new FloatView(getApplicationContext(),mFloatLayout, mWindowManager, wmParams);
         floatView.setbClickable(true);
         floatView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,10 +153,34 @@ public class FloatWinService extends Service {
         } else {
             floatView.setImageResource(R.drawable.wifi_off);
         }
+        Button add = new Button(this);
+        add.setText("+");
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTimeAfter30Minites();
+            }
+        });
+        Button dec = new Button(this);
+        dec.setText("-");
+
+        dec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                setTimeBefore30Minites();
+            }
+        });
+        //mWindowManager.addView(add, wmParams);
+        mFloatLayout.addView(dec);
+        mFloatLayout.addView(floatView);
+        mFloatLayout.addView(add);
+
 
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(this);
         mWifiStatusLoader.setRecentsPanel(floatView);
-        mWindowManager.addView(floatView, wmParams);
+
+        mWindowManager.addView(mFloatLayout, wmParams);
 
     }
 

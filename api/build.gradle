@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
     }
 }
 //apply plugin: 'com.android.model.application'
@@ -12,7 +12,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
