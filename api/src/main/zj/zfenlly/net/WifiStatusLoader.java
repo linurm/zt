@@ -37,6 +37,10 @@ public class WifiStatusLoader {
         selectId = id;
     }
 
+    public void setIsStopAPP() {
+        isStartApp = false;
+    }
+
 
     public void WifiDisableDisplay() {
         if (mFloatView != null) {

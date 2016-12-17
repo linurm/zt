@@ -34,7 +34,8 @@ public class FloatWinService extends Service {
     private BroadcastReceiver wifiReceiver;
     //Button mRecentView;
     private WifiAdmin mWifiAdmin = null;
-
+    private Button add;
+    private Button dec;
 
     @Override
     public void onCreate() {
@@ -90,12 +91,10 @@ public class FloatWinService extends Service {
     }
 
     private void createView2(Context mContext) {
-
         // 获取WindowManager
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(getApplicationContext().WINDOW_SERVICE);
         // 设置LayoutParams(全局变量）相关参数
         wmParams = new WindowManager.LayoutParams();
-
         wmParams.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
         wmParams.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
         // 设置Window flag
@@ -118,29 +117,22 @@ public class FloatWinService extends Service {
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         // 显示myFloatView图像
-
-
         initViewBox(mContext);
-
-//        mWindowManager.addView(mFloatLayout, wmParams);
-
-
-        floatView = new FloatView(getApplicationContext(),mFloatLayout, mWindowManager, wmParams);
+        floatView = new FloatView(getApplicationContext(), mFloatLayout, mWindowManager, wmParams);
         floatView.setbClickable(true);
         floatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View var1) {
-
                 //floatView.setEnabled(false);
                 if (floatView.isbClickable()) {
                     Log.e("click", "click");
                     floatView.setbClickable(false);
                     if (mWifiAdmin.isWifiEnabled()) {
                         mWifiAdmin.closeWifi();
-                        Toast.makeText(FloatWinService.this, "close wifi", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FloatWinService.this, "close wifi", Toast.LENGTH_SHORT).show();
                     } else {
                         mWifiAdmin.openWifi();
-                        Toast.makeText(FloatWinService.this, "open wifi", Toast.LENGTH_LONG).show();
+                        Toast.makeText(FloatWinService.this, "open wifi", Toast.LENGTH_SHORT).show();
                     }
                 }
                 //return true;
@@ -153,22 +145,26 @@ public class FloatWinService extends Service {
         } else {
             floatView.setImageResource(R.drawable.wifi_off);
         }
-        Button add = new Button(this);
+        add = new Button(this);
         add.setText("+");
+        add.setBackgroundResource(R.drawable.button_shape);
+        add.setTextColor(getResources().getColor(R.color.abs__background_holo_dark));
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setTimeAfter30Minites();
+                Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
             }
         });
-        Button dec = new Button(this);
+        dec = new Button(this);
         dec.setText("-");
-
+        dec.setBackgroundResource(R.drawable.button_shape);
+        dec.setTextColor(getResources().getColor(R.color.abs__background_holo_dark));
         dec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 setTimeBefore30Minites();
+                Toast.makeText(FloatWinService.this, "-30m", Toast.LENGTH_SHORT).show();
             }
         });
         //mWindowManager.addView(add, wmParams);
@@ -190,7 +186,8 @@ public class FloatWinService extends Service {
         // TODO Auto-generated method stub
         super.onDestroy();
         //if (mFloatLayout != null) {
-        mWindowManager.removeView(floatView);
+        mFloatLayout.removeAllViews();
+        mWindowManager.removeView(mFloatLayout);
         //}
     }
 

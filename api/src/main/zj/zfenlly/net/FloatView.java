@@ -17,6 +17,9 @@ public class FloatView extends ImageView {
     private float mTouchY;
     private float x;
     private float y;
+    private Long t_down;
+    private Long t_up;
+
     private float mStartX;
     private float mStartY;
     private boolean bClickable;
@@ -46,12 +49,12 @@ public class FloatView extends ImageView {
         //获取到状态栏的高度
         Rect frame = new Rect();
         getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top - 48;
+        int statusBarHeight = frame.top;// - 48;
         //System.out.println("statusBarHeight:" + statusBarHeight);
         // 获取相对屏幕的坐标，即以屏幕左上角为原点
-        x = event.getRawX();
+        x = event.getRawX() - 96;
         y = event.getRawY() - statusBarHeight; // statusBarHeight是系统状态栏的高度
-        Log.i("tag", "currX " + x + "==== currY " + y);
+        Log.i("tag", "currX " + x + "==== currY " + y + " " + frame.top + " " + frame.bottom);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: // 捕获手指触摸按下动作
                 // 获取相对View的坐标，即以此View左上角为原点
@@ -60,9 +63,10 @@ public class FloatView extends ImageView {
                 mStartX = x;
                 mStartY = y;
                 i = 0;
+                t_down = System.currentTimeMillis();
                 Log.e("tag", "frame:" + frame.toString());
                 Log.e("tag", "down:[ " + x + ", "
-                        + y + "]");
+                        + y + "] t_down " + t_down);
                 break;
 
             case MotionEvent.ACTION_MOVE: // 捕获手指触摸移动动作
@@ -75,11 +79,18 @@ public class FloatView extends ImageView {
             case MotionEvent.ACTION_UP: // 捕获手指触摸离开动作
                 updateViewPosition();
                 mTouchX = mTouchY = 0;
+                t_up = System.currentTimeMillis();
+                //if(t_up-t_down>)
                 Log.e("tag", "up:[" + (x - mStartX) + ", "
-                        + (y - mStartY) + "]");
-                if ((x - mStartX) < 10 && (y - mStartY) < 10) {
-                    if (mClickListener != null) {
-                        mClickListener.onClick(this);
+                        + (y - mStartY) + "] t_up " + "  " + (t_up - t_down));
+                float h = x - mStartX;
+                float v = y - mStartY;
+                if (h < 10 && v < 10 && h > -10 && v > -10) {//move little
+                    Long t = t_up - t_down;
+                    if (t > 50 && t < 500) {//time match
+                        if (mClickListener != null) {
+                            mClickListener.onClick(this);
+                        }
                     }
                 }
                 break;

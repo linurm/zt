@@ -15,8 +15,17 @@ public class OtherAPP {
         mWifiStatusLoader.setIsStartAPP(act, id);
     }
 
+    static void setWillStopAPP(Activity act) {
+        final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
+        mWifiStatusLoader.setIsStopAPP();
+    }
+
     static void startOtherActivity(Activity act, int select_id) {
-        act.startActivity(prepareIntent(select_id));
+        try {
+            act.startActivity(prepareIntent(select_id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static Intent prepareIntent(int id) {

@@ -170,18 +170,19 @@ public class SelectModeActivity extends Activity {
         if (getGuaAutoStart().equals("true")) {
             mAutoStart = true;
             autostart.setChecked(true);
-            startFloatWinAndSet();
+            startFloatWin();
             floatWin.setChecked(true);
         } else {
             mAutoStart = false;
             autostart.setChecked(false);
-            if (!getGuaFloatWin().equals("true")) {
-                startFloatWinAndSet();
-                floatWin.setChecked(true);
-            }
+
+        }
+        if (getGuaFloatWin().equals("true")) {
+            startFloatWin();
+            floatWin.setChecked(true);
         }
         Log.e(TAG, "start check: " + (mAutoStart ? "true" : "false"));
-
+        Log.e(TAG, "floatwin check: " + (getGuaFloatWin().equals("true") ? "true" : "false"));
         selectId = getStartAppNumber();
 
         if (selectId == 1) {
@@ -223,12 +224,15 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+
+
         Log.e(TAG, "onStop wifi activity");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        OtherAPP.setWillStopAPP(this);
         Log.e(TAG, "onDestroy wifi activity");
     }
 
@@ -422,11 +426,13 @@ public class SelectModeActivity extends Activity {
     private void startFloatWinAndSet() {
         startFloatWin();
         setGuaFloatWin(true);
+        floatWin.setChecked(true);
     }
 
     private void stopFloatWinAndSet() {
         stopFloatWin();
         setGuaFloatWin(false);
+        floatWin.setChecked(false);
     }
 
     private void stopFloatWin() {

@@ -10,7 +10,6 @@ import android.view.View;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import zj.zfenlly.arc.ArcFragment;
-import zj.zfenlly.mobeta.DragsortFragment;
 import zj.zfenlly.record.MyAlertDialogFragment;
 import zj.zfenlly.tools.R;
 
