@@ -53,7 +53,7 @@ public class FloatView extends ImageView {
         //System.out.println("statusBarHeight:" + statusBarHeight);
         // 获取相对屏幕的坐标，即以屏幕左上角为原点
         x = event.getRawX() - 96;
-        y = event.getRawY() - statusBarHeight; // statusBarHeight是系统状态栏的高度
+        y = event.getRawY() - statusBarHeight-200; // statusBarHeight是系统状态栏的高度
         Log.i("tag", "currX " + x + "==== currY " + y + " " + frame.top + " " + frame.bottom);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: // 捕获手指触摸按下动作

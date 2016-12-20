@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -27,6 +28,8 @@ public class FloatWinService extends Service {
 
     private static final String TAG = "FloatWinService";
     LinearLayout mFloatLayout;
+    LinearLayout mUpFloatLayout;
+    LinearLayout mDownFloatLayout;
     WindowManager.LayoutParams wmParams;
     WindowManager mWindowManager;
     Button mFloatView;
@@ -34,6 +37,7 @@ public class FloatWinService extends Service {
     private BroadcastReceiver wifiReceiver;
     //Button mRecentView;
     private WifiAdmin mWifiAdmin = null;
+    private TextView dtime;
     private Button add;
     private Button dec;
 
@@ -62,7 +66,22 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mFloatLayout.setLayoutParams(mFloatLayoutLP);
-        mFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mFloatLayout.setOrientation(LinearLayout.VERTICAL);
+
+        mUpFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
+        mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        mDownFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mDownFloatLayoutLP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mDownFloatLayout.setLayoutParams(mDownFloatLayoutLP);
+        mDownFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+
 //        floatView = new FloatButton(context);
 //        LinearLayout.LayoutParams floatViewLp = new LinearLayout.LayoutParams(
 //                MetricUtil.getDip(context, 50), MetricUtil.getDip(context, 50));
@@ -80,9 +99,29 @@ public class FloatWinService extends Service {
         }
     }
 
-    void setTimeBefore30Minites() {
+/*    void setTimeBefore30Minites() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(c.getTimeInMillis() - 1795000);//10second
+        long when = c.getTimeInMillis();
+
+        if (when / 1000 < Integer.MAX_VALUE) {
+            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
+        }
+    }*/
+
+    void setTimeAfter1Hour() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(c.getTimeInMillis() + 3595000);//10second
+        long when = c.getTimeInMillis();
+
+        if (when / 1000 < Integer.MAX_VALUE) {
+            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
+        }
+    }
+
+    void setTimeBefore1Hour() {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(c.getTimeInMillis() - 3595000);//10second
         long when = c.getTimeInMillis();
 
         if (when / 1000 < Integer.MAX_VALUE) {
@@ -147,31 +186,53 @@ public class FloatWinService extends Service {
         }
         add = new Button(this);
         add.setText("+");
+
+        add.setHeight(160);
         add.setBackgroundResource(R.drawable.button_shape);
-        add.setTextColor(getResources().getColor(R.color.abs__background_holo_dark));
+        add.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
         add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTimeAfter1Hour();
+                Toast.makeText(FloatWinService.this, "+1 hour", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dec = new Button(this);
+        dec.setText("-");
+        dec.setHeight(160);
+        dec.setBackgroundResource(R.drawable.button_shape);
+        dec.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        dec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setTimeBefore1Hour();
+                Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
+            }
+        });
+        //mWindowManager.addView(add, wmParams);
+        dtime = new TextView(this);
+
+        dtime.setText("   it is the time click + 30 minites   ");
+        dtime.setHeight(160);
+
+        dtime.setBackgroundResource(R.drawable.button_shape);
+        dtime.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        dtime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setTimeAfter30Minites();
                 Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
             }
         });
-        dec = new Button(this);
-        dec.setText("-");
-        dec.setBackgroundResource(R.drawable.button_shape);
-        dec.setTextColor(getResources().getColor(R.color.abs__background_holo_dark));
-        dec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTimeBefore30Minites();
-                Toast.makeText(FloatWinService.this, "-30m", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //mWindowManager.addView(add, wmParams);
-        mFloatLayout.addView(dec);
-        mFloatLayout.addView(floatView);
-        mFloatLayout.addView(add);
 
+
+        mUpFloatLayout.addView(dtime);
+        mDownFloatLayout.addView(dec);
+        mDownFloatLayout.addView(floatView);
+        mDownFloatLayout.addView(add);
+
+        mFloatLayout.addView(mUpFloatLayout);
+        mFloatLayout.addView(mDownFloatLayout);
 
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(this);
         mWifiStatusLoader.setRecentsPanel(floatView);
