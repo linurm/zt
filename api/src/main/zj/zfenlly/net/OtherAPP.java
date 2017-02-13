@@ -20,7 +20,7 @@ public class OtherAPP {
         mWifiStatusLoader.setIsStopAPP();
     }
 
-    static void startOtherActivity(Activity act, int select_id) {
+    static void startOtherActivity(Context act, int select_id) {
         try {
             act.startActivity(prepareIntent(select_id));
         } catch (Exception e) {

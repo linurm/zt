@@ -1,10 +1,12 @@
 package zj.zfenlly.net;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.util.Log;
@@ -40,6 +42,7 @@ public class FloatWinService extends Service {
     private TextView dtime;
     private Button add;
     private Button dec;
+    private final int DEC_SEC = 5;
 
     @Override
     public void onCreate() {
@@ -91,12 +94,20 @@ public class FloatWinService extends Service {
 
     void setTimeAfter30Minites() {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() + 1795000);//10second
+        c.setTimeInMillis(c.getTimeInMillis() + (30 * 60 - DEC_SEC) * 1000);//30m-4second
         long when = c.getTimeInMillis();
 
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
+
+        OtherAPP.startOtherActivity(this, 1);
+    }
+
+    int getStartAppNumber() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getInt("app_num", 1);
     }
 
 /*    void setTimeBefore30Minites() {
@@ -111,17 +122,18 @@ public class FloatWinService extends Service {
 
     void setTimeAfter1Hour() {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() + 3595000);//10second
+        c.setTimeInMillis(c.getTimeInMillis() + (60 * 60 - DEC_SEC * 2) * 1000);//1h-8second
         long when = c.getTimeInMillis();
 
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
+        OtherAPP.startOtherActivity(this, getStartAppNumber());
     }
 
     void setTimeBefore1Hour() {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() - 3595000);//10second
+        c.setTimeInMillis(c.getTimeInMillis() - (60 * 60 - DEC_SEC * 2) * 1000);//1h-8second
         long when = c.getTimeInMillis();
 
         if (when / 1000 < Integer.MAX_VALUE) {
