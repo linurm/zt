@@ -2,6 +2,8 @@ package zj.zfenlly.net;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import zj.zfenlly.tools.R;
 
@@ -10,7 +12,7 @@ import zj.zfenlly.tools.R;
  */
 public class WifiStatusLoader {
     private static WifiStatusLoader sInstance;
-    private Context mContext;
+    static private Context mContext;
     private FloatView mFloatView;
     private boolean isStartApp = false;
     private Activity theActivity;
@@ -23,6 +25,7 @@ public class WifiStatusLoader {
     public static WifiStatusLoader getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new WifiStatusLoader(context);
+            mContext = context;
         }
         return sInstance;
     }
@@ -34,6 +37,14 @@ public class WifiStatusLoader {
     public void setIsStartAPP(Activity act, int id) {
         isStartApp = true;
         theActivity = act;
+        selectId = id;
+    }
+
+    public void setActivity(Activity act) {
+        theActivity = act;
+    }
+
+    public void setSelectId(int id) {
         selectId = id;
     }
 
@@ -57,15 +68,24 @@ public class WifiStatusLoader {
             //mFloatView.setEnabled(true);
             //mFloatView.setClickable(true);
         }
-
     }
 
     public void StartAPP() {
-
         if (isStartApp) {
             isStartApp = false;
             OtherAPP.startActivity2(theActivity, selectId);
         }
     }
 
+    int getStartAppNumber() {
+        SharedPreferences mySharedPreferences = mContext.getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getInt("app_num", 1);
+    }
+
+    public void startAPP() {
+        int selectId = getStartAppNumber();
+        Log.e("TAG", "" + selectId);
+        OtherAPP.startActivity2(theActivity, selectId);
+    }
 }

@@ -40,6 +40,7 @@ public class FloatWinService extends Service {
     private TextView dtime;
     private Button add;
     private Button dec;
+    private Context mContext;
 
     @Override
     public void onCreate() {
@@ -50,8 +51,6 @@ public class FloatWinService extends Service {
         // Toast.LENGTH_LONG);
         mWifiAdmin = new WifiAdmin(this);
         createView2(this);
-
-
     }
 
     @Override
@@ -67,7 +66,7 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mFloatLayout.setLayoutParams(mFloatLayoutLP);
         mFloatLayout.setOrientation(LinearLayout.VERTICAL);
-
+        mContext = context;
         mUpFloatLayout = new LinearLayout(context);
         LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -97,6 +96,8 @@ public class FloatWinService extends Service {
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
+
+        WifiStatusLoader.getInstance(mContext).startAPP();
     }
 
 /*    void setTimeBefore30Minites() {
@@ -117,6 +118,8 @@ public class FloatWinService extends Service {
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
+
+        WifiStatusLoader.getInstance(mContext).startAPP();
     }
 
     void setTimeBefore1Hour() {
@@ -127,6 +130,8 @@ public class FloatWinService extends Service {
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
+
+        WifiStatusLoader.getInstance(mContext).startAPP();
     }
 
     private void createView2(Context mContext) {

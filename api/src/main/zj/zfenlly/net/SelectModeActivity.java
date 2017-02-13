@@ -165,7 +165,6 @@ public class SelectModeActivity extends Activity {
             net3gon.setVisibility(View.VISIBLE);
             net3goff.setVisibility(View.INVISIBLE);
         }
-
         //mAutoStart = autostart.isChecked();
         if (getGuaAutoStart().equals("true")) {
             mAutoStart = true;
@@ -200,11 +199,14 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        OtherAPP.setActivity(this);
         if (mAutoStart) {
             openWifiAndStartAPP();
         }
         Log.e(TAG, "onResume");
     }
+
+
 
     public void openWifiAndStartAPP() {
         if (mWifiAdmin.openWifi()) {
@@ -224,8 +226,6 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-
-
         Log.e(TAG, "onStop wifi activity");
     }
 
@@ -253,7 +253,6 @@ public class SelectModeActivity extends Activity {
         Object[] arg = null;
         try {
             isMobileDataEnable = invokeMethod("getMobileDataEnabled", arg);
-
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -261,10 +260,8 @@ public class SelectModeActivity extends Activity {
         return isMobileDataEnable;
     }
 
-
     public boolean invokeMethod(String methodName,
                                 Object[] arg) throws Exception {
-
         ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         Class ownerClass = mConnectivityManager.getClass();
         Class[] argsClass = null;
@@ -280,7 +277,6 @@ public class SelectModeActivity extends Activity {
 
     public Object invokeBooleanArgMethod(String methodName,
                                          boolean value) throws Exception {
-
         ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         Class ownerClass = mConnectivityManager.getClass();
         Class[] argsClass = new Class[1];
