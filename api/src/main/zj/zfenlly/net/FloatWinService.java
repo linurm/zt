@@ -29,6 +29,7 @@ import zj.zfenlly.wifi.WifiAdmin;
 public class FloatWinService extends Service {
 
     private static final String TAG = "FloatWinService";
+    Context mContext;
     LinearLayout mFloatLayout;
     LinearLayout mUpFloatLayout;
     LinearLayout mDownFloatLayout;
@@ -42,7 +43,7 @@ public class FloatWinService extends Service {
     private TextView dtime;
     private Button add;
     private Button dec;
-    private final int DEC_SEC = 5;
+    private final int DEC_SEC = 3;
 
     @Override
     public void onCreate() {
@@ -53,8 +54,6 @@ public class FloatWinService extends Service {
         // Toast.LENGTH_LONG);
         mWifiAdmin = new WifiAdmin(this);
         createView2(this);
-
-
     }
 
     @Override
@@ -70,7 +69,7 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mFloatLayout.setLayoutParams(mFloatLayoutLP);
         mFloatLayout.setOrientation(LinearLayout.VERTICAL);
-
+        mContext = context;
         mUpFloatLayout = new LinearLayout(context);
         LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -101,7 +100,7 @@ public class FloatWinService extends Service {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
 
-        OtherAPP.startOtherActivity(this, 1);
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber());
     }
 
     int getStartAppNumber() {
@@ -128,7 +127,8 @@ public class FloatWinService extends Service {
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
-        OtherAPP.startOtherActivity(this, getStartAppNumber());
+
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber());
     }
 
     void setTimeBefore1Hour() {
@@ -139,6 +139,8 @@ public class FloatWinService extends Service {
         if (when / 1000 < Integer.MAX_VALUE) {
             ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
         }
+
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber());
     }
 
     private void createView2(Context mContext) {

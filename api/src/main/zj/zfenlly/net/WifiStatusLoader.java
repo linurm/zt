@@ -37,6 +37,10 @@ public class WifiStatusLoader {
         selectId = id;
     }
 
+    public void setActivity(Activity act) {
+        theActivity = act;
+    }
+
     public void setIsStopAPP() {
         isStartApp = false;
     }
@@ -67,5 +71,10 @@ public class WifiStatusLoader {
             OtherAPP.startActivity2(theActivity, selectId);
         }
     }
+
+    public void startAPP(int id) {
+        OtherAPP.startActivity2(theActivity, id);
+    }
+
 
 }
