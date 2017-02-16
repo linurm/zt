@@ -21,15 +21,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.lidroid.xutils.view.annotation.event.OnCompoundButtonCheckedChange;
-import com.lidroid.xutils.view.annotation.event.OnRadioGroupCheckedChange;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -63,16 +60,12 @@ public class SelectModeActivity extends Activity {
     public Button wifion_btn;
     @ViewInject(R.id.wifioff)
     public Button wifioff_btn;
-    @ViewInject(R.id.myRadioGroup)
-    public RadioGroup mRadioGroup;
+
     @ViewInject(R.id.startapp)
     public Button startApp_btn;
     @ViewInject(R.id.autostart)
     public CheckBox autostart;
-    @ViewInject(R.id.myRadio1app)
-    public RadioButton mRB1app;
-    @ViewInject(R.id.myRadio2app)
-    public RadioButton mRB2app;
+
     String[] sa = null;
     String[] packagelist = null;
     String[] activityname = null;
@@ -80,7 +73,7 @@ public class SelectModeActivity extends Activity {
     private boolean mAutoStart = false;
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
-    private int selectId = 1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,17 +93,17 @@ public class SelectModeActivity extends Activity {
         Log.i(TAG, "onActivityResult");
     }
 
-    private void setAirplaneMode(Context context, int flags) {
-        Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
-        startActivityForResult(intent, flags);
-    }
-
-    //is ok
-    private boolean isAirplaneMode(Context context) {
-        int isAirplaneMode = Settings.System.getInt(context.getContentResolver(),
-                Settings.Global.AIRPLANE_MODE_ON, 0);
-        return (isAirplaneMode == 1) ? true : false;
-    }
+//    private void setAirplaneMode(Context context, int flags) {
+//        Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+//        startActivityForResult(intent, flags);
+//    }
+//
+//    //is ok
+//    private boolean isAirplaneMode(Context context) {
+//        int isAirplaneMode = Settings.System.getInt(context.getContentResolver(),
+//                Settings.Global.AIRPLANE_MODE_ON, 0);
+//        return (isAirplaneMode == 1) ? true : false;
+//    }
 
     void onTheCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
@@ -179,18 +172,7 @@ public class SelectModeActivity extends Activity {
         }
         Log.e(TAG, "start check: " + (mAutoStart ? "true" : "false"));
         Log.e(TAG, "floatwin check: " + (getGuaFloatWin().equals("true") ? "true" : "false"));
-        selectId = getStartAppNumber();
 
-        if (selectId == 1) {
-            mRB1app.setChecked(true);
-            mRB2app.setChecked(false);
-        } else if (selectId == 2) {
-            mRB2app.setChecked(true);
-            mRB1app.setChecked(false);
-        } else {
-            mRB1app.setChecked(false);
-            mRB2app.setChecked(false);
-        }
     }
 
     @Override
@@ -200,12 +182,9 @@ public class SelectModeActivity extends Activity {
         try {
             PackageInfo mPackageInfo = getPackageManager().getPackageInfo(getStartAppPkg(), 0);
             Drawable d = mPackageInfo.applicationInfo.loadIcon(getPackageManager());
-            Log.e("zj", d.toString());
+
             miv.setBackground(d);
             mtv.setText(getStartAppPkg());
-//            mtv.setText("Product Model: " + android.os.Build.MODEL + ","
-//                    + android.os.Build.VERSION.SDK + ","
-//                    + android.os.Build.VERSION.RELEASE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -326,7 +305,6 @@ public class SelectModeActivity extends Activity {
             //根据包名获取PackageInfo mPackageInfo;（需要处理异常）
             try {
                 PackageInfo mPackageInfo = getPackageManager().getPackageInfo(pkgName, 0);
-
                 if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
                     //第三方应用
                     String a = appInfo.loadLabel(getPackageManager()).toString();
@@ -381,22 +359,22 @@ public class SelectModeActivity extends Activity {
         OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
     }
 
-    @OnRadioGroupCheckedChange(R.id.myRadioGroup)
-    public void radioGroup(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.myRadio1app:
-                selectId = 1;
-                break;
-            case R.id.myRadio2app:
-                selectId = 2;
-                break;
-            default:
-                selectId = getStartAppNumber();
-                break;
-        }
-        Log.e(TAG, "selectId: " + selectId);
-        setStartAppNumber(selectId);
-    }
+//    @OnRadioGroupCheckedChange(R.id.myRadioGroup)
+//    public void radioGroup(RadioGroup group, int checkedId) {
+//        switch (checkedId) {
+//            case R.id.myRadio1app:
+//                selectId = 1;
+//                break;
+//            case R.id.myRadio2app:
+//                selectId = 2;
+//                break;
+//            default:
+//                selectId = getStartAppNumber();
+//                break;
+//        }
+//        Log.e(TAG, "selectId: " + selectId);
+//        setStartAppNumber(selectId);
+//    }
 
     @OnClick(R.id.startapp)
     public void startApp(View v) {
@@ -409,7 +387,6 @@ public class SelectModeActivity extends Activity {
     public void wifiOn(View v) {
         openWifiAndStartAPP();
     }
-
 
     @OnCompoundButtonCheckedChange(R.id.autostart)
     public void autoStart(CompoundButton buttonView,
@@ -444,21 +421,6 @@ public class SelectModeActivity extends Activity {
                 Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putString("act", n);
-        editor.commit();
-    }
-
-    int getStartAppNumber() {
-        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
-                Activity.MODE_PRIVATE);
-        return mySharedPreferences.getInt("app_num", 1);
-    }
-
-
-    void setStartAppNumber(int n) {
-        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
-                Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putInt("app_num", n);
         editor.commit();
     }
 
@@ -522,8 +484,5 @@ public class SelectModeActivity extends Activity {
     private void stopFloatWin() {
         Intent intent = new Intent(this, FloatWinService.class);
         stopService(intent);
-
     }
-
-
 }

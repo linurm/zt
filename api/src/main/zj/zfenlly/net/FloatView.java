@@ -2,7 +2,6 @@ package zj.zfenlly.net;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;

@@ -29,7 +29,6 @@ public class OverActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //onTheCreate(savedInstanceState);
         setContentView(R.layout.over_main);
         ViewUtils.inject(this);
         Bundle bundle = this.getIntent().getExtras();

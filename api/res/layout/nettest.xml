@@ -113,26 +113,26 @@
             android:text="start app"
             android:visibility="visible" />
 
-        <RadioGroup
-            android:id="@+id/myRadioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <!--<RadioGroup-->
+            <!--android:id="@+id/myRadioGroup"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
 
-            android:orientation="vertical">
+            <!--android:orientation="vertical">-->
 
-            <RadioButton
-                android:id="@+id/myRadio1app"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio1app" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/myRadio1app"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/radio1app" />-->
 
-            <RadioButton
-                android:id="@+id/myRadio2app"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/radio2app" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/myRadio2app"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/radio2app" />-->
 
-        </RadioGroup>
+        <!--</RadioGroup>-->
 
     </LinearLayout>
 

@@ -29,7 +29,6 @@ import static zj.zfenlly.net.SystemInfo.CPU_TYPE;
 public class FloatWinService extends Service {
 
     private static final String TAG = "FloatWinService";
-    private final int DEC_SEC = 3;
 
     Context mContext;
     LinearLayout mFloatLayout;
@@ -37,10 +36,7 @@ public class FloatWinService extends Service {
     LinearLayout mDownFloatLayout;
     WindowManager.LayoutParams wmParams;
     WindowManager mWindowManager;
-    Button mFloatView;
     private FloatView floatView = null;
-    private BroadcastReceiver wifiReceiver;
-    //Button mRecentView;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
     private TextView afterha10minites;
@@ -96,25 +92,25 @@ public class FloatWinService extends Service {
     }
 
     void setTimeAfter10Minites() {
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "a10");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, "a10");
     }
 
     void setTimeAfter30Minites() {
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "a30");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, "a30");
     }
 
-    int getStartAppNumber() {
-        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
-                Activity.MODE_PRIVATE);
-        return mySharedPreferences.getInt("app_num", 1);
-    }
+//    int getStartAppNumber() {
+//        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+//                Activity.MODE_PRIVATE);
+//        return mySharedPreferences.getInt("app_num", 1);
+//    }
 
     void setTimeAfter1Hour() {
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "a60");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, "a60");
     }
 
     void setTimeBefore1Hour() {
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "d60");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, "d60");
     }
 
     private void createView2(Context mContext) {
