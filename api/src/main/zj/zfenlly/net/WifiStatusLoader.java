@@ -2,6 +2,8 @@ package zj.zfenlly.net;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 
 import zj.zfenlly.tools.R;
 
@@ -13,7 +15,7 @@ public class WifiStatusLoader {
     private Context mContext;
     private FloatView mFloatView;
     private boolean isStartApp = false;
-    private Activity theActivity;
+    //private Activity theActivity;
     private int selectId = 1;
 
     private WifiStatusLoader(Context context) {
@@ -31,15 +33,15 @@ public class WifiStatusLoader {
         mFloatView = fv;
     }
 
-    public void setIsStartAPP(Activity act, int id) {
+    public void setIsStartAPP(Activity act) {
         isStartApp = true;
-        theActivity = act;
-        selectId = id;
+        //theActivity = act;
+        //selectId = id;
     }
 
-    public void setActivity(Activity act) {
-        theActivity = act;
-    }
+//    public void setActivity(Activity act) {
+//       // theActivity = act;
+//    }
 
     public void setIsStopAPP() {
         isStartApp = false;
@@ -68,13 +70,23 @@ public class WifiStatusLoader {
 
         if (isStartApp) {
             isStartApp = false;
-            OtherAPP.startActivity2(theActivity, selectId);
+            //OtherAPP.startActivity2(theActivity, selectId);
+            startO(0, "0");
         }
     }
 
-    public void startAPP(int id) {
-        OtherAPP.startActivity2(theActivity, id);
+    public void startAPP(int id, String v) {
+        //OtherAPP.startActivity2(theActivity, id);
+        startO(id, v);
     }
 
-
+    public void startO(int id, String v) {
+        Intent intent = new Intent(mContext, OverActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("key", id);
+        bundle.putString("value", v);
+        intent.putExtras(bundle);
+        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(intent);
+    }
 }

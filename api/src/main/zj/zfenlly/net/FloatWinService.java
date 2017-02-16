@@ -1,7 +1,6 @@
 package zj.zfenlly.net;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,10 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Calendar;
 
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
+
+import static zj.zfenlly.net.SystemInfo.CPU_TYPE;
 
 /**
  * Created by Administrator on 2016/8/17.
@@ -29,6 +29,8 @@ import zj.zfenlly.wifi.WifiAdmin;
 public class FloatWinService extends Service {
 
     private static final String TAG = "FloatWinService";
+    private final int DEC_SEC = 3;
+
     Context mContext;
     LinearLayout mFloatLayout;
     LinearLayout mUpFloatLayout;
@@ -40,18 +42,25 @@ public class FloatWinService extends Service {
     private BroadcastReceiver wifiReceiver;
     //Button mRecentView;
     private WifiAdmin mWifiAdmin = null;
-    private TextView dtime;
-    private Button add;
-    private Button dec;
-    private final int DEC_SEC = 3;
+    private TextView afterhalfhour;
+    private TextView afterha10minites;
+    private Button after1hour;
+    private Button before1hour;
+
+    public static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    public static int px2dip(Context context, float pxValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
 
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-        //createFloatView();
-        // Toast.makeText(FxService.this, "create FxService",
-        // Toast.LENGTH_LONG);
         mWifiAdmin = new WifiAdmin(this);
         createView2(this);
     }
@@ -70,37 +79,28 @@ public class FloatWinService extends Service {
         mFloatLayout.setLayoutParams(mFloatLayoutLP);
         mFloatLayout.setOrientation(LinearLayout.VERTICAL);
         mContext = context;
-        mUpFloatLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
-        mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
-
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            mUpFloatLayout = new LinearLayout(context);
+            LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
+            mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+        }
         mDownFloatLayout = new LinearLayout(context);
         LinearLayout.LayoutParams mDownFloatLayoutLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mDownFloatLayout.setLayoutParams(mDownFloatLayoutLP);
         mDownFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+    }
 
-//        floatView = new FloatButton(context);
-//        LinearLayout.LayoutParams floatViewLp = new LinearLayout.LayoutParams(
-//                MetricUtil.getDip(context, 50), MetricUtil.getDip(context, 50));
-//        floatView.setLayoutParams(floatViewLp);
-//        mFloatLayout.addView(floatView);
+    void setTimeAfter10Minites() {
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "a10");
     }
 
     void setTimeAfter30Minites() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() + (30 * 60 - DEC_SEC) * 1000);//30m-4second
-        long when = c.getTimeInMillis();
-
-        if (when / 1000 < Integer.MAX_VALUE) {
-            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
-        }
-
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber());
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "a30");
     }
 
     int getStartAppNumber() {
@@ -109,38 +109,12 @@ public class FloatWinService extends Service {
         return mySharedPreferences.getInt("app_num", 1);
     }
 
-/*    void setTimeBefore30Minites() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() - 1795000);//10second
-        long when = c.getTimeInMillis();
-
-        if (when / 1000 < Integer.MAX_VALUE) {
-            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
-        }
-    }*/
-
     void setTimeAfter1Hour() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() + (60 * 60 - DEC_SEC * 2) * 1000);//1h-8second
-        long when = c.getTimeInMillis();
-
-        if (when / 1000 < Integer.MAX_VALUE) {
-            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
-        }
-
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber());
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "a60");
     }
 
     void setTimeBefore1Hour() {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() - (60 * 60 - DEC_SEC * 2) * 1000);//1h-8second
-        long when = c.getTimeInMillis();
-
-        if (when / 1000 < Integer.MAX_VALUE) {
-            ((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setTime(when);
-        }
-
-        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber());
+        WifiStatusLoader.getInstance(mContext).startAPP(getStartAppNumber(), "d60");
     }
 
     private void createView2(Context mContext) {
@@ -164,7 +138,7 @@ public class FloatWinService extends Service {
         // 调整悬浮窗口至左上角，便于调整坐标
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
         // 以屏幕左上角为原点，设置x、y初始值
-        wmParams.x = 0;
+        wmParams.x = 800;
         wmParams.y = 0;
         // 设置悬浮窗口长宽数据
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -176,7 +150,6 @@ public class FloatWinService extends Service {
         floatView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View var1) {
-                //floatView.setEnabled(false);
                 if (floatView.isbClickable()) {
                     Log.e("click", "click");
                     floatView.setbClickable(false);
@@ -188,9 +161,7 @@ public class FloatWinService extends Service {
                         Toast.makeText(FloatWinService.this, "open wifi", Toast.LENGTH_SHORT).show();
                     }
                 }
-                //return true;
             }
-
         });
 
         if (mWifiAdmin.isWifiEnabled()) {
@@ -198,72 +169,81 @@ public class FloatWinService extends Service {
         } else {
             floatView.setImageResource(R.drawable.wifi_off);
         }
-        add = new Button(this);
-        add.setText("+");
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            after1hour = new Button(this);
+            after1hour.setText("+ hour");
+            after1hour.setHeight(dip2px(mContext, 80));
+            after1hour.setBackgroundResource(R.drawable.button_shape);
+            after1hour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            after1hour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeAfter1Hour();
+                    Toast.makeText(FloatWinService.this, "+1 hour", Toast.LENGTH_SHORT).show();
+                }
+            });
+            before1hour = new Button(this);
+            before1hour.setText("- hour");
+            before1hour.setHeight(dip2px(mContext, 80));
+            before1hour.setBackgroundResource(R.drawable.button_shape);
+            before1hour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            before1hour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeBefore1Hour();
+                    Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
+                }
+            });
+            afterhalfhour = new TextView(this);
+            afterhalfhour.setText("+ 30m");
+            afterhalfhour.setHeight(dip2px(mContext, 80));
+            afterhalfhour.setWidth(175);
+            afterhalfhour.setBackgroundResource(R.drawable.button_shape);
+            afterhalfhour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            afterhalfhour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeAfter30Minites();
+                    Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-        add.setHeight(160);
-        add.setBackgroundResource(R.drawable.button_shape);
-        add.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTimeAfter1Hour();
-                Toast.makeText(FloatWinService.this, "+1 hour", Toast.LENGTH_SHORT).show();
-            }
-        });
-        dec = new Button(this);
-        dec.setText("-");
-        dec.setHeight(160);
-        dec.setBackgroundResource(R.drawable.button_shape);
-        dec.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
-        dec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTimeBefore1Hour();
-                Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
-            }
-        });
-        //mWindowManager.addView(add, wmParams);
-        dtime = new TextView(this);
+            afterha10minites = new TextView(this);
+            afterha10minites.setText("+ 10m");
+            afterha10minites.setHeight(dip2px(mContext, 80));
+            afterha10minites.setWidth(175);
+            afterha10minites.setBackgroundResource(R.drawable.button_shape);
+            afterha10minites.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            afterha10minites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeAfter10Minites();
+                    Toast.makeText(FloatWinService.this, "+10m", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-        dtime.setText("   it is the time click + 30 minites   ");
-        dtime.setHeight(160);
-
-        dtime.setBackgroundResource(R.drawable.button_shape);
-        dtime.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
-        dtime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setTimeAfter30Minites();
-                Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        mUpFloatLayout.addView(dtime);
-        mDownFloatLayout.addView(dec);
+            mUpFloatLayout.addView(afterha10minites);
+            mUpFloatLayout.addView(afterhalfhour);
+            mFloatLayout.addView(mUpFloatLayout);
+            mDownFloatLayout.addView(before1hour);
+        }
         mDownFloatLayout.addView(floatView);
-        mDownFloatLayout.addView(add);
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            mDownFloatLayout.addView(after1hour);
+        }
 
-        mFloatLayout.addView(mUpFloatLayout);
         mFloatLayout.addView(mDownFloatLayout);
-
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(this);
         mWifiStatusLoader.setRecentsPanel(floatView);
-
         mWindowManager.addView(mFloatLayout, wmParams);
-
     }
-
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        //if (mFloatLayout != null) {
         mFloatLayout.removeAllViews();
         mWindowManager.removeView(mFloatLayout);
-        //}
     }
 
 }

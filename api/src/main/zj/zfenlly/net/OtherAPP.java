@@ -10,15 +10,15 @@ import android.content.Intent;
  */
 public class OtherAPP {
 
-    static void setWillStartAPP(Activity act, int id) {
+    static void setWillStartAPP(Activity act) {
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
-        mWifiStatusLoader.setIsStartAPP(act, id);
+        mWifiStatusLoader.setIsStartAPP(act);
     }
 
-    static void setActivity(Activity act) {
-        final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
-        mWifiStatusLoader.setActivity(act);
-    }
+//    static void setActivity(Activity act) {
+//        final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
+//        mWifiStatusLoader.setActivity(act);
+//    }
 
 
     static void setWillStopAPP(Activity act) {
@@ -34,21 +34,21 @@ public class OtherAPP {
 //        }
 //    }
 
-    static void startOtherActivity(Context mContext, int select_id) {
-        try {
-            mContext.startActivity(prepareIntent(select_id));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    static void startOtherActivity(Context mContext, int select_id) {
+//        try {
+//            mContext.startActivity(prepareIntent(select_id));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     static Intent prepareIntent(int id) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         ComponentName cn = null;
         if (id == 1) {
-            cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
-            //cn = new ComponentName("zybornit.loadlib", "zybornit.loadlib.MainActivity");
+            //cn = new ComponentName("com.teamlava.castlestory41", "com.apportable.activity.VerdeActivity");
+            cn = new ComponentName("zybornit.loadlib", "zybornit.loadlib.MainActivity");
             //""
             //""
         } else if (id == 2) {
@@ -61,7 +61,11 @@ public class OtherAPP {
         return intent;
     }
 
-    public static void startActivity2(Context mContext, int id) {
-        mContext.startActivity(prepareIntent(id));
+
+
+    public static void startActivity3(Context mContext, String pkg, String act) {
+        mContext.startActivity(new Intent().setComponent(new ComponentName(pkg, act)));
     }
+
+
 }

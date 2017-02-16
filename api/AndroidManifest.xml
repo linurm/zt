@@ -74,6 +74,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="zj.zfenlly.net.OverActivity"
+            android:label="@string/wifi_manual"
+            android:screenOrientation="landscape"></activity>
+        <activity
             android:name="zj.zfenlly.main.MainActivity"
             android:label="@string/device_config"
             android:launchMode="singleTask">

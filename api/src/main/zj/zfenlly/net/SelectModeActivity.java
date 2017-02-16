@@ -1,19 +1,29 @@
 package zj.zfenlly.net;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -22,6 +32,8 @@ import com.lidroid.xutils.view.annotation.event.OnCompoundButtonCheckedChange;
 import com.lidroid.xutils.view.annotation.event.OnRadioGroupCheckedChange;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
@@ -36,10 +48,11 @@ public class SelectModeActivity extends Activity {
     private final String TAG = "SelectModeActivity";
     @ViewInject(R.id.floatwin)
     public CheckBox floatWin;
-    @ViewInject(R.id.airplane1)
-    public Button airplane1_btn;
-    @ViewInject(R.id.airplane2)
-    public Button airplane2_btn;
+    @ViewInject(R.id.mTV)
+    public TextView mtv;
+    @ViewInject(R.id.mIV)
+    public ImageView miv;
+
     @ViewInject(R.id.appexit)
     public Button exit;
     @ViewInject(R.id.net3gon)
@@ -60,23 +73,24 @@ public class SelectModeActivity extends Activity {
     public RadioButton mRB1app;
     @ViewInject(R.id.myRadio2app)
     public RadioButton mRB2app;
+    String[] sa = null;
+    String[] packagelist = null;
+    String[] activityname = null;
+
     private boolean mAutoStart = false;
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
     private int selectId = 1;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         onTheCreate(savedInstanceState);
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e(TAG, "_______________________________" + requestCode);
-
         if ((requestCode & FLAG_START_ACTIVITY) == FLAG_START_ACTIVITY) {
         } else {
         }
@@ -99,7 +113,6 @@ public class SelectModeActivity extends Activity {
     }
 
     void onTheCreate(Bundle savedInstanceState) {
-
         Intent intent = getIntent();
         if (intent != null) {
             autoMode = intent.getBooleanExtra("auto", false);
@@ -134,23 +147,7 @@ public class SelectModeActivity extends Activity {
 
     private void updateView() {
         startApp_btn.setVisibility(View.VISIBLE);
-        if (isAirplaneMode(this)) {
-            if (autoMode) {
-                setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
-            } else {
-                airplane1_btn.setVisibility(View.INVISIBLE);
-//                exit.setVisibility(View.INVISIBLE);
-                airplane2_btn.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (autoMode) {
-                setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
-            } else {
-                airplane1_btn.setVisibility(View.VISIBLE);
-//                exit.setVisibility(View.VISIBLE);
-                airplane2_btn.setVisibility(View.INVISIBLE);
-            }
-        }
+
         if (mWifiAdmin.isWifiEnabled()) {
             wifioff_btn.setVisibility(View.VISIBLE);
             wifion_btn.setVisibility(View.INVISIBLE);
@@ -199,21 +196,31 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        OtherAPP.setActivity(this);
+//        OtherAPP.setActivity(this);
+        try {
+            PackageInfo mPackageInfo = getPackageManager().getPackageInfo(getStartAppPkg(), 0);
+            Drawable d = mPackageInfo.applicationInfo.loadIcon(getPackageManager());
+            Log.e("zj", d.toString());
+            miv.setBackground(d);
+            mtv.setText(getStartAppPkg());
+//            mtv.setText("Product Model: " + android.os.Build.MODEL + ","
+//                    + android.os.Build.VERSION.SDK + ","
+//                    + android.os.Build.VERSION.RELEASE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (mAutoStart) {
             openWifiAndStartAPP();
         }
         Log.e(TAG, "onResume");
     }
 
-
-
     public void openWifiAndStartAPP() {
         if (mWifiAdmin.openWifi()) {
-            OtherAPP.setWillStartAPP(this, selectId);
+            OtherAPP.setWillStartAPP(this);
         } else {
-            Log.e(TAG, "startOtherActivity selectId: " + selectId);
-            OtherAPP.startOtherActivity(this, selectId);
+            OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
         }
     }
 
@@ -299,14 +306,67 @@ public class SelectModeActivity extends Activity {
         }
     }
 
-    @OnClick(R.id.airplane1)
-    public void airplaneOff(View v) {
-        setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
-    }
+    @OnClick(R.id.selectapp)
+    public void selectAPP(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        PackageManager packageManager = getPackageManager();
+        Intent mIntent = new Intent(Intent.ACTION_MAIN, null);
+        mIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> listAllApps = packageManager.queryIntentActivities(mIntent, 0);
+        //判断是否系统应用：
+        //listAllApps.size();
+        StringBuilder sb = new StringBuilder();
+        StringBuilder pk = new StringBuilder();
+        StringBuilder an = new StringBuilder();
+        List<Drawable> listdrawable = new ArrayList<Drawable>();
+        for (ResolveInfo appInfo : listAllApps) {
+            String pkgName = appInfo.activityInfo.packageName;//获取包名
+            if (pkgName.equals(getPackageName()))
+                continue;
+            //根据包名获取PackageInfo mPackageInfo;（需要处理异常）
+            try {
+                PackageInfo mPackageInfo = getPackageManager().getPackageInfo(pkgName, 0);
 
-    @OnClick(R.id.airplane2)
-    public void airplaneOn(View v) {
-        setAirplaneMode(this, FLAG_START_ACTIVITY | FLAG_EXIT);
+                if ((mPackageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
+                    //第三方应用
+                    String a = appInfo.loadLabel(getPackageManager()).toString();
+                    sb.append(a);
+                    sb.append("#");
+                    pk.append(pkgName);
+                    pk.append("#");
+                    an.append(appInfo.activityInfo.name);
+                    an.append("#");
+                    Drawable appdrawable = appInfo.activityInfo.loadIcon(getPackageManager());
+                    //if (appdrawable == null) {
+                    Log.e("zj", "+++++++++++++++" + appdrawable.toString());
+                    //}
+                    listdrawable.add(appdrawable);
+                    Log.e("zj", a + ":" + pkgName + "/" + appInfo.activityInfo.name);
+                } else {
+                    //系统应用
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            sa = sb.toString().split("#");
+            packagelist = pk.toString().split("#");
+            activityname = an.toString().split("#");
+        }
+        BaseAdapter adapter = new AppListAdapter(this, sa, listdrawable);
+        DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                // TODO 自动生成的方法存根
+                //System.out.println();
+                Log.e("zj", packagelist[arg1] + "/" + activityname[arg1]);
+                setStartAppPkg(packagelist[arg1]);
+                setStartAppAct(activityname[arg1]);
+                arg0.dismiss();
+            }
+        };
+        builder.setAdapter(adapter, clickListener);
+        builder.setNegativeButton("cancle", null);
+        builder.setPositiveButton("ok", null);
+        builder.show();
     }
 
     @OnClick(R.id.appexit)
@@ -318,7 +378,7 @@ public class SelectModeActivity extends Activity {
     @OnClick(R.id.wifioff)
     public void wifiOff(View v) {
         mWifiAdmin.closeWifi();
-        OtherAPP.startOtherActivity(this, selectId);
+        OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
     }
 
     @OnRadioGroupCheckedChange(R.id.myRadioGroup)
@@ -340,7 +400,6 @@ public class SelectModeActivity extends Activity {
 
     @OnClick(R.id.startapp)
     public void startApp(View v) {
-
         //mAutoStart = autostart.isChecked();
         openWifiAndStartAPP();
         //finish();
@@ -360,11 +419,40 @@ public class SelectModeActivity extends Activity {
         setGuaAutoStart(mAutoStart);
     }
 
+    String getStartAppPkg() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getString("pkg", null);
+    }
+
+    void setStartAppPkg(String n) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString("pkg", n);
+        editor.commit();
+    }
+
+    String getStartAppAct() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getString("act", null);
+    }
+
+    void setStartAppAct(String n) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString("act", n);
+        editor.commit();
+    }
+
     int getStartAppNumber() {
         SharedPreferences mySharedPreferences = getSharedPreferences("gua",
                 Activity.MODE_PRIVATE);
         return mySharedPreferences.getInt("app_num", 1);
     }
+
 
     void setStartAppNumber(int n) {
         SharedPreferences mySharedPreferences = getSharedPreferences("gua",
