@@ -46,6 +46,8 @@ public class OverActivity extends Activity {
             t = (60 * 60 - DEC_SEC * 2);
         } else if (v.equals("d60")) {
             t = -(60 * 60 - DEC_SEC * 2);
+        } else {
+            return;
         }
         setTime(t);
         //setTimeAfter10Minites(t);
