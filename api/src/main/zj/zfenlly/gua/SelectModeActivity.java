@@ -1,4 +1,4 @@
-package zj.zfenlly.net;
+package zj.zfenlly.gua;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,7 +13,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -180,6 +179,9 @@ public class SelectModeActivity extends Activity {
         super.onResume();
 //        OtherAPP.setActivity(this);
         try {
+            if (getStartAppPkg() == null) {
+                return;
+            }
             PackageInfo mPackageInfo = getPackageManager().getPackageInfo(getStartAppPkg(), 0);
             Drawable d = mPackageInfo.applicationInfo.loadIcon(getPackageManager());
 

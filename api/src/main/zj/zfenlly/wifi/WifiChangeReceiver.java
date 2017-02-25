@@ -8,7 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import zj.zfenlly.net.WifiStatusLoader;
+import zj.zfenlly.gua.WifiStatusLoader;
 
 /**
  * Created by Administrator on 2016/8/17.

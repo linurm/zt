@@ -1,4 +1,4 @@
-package zj.zfenlly.net;
+package zj.zfenlly.gua;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -7,8 +7,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import static zj.zfenlly.net.FloatWinService.dip2px;
-import static zj.zfenlly.net.SystemInfo.CPU_TYPE;
+import static zj.zfenlly.gua.FloatWinService.dip2px;
+import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
 
 /**
  * Created by Administrator on 2016/8/17.

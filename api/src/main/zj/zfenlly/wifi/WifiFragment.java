@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import zj.zfenlly.main.MainApplication;
-import zj.zfenlly.net.SelectModeActivity;
+import zj.zfenlly.gua.SelectModeActivity;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;

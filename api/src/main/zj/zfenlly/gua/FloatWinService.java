@@ -1,11 +1,8 @@
-package zj.zfenlly.net;
+package zj.zfenlly.gua;
 
-import android.app.Activity;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.util.Log;
@@ -21,7 +18,7 @@ import android.widget.Toast;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
-import static zj.zfenlly.net.SystemInfo.CPU_TYPE;
+import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
 
 /**
  * Created by Administrator on 2016/8/17.
@@ -39,7 +36,8 @@ public class FloatWinService extends Service {
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
-    private TextView afterha10minites;
+    private TextView after10minites;
+    private TextView before10minites;
     private Button after1hour;
     private Button before1hour;
 
@@ -68,27 +66,11 @@ public class FloatWinService extends Service {
     }
 
     private void initViewBox(Context context) {
-        mFloatLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams mFloatLayoutLP = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        mFloatLayout.setLayoutParams(mFloatLayoutLP);
-        mFloatLayout.setOrientation(LinearLayout.VERTICAL);
-        mContext = context;
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
-            mUpFloatLayout = new LinearLayout(context);
-            LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
-            mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
-        }
-        mDownFloatLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams mDownFloatLayoutLP = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        mDownFloatLayout.setLayoutParams(mDownFloatLayoutLP);
-        mDownFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+    }
+
+    void setTimeBefore10Minites() {
+        WifiStatusLoader.getInstance(mContext).startAPP(0, "b10");
     }
 
     void setTimeAfter10Minites() {
@@ -113,7 +95,7 @@ public class FloatWinService extends Service {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "d60");
     }
 
-    private void createView2(Context mContext) {
+    private void createView2(Context context) {
         // 获取WindowManager
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(getApplicationContext().WINDOW_SERVICE);
         // 设置LayoutParams(全局变量）相关参数
@@ -140,7 +122,27 @@ public class FloatWinService extends Service {
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         // 显示myFloatView图像
-        initViewBox(mContext);
+        mFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mFloatLayoutLP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mFloatLayout.setLayoutParams(mFloatLayoutLP);
+        mFloatLayout.setOrientation(LinearLayout.VERTICAL);
+        mContext = context;
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            mUpFloatLayout = new LinearLayout(context);
+            LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
+            mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+        }
+        mDownFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mDownFloatLayoutLP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mDownFloatLayout.setLayoutParams(mDownFloatLayoutLP);
+        mDownFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
         floatView = new FloatView(getApplicationContext(), mFloatLayout, mWindowManager, wmParams);
         floatView.setbClickable(true);
         floatView.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +195,7 @@ public class FloatWinService extends Service {
             afterhalfhour = new TextView(this);
             afterhalfhour.setText("+ 30m");
             afterhalfhour.setHeight(dip2px(mContext, 80));
-            afterhalfhour.setWidth(175);
+            afterhalfhour.setWidth(dip2px(mContext, 80));
             afterhalfhour.setBackgroundResource(R.drawable.button_shape);
             afterhalfhour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
             afterhalfhour.setOnClickListener(new View.OnClickListener() {
@@ -204,21 +206,35 @@ public class FloatWinService extends Service {
                 }
             });
 
-            afterha10minites = new TextView(this);
-            afterha10minites.setText("+ 10m");
-            afterha10minites.setHeight(dip2px(mContext, 80));
-            afterha10minites.setWidth(175);
-            afterha10minites.setBackgroundResource(R.drawable.button_shape);
-            afterha10minites.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
-            afterha10minites.setOnClickListener(new View.OnClickListener() {
+            before10minites = new TextView(this);
+            before10minites.setText("- 10m");
+            before10minites.setHeight(dip2px(mContext, 80));
+            before10minites.setWidth(dip2px(mContext, 80));
+            before10minites.setBackgroundResource(R.drawable.button_shape);
+            before10minites.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            before10minites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeBefore10Minites();
+                    Toast.makeText(FloatWinService.this, "-10m", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            after10minites = new TextView(this);
+            after10minites.setText("+ 10m");
+            after10minites.setHeight(dip2px(mContext, 80));
+            after10minites.setWidth(dip2px(mContext, 80));
+            after10minites.setBackgroundResource(R.drawable.button_shape);
+            after10minites.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            after10minites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     setTimeAfter10Minites();
                     Toast.makeText(FloatWinService.this, "+10m", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            mUpFloatLayout.addView(afterha10minites);
+            mUpFloatLayout.addView(before10minites);
+            mUpFloatLayout.addView(after10minites);
             mUpFloatLayout.addView(afterhalfhour);
             mFloatLayout.addView(mUpFloatLayout);
             mDownFloatLayout.addView(before1hour);

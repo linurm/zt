@@ -1,11 +1,10 @@
-package zj.zfenlly.net;
+package zj.zfenlly.gua;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -38,7 +37,9 @@ public class OverActivity extends Activity {
         String v = bundle.getString("value");
         display_view.setText(v);
         int t = 0;
-        if (v.equals("a10")) {
+        if (v.equals("b10")) {
+            t = -(10 * 60);
+        } else if (v.equals("a10")) {
             t = 10 * 60;
         } else if (v.equals("a30")) {
             t = 30 * 60 - DEC_SEC;
