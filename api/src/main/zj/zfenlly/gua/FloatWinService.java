@@ -68,19 +68,15 @@ public class FloatWinService extends Service {
     private void initViewBox(Context context) {
 
     }
-
     void setTimeBefore10Minites() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "b10");
     }
-
     void setTimeAfter10Minites() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "a10");
     }
-
     void setTimeAfter30Minites() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "a30");
     }
-
 //    int getStartAppNumber() {
 //        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
 //                Activity.MODE_PRIVATE);
@@ -257,5 +253,4 @@ public class FloatWinService extends Service {
         mFloatLayout.removeAllViews();
         mWindowManager.removeView(mFloatLayout);
     }
-
 }
