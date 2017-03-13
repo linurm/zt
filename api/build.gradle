@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
     }
 }
 //apply plugin: 'com.android.model.application'
@@ -58,9 +58,9 @@ dependencies {
     compile project(':DaoCore')
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+//task clean(type: Delete) {
+//    delete rootProject.buildDir
+//}
 allprojects {
     repositories {
         mavenCentral()
