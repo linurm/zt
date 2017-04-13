@@ -10,27 +10,24 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.MulticastLock;
 import android.net.wifi.WifiManager.WifiLock;
+import android.util.Log;
 
 import java.util.List;
 
 public class WifiAdmin {
+    public static final int OPEN_INDEX = 0;
+    public static final int WPA_INDEX = 1;
+    public static final int WPA2_INDEX = 2;
+    WifiLock mWifiLock;
     // 定义一个WifiManager对象
     private WifiManager mWifiManager;
     // 定义一个WifiInfo对象
     private WifiInfo mWifiInfo;
-
     private MulticastLock multicastLock = null;
-
     // 扫描出的网络连接列表
     private List<ScanResult> mWifiList;
     // 网络连接列表
     private List<WifiConfiguration> mWifiConfigurations;
-    WifiLock mWifiLock;
-
-    enum WifiPasswdType {
-        WIFICIPHER_NOPASS, WIFICIPHER_WEP, WIFICIPHER_WPA,
-
-    }
 
     public WifiAdmin(Context context) {
         // 取得WifiManager对象
@@ -57,13 +54,17 @@ public class WifiAdmin {
     }
 
     public void allowMulticast() {
-        multicastLock = mWifiManager.createMulticastLock("multicast");
+        multicastLock = mWifiManager.createMulticastLock("multicast.test");
+        Log.e("TAG", "acquire");
         multicastLock.acquire();
     }
 
     public void releaseMulticast() {
         if (multicastLock != null) {
-            multicastLock.release();
+            if (multicastLock.isHeld()) {
+                Log.e("TAG", "release");
+                multicastLock.release();
+            }
         }
     }
 
@@ -227,12 +228,6 @@ public class WifiAdmin {
 
     }
 
-    public static final int OPEN_INDEX = 0;
-    public static final int WPA_INDEX = 1;
-    public static final int WPA2_INDEX = 2;
-
-    // private int mSecurityTypeIndex = OPEN_INDEX;
-
     public WifiConfiguration CreateWifiInfo(String SSID, String Password, int Type) {
         WifiConfiguration config = new WifiConfiguration();
 
@@ -318,5 +313,12 @@ public class WifiAdmin {
         // config.linkProperties = new LinkProperties(mLinkProperties);
 
         return config;
+    }
+
+    // private int mSecurityTypeIndex = OPEN_INDEX;
+
+    enum WifiPasswdType {
+        WIFICIPHER_NOPASS, WIFICIPHER_WEP, WIFICIPHER_WPA,
+
     }
 }

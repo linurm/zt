@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import zj.zfenlly.arc.ArcFragment;
 import zj.zfenlly.bluetooth.BluetoothFragment;
+import zj.zfenlly.caculator.CalculationFragment;
 import zj.zfenlly.camera.CameraFragment;
 import zj.zfenlly.coloradjust.ColorAdjustFragment;
 import zj.zfenlly.http.HttpFragment;
@@ -22,6 +23,7 @@ import zj.zfenlly.tools.R;
 import zj.zfenlly.usb.UsbFragment;
 import zj.zfenlly.wifi.WifiFragment;
 import zj.zfenlly.wifiap.WifiApFragment;
+import zj.zfenlly.wifidevice.WifiDeviceFragment;
 
 public class MenuFragment extends ListFragment {
     private final String TAG = this.getClass().getName();
@@ -58,7 +60,7 @@ public class MenuFragment extends ListFragment {
                 newContent = new BluetoothFragment(R.color.white, "Bluetooth");
                 break;
             case 3:
-                //newContent = new SpeechSynthesisFragment(android.R.color.white, "voice");
+                newContent = new CalculationFragment(android.R.color.white, "cal");
                 break;
             case 4:
                 newContent = new UsbFragment(android.R.color.black, "usb");
@@ -87,7 +89,9 @@ public class MenuFragment extends ListFragment {
             case 12:
                 newContent = new ArcFragment();
                 break;
-
+            case 13:
+                newContent = new WifiDeviceFragment();
+                break;
         }
         if (newContent != null)
             switchFragment(newContent);

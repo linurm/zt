@@ -177,14 +177,14 @@ public class MainApplication extends Application implements Observable {
     }
 
     public void startWifi() {
-        mWifiAdmin = new WifiAdmin(this);
+//        mWifiAdmin = new WifiAdmin(this);
 //        Intent intent = new Intent(this, ZfenllyService.class);
 //        // mAPService =
 //        startService(intent);
     }
 
     public void stopWifi() {
-        mWifiAdmin = null;
+//        mWifiAdmin = null;
         // mAPService = null;
 //        Intent intent = new Intent(this, ZfenllyService.class);
 //        stopService(intent);
@@ -195,7 +195,7 @@ public class MainApplication extends Application implements Observable {
 
 
         super.onCreate();
-
+        mWifiAdmin = new WifiAdmin(this);
         print("onCreate");
         //appRegister();
 

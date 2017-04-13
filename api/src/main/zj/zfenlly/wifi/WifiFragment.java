@@ -577,7 +577,6 @@ public class WifiFragment extends Fragment implements Name, Observer {
         mApplication.startWifi();
         initNetworkUI();
         //}
-
         print("onResume");
     }
 
@@ -596,10 +595,8 @@ public class WifiFragment extends Fragment implements Name, Observer {
         LayoutInflater inflater;
         List<ScanResult> list;
 
-
         @ViewInject(R.id.wifi_strength)
         ImageView signalStrenth;
-
         @ViewInject(android.R.id.text1)
         TextView ssid;
         @ViewInject(android.R.id.text2)

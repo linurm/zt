@@ -405,4 +405,9 @@
     <string name="date_widgets_example_pickDate_text">change the date</string>
     <string name="radio1app">winter</string>
     <string name="radio2app">default</string>
+    <string name="value_from">from</string>
+    <string name="value_to">to</string>
+    <string name="from_introduce">x% means that the total value is equal to (1+x)%</string>
+    <string name="value_equal">=</string>
+    <string name="caculate_button">Enter</string>
 </resources>

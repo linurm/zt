@@ -49,6 +49,9 @@
             android:name="zj.zfenlly.wifi.WifiFragment"
             android:label="@string/wifi_conn_activity"></activity>
         <activity
+            android:name="zj.zfenlly.wifidevice.WifiDeviceFragment"
+            android:label="@string/wifi_conn_activity"></activity>
+        <activity
             android:name="zj.zfenlly.wifi.WifiConfigDialogFragment"
             android:label="@string/wifi_conn_activity"></activity>
 
@@ -68,10 +71,10 @@
             android:name="zj.zfenlly.gua.SelectModeActivity"
             android:label="@string/wifi_manual"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name="zj.zfenlly.gua.OverActivity"
