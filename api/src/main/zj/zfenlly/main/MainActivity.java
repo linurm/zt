@@ -1,6 +1,7 @@
 package zj.zfenlly.main;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,10 +10,10 @@ import android.view.View;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-import zj.zfenlly.arc.ArcFragment;
 import zj.zfenlly.record.MyAlertDialogFragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifidevice.WifiDeviceFragment;
+import zj.zfenlly.wifidevice.util.Constant;
 
 public class MainActivity extends BaseActivity {
 
@@ -76,6 +77,19 @@ public class MainActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         print("onPause");
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (null != data) {
+                int selectType = data.getExtras().getInt("selectType");
+                if (selectType == Constant.SELECT_FILES) {
+                    Log.e("TAG", "select type");
+//                    WifiDeviceFragment.
+                }
+            }
+        }
     }
 
     @Override

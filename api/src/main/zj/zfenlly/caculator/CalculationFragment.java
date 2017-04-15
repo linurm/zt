@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +73,7 @@ public class CalculationFragment extends Fragment implements Name, Observer {
 
         float molecule = x_to - x_from;
         float denominator = 100 + x_from;
-        float result = molecule / denominator;
+        float result = molecule / denominator * 100;
         result_calculate.setText("" + result);
         Log.e("TAG", "" + x_from + ":" + x_to);
     }

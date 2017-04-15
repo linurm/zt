@@ -107,6 +107,9 @@
         <item>TW</item>
         <item>US</item>
     </string-array>
+    <string-array name="groupIndicatorLabeles">
+        <item>在线</item>
+    </string-array>
     <string-array name="preferences_front_light_values" tools:ignore="MissingTranslation">
         <item>ON</item>
         <item>AUTO</item>

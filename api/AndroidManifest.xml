@@ -72,10 +72,17 @@
             android:label="@string/wifi_manual"
             android:screenOrientation="landscape">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
+        <activity  android:name="zj.zfenlly.wifidevice.home.MyFileManager"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Dialog"/>
+        <service
+            android:name="zj.zfenlly.wifidevice.service.MainService"
+            android:enabled="true"></service>
+
         <activity
             android:name="zj.zfenlly.gua.OverActivity"
             android:label="@string/wifi_manual"
@@ -281,12 +288,12 @@
 
         <service android:name="zj.zfenlly.other.ZfenllyService"></service>
 
-        <receiver android:name="zj.zfenlly.wifi.WifiChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name="zj.zfenlly.wifi.WifiChangeReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+                <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <receiver
             android:name="zj.zfenlly.main.BootUpReceiver"
             android:enabled="true"
