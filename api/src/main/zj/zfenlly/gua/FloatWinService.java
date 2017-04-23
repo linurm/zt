@@ -30,6 +30,7 @@ public class FloatWinService extends Service {
     Context mContext;
     LinearLayout mFloatLayout;
     LinearLayout mUpFloatLayout;
+    LinearLayout mMidFloatLayout;
     LinearLayout mDownFloatLayout;
     WindowManager.LayoutParams wmParams;
     WindowManager mWindowManager;
@@ -40,6 +41,7 @@ public class FloatWinService extends Service {
     private TextView before10minites;
     private Button after1hour;
     private Button before1hour;
+    private Button refreshView;
 
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -85,6 +87,9 @@ public class FloatWinService extends Service {
 
     void setTimeAfter1Hour() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "a60");
+    }
+    void setRefresh() {
+        WifiStatusLoader.getInstance(mContext).startAPP(0, "a0");
     }
 
     void setTimeBefore1Hour() {
@@ -133,6 +138,13 @@ public class FloatWinService extends Service {
             mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
             mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
         }
+        mMidFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mMidFloatLayoutLP  = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mMidFloatLayout.setLayoutParams(mMidFloatLayoutLP);
+        mMidFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
+
         mDownFloatLayout = new LinearLayout(context);
         LinearLayout.LayoutParams mDownFloatLayoutLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -233,13 +245,27 @@ public class FloatWinService extends Service {
             mUpFloatLayout.addView(after10minites);
             mUpFloatLayout.addView(afterhalfhour);
             mFloatLayout.addView(mUpFloatLayout);
-            mDownFloatLayout.addView(before1hour);
+            mMidFloatLayout.addView(before1hour);
         }
-        mDownFloatLayout.addView(floatView);
+        mMidFloatLayout.addView(floatView);
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
-            mDownFloatLayout.addView(after1hour);
+            mMidFloatLayout.addView(after1hour);
         }
+        refreshView = new Button(this);
+        refreshView.setText("refresh");
+        refreshView.setHeight(dip2px(mContext, 80));
+        refreshView.setBackgroundResource(R.drawable.button_shape);
+        refreshView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        refreshView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setRefresh();
+                Toast.makeText(FloatWinService.this, "refresh", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mDownFloatLayout.addView(refreshView);
 
+        mFloatLayout.addView(mMidFloatLayout);
         mFloatLayout.addView(mDownFloatLayout);
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(this);
         mWifiStatusLoader.setRecentsPanel(floatView);

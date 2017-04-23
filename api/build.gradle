@@ -19,7 +19,7 @@ android {
             storePassword '123456'
         }
     }
-    compileSdkVersion 19
+    compileSdkVersion 24
     buildToolsVersion '25.0.2'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -56,10 +56,8 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.android
         }
         release {
-            signingConfig signingConfigs.android
         }
     }
 }

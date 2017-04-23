@@ -10,6 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ import java.util.List;
 
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
+
+import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
 
 
 /**
@@ -149,9 +152,14 @@ public class SelectModeActivity extends Activity {
         }
         if (getMobileNet()) {
             net3gon.setVisibility(View.INVISIBLE);
+            net3goff.setBackgroundColor(Color.RED);
             net3goff.setVisibility(View.VISIBLE);
+            if (!android.os.Build.MODEL.equals(CPU_TYPE)) {
+                setGuaAutoStart(false);
+            }
         } else {
             net3gon.setVisibility(View.VISIBLE);
+
             net3goff.setVisibility(View.INVISIBLE);
         }
         //mAutoStart = autostart.isChecked();
