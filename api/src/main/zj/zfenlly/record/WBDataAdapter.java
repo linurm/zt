@@ -3,11 +3,12 @@ package zj.zfenlly.record;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import com.zfenlly.db.WB;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import zj.zfenlly.daodb.WB;
 
 /**
  * Created by Administrator on 2016/7/22.

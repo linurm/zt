@@ -151,9 +151,8 @@ public class WifiDeviceFragment extends Fragment implements Name, Observer, View
         mStockApplication.addObserver(this);
         groupIndicatorLabeles = getResources().getStringArray(R.array.groupIndicatorLabeles);
         mMainServiceIntent = new Intent(getActivity(), MainService.class);
-        getActivity().bindService(mMainServiceIntent, sConnection, Context.BIND_AUTO_CREATE);
-        getActivity().startService(mMainServiceIntent);
-        regBroadcastRecv();
+
+
     }
 
     @Override
@@ -166,6 +165,9 @@ public class WifiDeviceFragment extends Fragment implements Name, Observer, View
         View view = inflater.inflate(R.layout.fragment_wifi_client, container, false);
         view.setBackgroundColor(color);
         ViewUtils.inject(this, view);
+        getActivity().bindService(mMainServiceIntent, sConnection, Context.BIND_AUTO_CREATE);
+        getActivity().startService(mMainServiceIntent);
+        regBroadcastRecv();
         return view;
     }
 

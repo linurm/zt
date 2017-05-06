@@ -16,26 +16,25 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.zfenlly.dao.DaoMaster;
-import com.zfenlly.dao.DaoMaster.DevOpenHelper;
-import com.zfenlly.dao.DaoSession;
-import com.zfenlly.dao.Note;
-import com.zfenlly.dao.NoteDao;
-import com.zfenlly.dao.NoteDao.Properties;
+
 
 import org.apache.commons.httpclient.HttpException;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import de.greenrobot.dao.query.QueryBuilder;
 import zj.zfenlly.main.MainActivity;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.main.MonitorService;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
+import zj.zfenlly.daodb.DaoMaster;
+import zj.zfenlly.daodb.DaoSession;
+import zj.zfenlly.daodb.Note;
+import zj.zfenlly.daodb.NoteDao;
 import zj.zfenlly.tools.R;
 
 public class StockService extends Service implements Observer {
@@ -166,7 +165,7 @@ public class StockService extends Service implements Observer {
     private void initDatabase() {
         final String DATABASE_PATH = Environment.getExternalStorageDirectory()
                 + "/" + "xxx/";
-        DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_PATH
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_PATH
                 + "notes-db", null);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
@@ -300,9 +299,9 @@ public class StockService extends Service implements Observer {
     public boolean isSaved(Note note) {
         QueryBuilder<Note> qb = noteDao.queryBuilder();
 
-        qb.where(Properties.Stockid.eq(note.getStockid()));
+        qb.where(NoteDao.Properties.Stockid.eq(note.getStockid()));
         if (qb.list().size() > 0)
-            qb.where(Properties.Date.eq(note.getDate()));
+            qb.where(NoteDao.Properties.Date.eq(note.getDate()));
 
         // print("date: " + note.getDate() + ": " + qb.list().size());
         // qb.buildCount().count();
@@ -492,7 +491,7 @@ public class StockService extends Service implements Observer {
         private boolean simulationDisplayInit(String stockId) {
             if (!isInit) {
                 qb = noteDao.queryBuilder();
-                qb.where(Properties.Stockid.eq(stockId));
+                qb.where(NoteDao.Properties.Stockid.eq(stockId));
                 db_num = qb.list().size();
                 db_index = 0;
                 isInit = true;

@@ -4,29 +4,27 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import zj.zfenlly.daodb.MSC;
+import zj.zfenlly.daodb.WB2;
 
 /**
  * Created by Administrator on 2016/7/22.
  */
-public class MSCDataAdapter extends ArrayAdapter<String> {
+public class WB2DataAdapter extends ArrayAdapter<String> {
 
-    public MSCDataAdapter(Context context) {
+    public WB2DataAdapter(Context context) {
         super(context, android.R.layout.simple_list_item_single_choice);
     }
 
-    public void setAliases(List<MSC> items) {
+    public void setAliases(List<WB2> items) {
         clear();
-
         List<String> list = new ArrayList<String>();
         Iterator it1 = items.iterator();
-        while(it1.hasNext()){
-            list.add(((MSC)it1.next()).toString());
+        while (it1.hasNext()) {
+            list.add(it1.next().toString());
         }
         addAll(list);
         notifyDataSetChanged();

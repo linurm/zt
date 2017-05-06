@@ -20,7 +20,6 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.zfenlly.dao.Note;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -38,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zj.zfenlly.stock.StockInfo.ParseStockInfoException;
+import zj.zfenlly.daodb.Note;
 
 
 public final class StockClient {

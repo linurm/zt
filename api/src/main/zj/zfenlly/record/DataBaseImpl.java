@@ -4,21 +4,28 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
-import com.zfenlly.db.DaoMaster;
-import com.zfenlly.db.DaoSession;
-import com.zfenlly.db.MSC;
-import com.zfenlly.db.MSCDao;
-import com.zfenlly.db.WB;
-import com.zfenlly.db.WBDao;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
 
-import de.greenrobot.dao.query.QueryBuilder;
+import zj.zfenlly.daodb.DaoMaster;
+import zj.zfenlly.daodb.DaoSession;
+import zj.zfenlly.daodb.MSC;
+import zj.zfenlly.daodb.MSCDao;
+import zj.zfenlly.daodb.WB;
+import zj.zfenlly.daodb.WB2;
+import zj.zfenlly.daodb.WB2Dao;
+import zj.zfenlly.daodb.WBDao;
+
 
 /**
  * Created by Administrator on 2016/7/18.
  */
 public class DataBaseImpl {
+
+    public static final boolean ENCRYPTED = false;
+
+
     static final String DATABASENAME = "mw.db";
     static final String DATABASEPATH = "xxx";
 
@@ -185,6 +192,86 @@ public class DataBaseImpl {
             daoSession = daoMaster.newSession();
             wbDao = daoSession.getWBDao();
             QueryBuilder<WB> qb = wbDao.queryBuilder().orderAsc(WBDao.Properties.Date);
+
+            return qb.list();
+        }
+    }
+
+    public static class WB2DataBaseOp {
+        public static void insert(Context mContext, WB2 mWb) {
+            SQLiteDatabase db;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            WB2Dao wbDao;
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getWritableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWB2Dao();
+            wbDao.insert(mWb);
+        }
+
+        public static void delete(Context mContext, WB2 mWB) {
+            SQLiteDatabase db;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            WB2Dao wbDao;
+
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getWritableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWB2Dao();
+
+            wbDao.deleteByKey(mWB.getId());
+        }
+
+        public static WB2 getCurrWB(Context mContext) {
+            SQLiteDatabase db;
+            WB2Dao wbDao;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getReadableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWB2Dao();
+            QueryBuilder<WB2> qb = wbDao.queryBuilder().orderAsc(WB2Dao.Properties.Date);;
+            WB2 mWB = null;
+            if (qb.list().size() >= 1)
+                mWB = qb.list().get(qb.list().size() - 1);
+            return mWB;
+        }
+
+        public static WB2 getWB(Context mContext, int id) {
+            SQLiteDatabase db;
+            WB2Dao wbDao;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            if (id < 0) return null;
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getReadableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWB2Dao();
+            QueryBuilder<WB2> qb = wbDao.queryBuilder().orderAsc(WB2Dao.Properties.Date);;
+            WB2 mWB = null;
+            if (qb.list().size() >= 1)
+                mWB = qb.list().get(id);
+            return mWB;
+        }
+
+        public static List<WB2> getListWB(Context mContext) {
+            SQLiteDatabase db;
+            WB2Dao wbDao;
+            DaoMaster daoMaster;
+            DaoSession daoSession;
+            DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(mContext, DATABASE_PATH_NAME, null);
+            db = helper.getReadableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+            wbDao = daoSession.getWB2Dao();
+            QueryBuilder<WB2> qb = wbDao.queryBuilder().orderAsc(WB2Dao.Properties.Date);
             return qb.list();
         }
     }

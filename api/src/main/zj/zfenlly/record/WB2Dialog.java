@@ -12,29 +12,28 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import zj.zfenlly.main.MainActivity;
-import zj.zfenlly.daodb.WB;
+import zj.zfenlly.daodb.WB2;
 import zj.zfenlly.tools.R;
 
 
-public class WBDialog extends Dialog {
+public class WB2Dialog extends Dialog {
     public Context mContext;
     public View contentView;
 
-    public WBDialog(Context context) {
+    public WB2Dialog(Context context) {
         super(context);
         mContext = context;
     }
 
-    public WBDialog(Context context, int theme) {
+    public WB2Dialog(Context context, int theme) {
         super(context, theme);
         mContext = context;
     }
 
-    public void initDatabase(WB mWb) {
+    public void initDatabase(WB2 mWb) {
         //DataBaseImpl.WBDataBaseOp mWBOp = new DataBaseImpl.WBDataBaseOp();
-        DataBaseImpl.WBDataBaseOp.insert(mContext, mWb);
+        DataBaseImpl.WB2DataBaseOp.insert(mContext, mWb);
     }
 
     public boolean openDialogDate() {
@@ -69,7 +68,7 @@ public class WBDialog extends Dialog {
             d = s + " " + NowDataTime.getTime();
         }
 
-        WB mWb = new WB(null, t, n, d);
+        WB2 mWb = new WB2(null, t, n, d);
         initDatabase(mWb);
         Toast.makeText(mContext, t + ":" + n + " add successed!!!", Toast.LENGTH_SHORT).show();
         return true;
@@ -81,9 +80,9 @@ public class WBDialog extends Dialog {
         private String positiveButtonText;
         private String negativeButtonText;
 
-        private DialogInterface.OnClickListener positiveButtonClickListener;
-        private DialogInterface.OnClickListener negativeButtonClickListener;
-        private DialogInterface.OnClickListener dataPickClickListener;
+        private OnClickListener positiveButtonClickListener;
+        private OnClickListener negativeButtonClickListener;
+        private OnClickListener dataPickClickListener;
 
         public Builder(Context context) {
             this.context = context;
@@ -94,36 +93,36 @@ public class WBDialog extends Dialog {
             return this;
         }
 
-        public Builder setContentView(WBDialog dialog, View v) {
+        public Builder setContentView(WB2Dialog dialog, View v) {
             dialog.contentView = v;
             return this;
         }
 
 
         public Builder setPositiveButton(String positiveButtonText,
-                                         DialogInterface.OnClickListener listener) {
+                                         OnClickListener listener) {
             this.positiveButtonText = positiveButtonText;
             this.positiveButtonClickListener = listener;
             return this;
         }
 
         public Builder setNegativeButton(String negativeButtonText,
-                                         DialogInterface.OnClickListener listener) {
+                                         OnClickListener listener) {
             this.negativeButtonText = negativeButtonText;
             this.negativeButtonClickListener = listener;
             return this;
         }
 
-        public Builder setDatePickerButton(String DataPickerText, DialogInterface.OnClickListener listener) {
+        public Builder setDatePickerButton(String DataPickerText, OnClickListener listener) {
             this.dataPickClickListener = listener;
             return this;
         }
 
-        public WBDialog create() {
+        public WB2Dialog create() {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
-            final WBDialog dialog = new WBDialog(context, R.style.Dialog);
+            final WB2Dialog dialog = new WB2Dialog(context, R.style.Dialog);
             View layout = inflater.inflate(R.layout.wbdialog_setting, null);
             dialog.addContentView(layout, new LayoutParams(
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));

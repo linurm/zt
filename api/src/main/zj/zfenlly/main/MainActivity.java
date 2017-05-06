@@ -12,7 +12,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import zj.zfenlly.record.MyAlertDialogFragment;
 import zj.zfenlly.tools.R;
-import zj.zfenlly.wifidevice.WifiDeviceFragment;
 import zj.zfenlly.wifidevice.util.Constant;
 
 public class MainActivity extends BaseActivity {
@@ -50,8 +49,8 @@ public class MainActivity extends BaseActivity {
             print("have");
         }
         if (mContent == null)
-            mContent = new WifiDeviceFragment();
-        ;//mContent = new ColorFragment(R.color.red, "color");
+            //mContent = new RecordFragment();
+            mContent = new ColorFragment(R.color.protecteye, "color");
         // set the Above View
 
         getSupportFragmentManager().beginTransaction()

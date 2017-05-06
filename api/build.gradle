@@ -5,11 +5,12 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
     }
 }
 //apply plugin: 'com.android.model.application'
 apply plugin: 'android'
-
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 android {
     signingConfigs {
         android {
@@ -61,7 +62,9 @@ android {
         }
     }
 }
-
+greendao {
+    schemaVersion 1000
+}
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':other:slidingmenu')
@@ -69,6 +72,7 @@ dependencies {
     compile project(':other:pulltorefresh')
     compile project(':EventBus')
     compile project(':DaoCore')
+    compile 'org.greenrobot:greendao:3.2.2' // add library
 }
 
 //task clean(type: Delete) {

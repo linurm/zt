@@ -17,11 +17,13 @@ import android.widget.TextView;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
-import com.zfenlly.db.MSC;
-import com.zfenlly.db.WB;
 
-import zj.zfenlly.camera.CameraJni;
+
+
 import zj.zfenlly.other.Name;
+import zj.zfenlly.daodb.MSC;
+import zj.zfenlly.daodb.WB;
+import zj.zfenlly.daodb.WB2;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
@@ -32,6 +34,9 @@ public class RecordFragment extends Fragment implements Name {
     public String mName;
     @ViewInject(R.id.music_seven_day_minites)
     TextView mMusic7DayMinites;
+    @ViewInject(R.id.mscListView)
+    ListView mMscListView;
+
     @ViewInject(R.id.weibo_score)
     TextView mWeiboScore;
     @ViewInject(R.id.next_score)
@@ -40,10 +45,18 @@ public class RecordFragment extends Fragment implements Name {
     TextView mWeiboLevel;
     @ViewInject(R.id.wbListView)
     ListView mWbListView;
-    @ViewInject(R.id.mscListView)
-    ListView mMscListView;
+
+    @ViewInject(R.id.weibo2_score)
+    TextView mWeibo2Score;
+    @ViewInject(R.id.next2_score)
+    TextView mNext2Score;
+    @ViewInject(R.id.weibo2_level)
+    TextView mWeibo2Level;
+    @ViewInject(R.id.wb2ListView)
+    ListView mWb2ListView;
 
     WBDataAdapter mWBDataAdapter;
+    WB2DataAdapter mWB2DataAdapter;
     MSCDataAdapter mMSCDataAdapter;
     private int mColorRes = -1;
 
@@ -93,8 +106,6 @@ public class RecordFragment extends Fragment implements Name {
 
     @OnClick(R.id.wbEdit_btn)
     public void wbEdit_btn(View v) {
-
-
         WBDialog.Builder builder = new WBDialog.Builder(getActivity());
         builder.setTitle("WB");
         //builder.setDateButton("",null);
@@ -118,7 +129,34 @@ public class RecordFragment extends Fragment implements Name {
                 ((WBDialog) dialog).openDialogDate();
             }
         });
+        builder.create().show();
+    }
 
+    @OnClick(R.id.wb2Edit_btn)
+    public void wb2Edit_btn(View v) {
+        WB2Dialog.Builder builder = new WB2Dialog.Builder(getActivity());
+        builder.setTitle("WB2");
+        //builder.setDateButton("",null);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //builder.addMSCDate();//.addMSCDate();
+                ((WB2Dialog) dialog).addWBDate();
+                dialog.dismiss();
+                //设置你的操作事项
+            }
+        });
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.setDatePickerButton("data picker", new android.content.DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ((WB2Dialog) dialog).openDialogDate();
+            }
+        });
         builder.create().show();
     }
 
@@ -138,11 +176,14 @@ public class RecordFragment extends Fragment implements Name {
         mName = name;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         print("onCreate");
         print("" + dip2px(getActivity(), 128));
+
     }
 
     @Override
@@ -174,6 +215,40 @@ public class RecordFragment extends Fragment implements Name {
                                 WB mwb = DataBaseImpl.WBDataBaseOp.getWB(getActivity(), key);
                                 print(mwb.toString());
                                 DataBaseImpl.WBDataBaseOp.delete(getActivity(), mwb);
+
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+                                dialog.cancel();
+                            }
+                        }).create();
+                dialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
+                dialog.show();
+            }
+        });
+
+        mWB2DataAdapter = new WB2DataAdapter(getActivity().getApplicationContext());
+        mWb2ListView.setAdapter(mWB2DataAdapter);
+        mWb2ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                //DataBaseImpl.MSCDataBaseOp mMSCOp = new DataBaseImpl.MSCDataBaseOp();
+                final int key = (int) arg3;
+                final AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        .setTitle("WB2")//在这里把写好的这个listview的布局加载dialog中
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                print(":" + key);
+                                WB2 mwb = DataBaseImpl.WB2DataBaseOp.getWB(getActivity(), key);
+                                print(mwb.toString());
+                                DataBaseImpl.WB2DataBaseOp.delete(getActivity(), mwb);
 
                                 dialog.dismiss();
                             }
@@ -251,7 +326,14 @@ public class RecordFragment extends Fragment implements Name {
             mWBDataAdapter.setAliases(DataBaseImpl.WBDataBaseOp.getListWB(getActivity()));
         }
 
-
+        WB2 mWB2 = DataBaseImpl.WB2DataBaseOp.getCurrWB(getActivity());
+        if (mWB2 != null) {
+            mWeibo2Score.setText(mWB2.getTotalscore());
+            mNext2Score.setText(mWB2.getNextscore());
+            String lv = CaculateLevel.getCaculateLevel(mWB2.getTotalscore());
+            mWeibo2Level.setText(lv);
+            mWB2DataAdapter.setAliases(DataBaseImpl.WB2DataBaseOp.getListWB(getActivity()));
+        }
     }
 
     @Override

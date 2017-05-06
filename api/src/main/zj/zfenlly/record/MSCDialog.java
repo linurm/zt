@@ -12,9 +12,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zfenlly.db.MSC;
 
 import zj.zfenlly.main.MainActivity;
+import zj.zfenlly.daodb.MSC;
 import zj.zfenlly.tools.R;
 
 

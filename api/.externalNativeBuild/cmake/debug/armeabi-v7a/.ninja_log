@@ -1,4 +1,7 @@
 # ninja log v5
-0	1288	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	73b59a9830d5c483
-2	1291	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	89b64a2a56d34118
-1291	1423	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	f322a8a2ae827afe
+0	183	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	f4be531158dbb386
+1	191	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	f21804e54fe21614
+191	270	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	bc5f81c5c276fbb4
+1	343	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	f4be531158dbb386
+2	357	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	f21804e54fe21614
+357	572	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	bc5f81c5c276fbb4
