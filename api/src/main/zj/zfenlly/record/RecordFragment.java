@@ -18,12 +18,10 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-
-
-import zj.zfenlly.other.Name;
 import zj.zfenlly.daodb.MSC;
 import zj.zfenlly.daodb.WB;
 import zj.zfenlly.daodb.WB2;
+import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
@@ -177,7 +175,6 @@ public class RecordFragment extends Fragment implements Name {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -266,7 +263,8 @@ public class RecordFragment extends Fragment implements Name {
             }
         });
 
-        mMSCDataAdapter = new MSCDataAdapter(getActivity().getApplicationContext());
+        mMSCDataAdapter = new MSCDataAdapter(getActivity().getApplicationContext(), R.layout.mw_item_list);
+        mMSCDataAdapter.setAliases(DataBaseImpl.MSCDataBaseOp.getListMSC(getActivity()));
         mMscListView.setAdapter(mMSCDataAdapter);
         mMscListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -281,9 +279,7 @@ public class RecordFragment extends Fragment implements Name {
                             public void onClick(DialogInterface dialog, int which) {
                                 print(":" + key);
                                 MSC mmsc = DataBaseImpl.MSCDataBaseOp.getMSC(getActivity(), key);
-
                                 DataBaseImpl.MSCDataBaseOp.delete(getActivity(), mmsc);
-
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -296,10 +292,8 @@ public class RecordFragment extends Fragment implements Name {
                         }).create();
                 dialog.setCanceledOnTouchOutside(false);//使除了dialog以外的地方不能被点击
                 dialog.show();
-
             }
         });
-
         return view;
     }
 

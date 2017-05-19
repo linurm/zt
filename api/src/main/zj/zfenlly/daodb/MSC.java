@@ -41,6 +41,8 @@ public class MSC {
         return date + " " + last7minites + " " + todayminites;
     }
 
+
+
     public Long getId() {
         return this.id;
     }

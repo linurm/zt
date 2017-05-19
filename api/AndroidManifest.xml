@@ -13,6 +13,7 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="22" />
     <!-- 以下是使用wifi访问网络所需的权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
