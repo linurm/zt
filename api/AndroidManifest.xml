@@ -276,6 +276,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+        <service android:name="zj.zfenlly.stock2.Stock2Service">
+            <intent-filter>
+                <action android:name="zj.zfenlly.Stock2Service" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
         <!-- android:process=":MonitorService" android:process=":StockService"-->
         <service android:name="zj.zfenlly.main.MonitorService">
             <intent-filter>

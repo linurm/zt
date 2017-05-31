@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <TextView
+        android:id="@+id/t_score"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="TextView1" />
+    <TextView
+        android:id="@+id/n_score"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/t_score"
+        android:layout_marginStart="@dimen/abs__action_bar_default_height"
+        android:text="TextView2" />
+    <CheckedTextView
+        android:id="@+id/wb2_date"
+        android:layout_below="@+id/n_score"
+        android:layout_width="fill_parent"
+        android:text="ffff"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip"
+        />
+
+</RelativeLayout>

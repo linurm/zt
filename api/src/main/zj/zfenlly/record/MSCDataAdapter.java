@@ -67,8 +67,8 @@ public class MSCDataAdapter extends BaseAdapter {
         if (convertView == null) {
             cp = new Compan();
             convertView = layoutInflater.inflate(mResourceId, null);
-            cp.id = (TextView) convertView.findViewById(R.id.v_date);
-            cp.ctv = (CheckedTextView) convertView.findViewById(R.id.v_content);
+            cp.id = (CheckedTextView) convertView.findViewById(R.id.v_date);
+            cp.ctv = (TextView) convertView.findViewById(R.id.v_content);
             convertView.setTag(cp);
         } else {
             cp = (Compan) convertView.getTag();
@@ -82,7 +82,7 @@ public class MSCDataAdapter extends BaseAdapter {
     }
 
     class Compan {
-        TextView id;
-        CheckedTextView ctv;
+        TextView ctv;
+        CheckedTextView id;
     }
 }

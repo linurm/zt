@@ -195,7 +195,7 @@ public class RecordFragment extends Fragment implements Name {
         view.setBackgroundColor(color);
         ViewUtils.inject(this, view);
 
-        mWBDataAdapter = new WBDataAdapter(getActivity().getApplicationContext());
+        mWBDataAdapter = new WBDataAdapter(getActivity().getApplicationContext(), R.layout.mw_item_list2);
         mWbListView.setAdapter(mWBDataAdapter);
         mWbListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -229,7 +229,7 @@ public class RecordFragment extends Fragment implements Name {
             }
         });
 
-        mWB2DataAdapter = new WB2DataAdapter(getActivity().getApplicationContext());
+        mWB2DataAdapter = new WB2DataAdapter(getActivity().getApplicationContext(), R.layout.mw_item_list2);
         mWb2ListView.setAdapter(mWB2DataAdapter);
         mWb2ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

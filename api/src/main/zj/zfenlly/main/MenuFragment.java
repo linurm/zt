@@ -19,6 +19,7 @@ import zj.zfenlly.http.HttpFragment;
 import zj.zfenlly.mobeta.DragsortFragment;
 import zj.zfenlly.record.RecordFragment;
 import zj.zfenlly.stock.StockFragment;
+import zj.zfenlly.stock2.Stock2Fragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.usb.UsbFragment;
 import zj.zfenlly.wifi.WifiFragment;
@@ -78,7 +79,7 @@ public class MenuFragment extends ListFragment {
                 newContent = new WifiFragment(R.color.white, "wifi");
                 break;
             case 9:
-                newContent = new RecordFragment(R.color.white, "record");
+                newContent = new RecordFragment(R.color.yezhi, "record");
                 break;
             case 10:
                 newContent = new StockFragment();
@@ -91,6 +92,9 @@ public class MenuFragment extends ListFragment {
                 break;
             case 13:
                 newContent = new WifiDeviceFragment();
+                break;
+            case 14:
+                newContent = new Stock2Fragment();
                 break;
         }
         if (newContent != null)

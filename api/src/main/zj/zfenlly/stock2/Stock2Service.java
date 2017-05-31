@@ -1,4 +1,4 @@
-package zj.zfenlly.stock;
+package zj.zfenlly.stock2;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -35,14 +35,14 @@ import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
 import zj.zfenlly.tools.R;
 
-public class StockService extends Service implements Observer {
+public class Stock2Service extends Service implements Observer {
 
     private static final int STOCK_DATA_GET = 1;
     private static final int SCAN_CAMERA_STOP = 2;
     private static final int STOCK_GETLOOP_TICK = 6;
     private static final int STOCK_GETNEXTLOOP_TICK = STOCK_GETLOOP_TICK - 1;
 
-    private static final String ST_CODE = "sh600844";
+    private static final String ST_CODE = "600844";
     private static int numMessages;
     // private SinaStockClient mClient;
     private final String TAG = this.getClass().getName();
@@ -57,7 +57,7 @@ public class StockService extends Service implements Observer {
     // private boolean pause = false;
 
     // private Cursor cursor;
-    private StockClient mClient = null;
+    private Stock2Client mClient = null;
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private SQLiteDatabase db;
     private DaoMaster daoMaster;
@@ -75,7 +75,7 @@ public class StockService extends Service implements Observer {
     private sThread mStockThread = new sThread();
 
     private void print(String msg) {
-        Log.i(TAG, msg);
+        Log.e(TAG, msg);
     }
 
 //    private void initNotification() {
@@ -179,8 +179,10 @@ public class StockService extends Service implements Observer {
         mApplication = (MainApplication) getApplication();
         mApplication.addObserver(this);
         isstart = true;
-        mClient = StockClient.getInstance();
-        print(mClient.getUrlString(new String[]{ST_CODE}));
+        mClient = Stock2Client.getInstance();
+        mClient.getUrlString(new String[]{ST_CODE});
+        //mClient.getStockInfoDB(new String[]{ST_CODE});
+
         initDatabase();
         mStockThread.start();
         //mThread.start();
@@ -301,7 +303,7 @@ public class StockService extends Service implements Observer {
         if (qb.list().size() > 0)
             qb.where(NoteDao.Properties.Date.eq(note.getDate()));
 
-        // print("date: " + note.getDate() + ": " + qb.list().size());
+        print("date: " + note.getDate() + ": " + qb.list().size());
         // qb.buildCount().count();
         return qb.list().size() > 0 ? true : false;// 锟斤拷锟斤拷锟秸藏憋拷
     }
@@ -311,12 +313,12 @@ public class StockService extends Service implements Observer {
         // String comment = "Added on " + df.format(new Date());
         // Note note = new Note(null, id, content, time);
         if (isSaved(note)) {
-            print("is already exist!!!");
+//            print("is already exist!!!");
             return -1;
         } else {
             noteDao.insert(note);
-            print("Inserted new note, ID: " + note.getId() + "time: "
-                    + note.getDate());
+//            print("Inserted new note, ID: " + note.getId() + "time: "
+//                    + note.getDate());
             return 0;
         }
 
@@ -328,19 +330,20 @@ public class StockService extends Service implements Observer {
         Note note;
         for (Iterator i = al.iterator(); i.hasNext(); ) {
             note = (Note) i.next();
-            return addNote(note);
+            addNote(note);
         }
         return 0;
     }
 
     private void displayNote(Note note) {
-        StockInfo stockInfo = StockInfo.parseNoteInfo(note);
+        Stock2Info stockInfo = Stock2Info.parseNote2Info(note);
 
-        if (EventBus.getDefault().hasSubscriberForEvent(StockEvent.class)) {
-            EventBus.getDefault().post(new StockEvent(stockInfo));
+        if (EventBus.getDefault().hasSubscriberForEvent(Stock2Event.class)) {
+            EventBus.getDefault().post(new Stock2Event(stockInfo));
             print("=======================");
+        } else {
+            print("-------------------------");
         }
-        print("-------------------------");
         // print(stockInfo.toString());
     }
 
@@ -498,7 +501,6 @@ public class StockService extends Service implements Observer {
         }
 
         public Note getNoteFromDB() {
-
             if (db_num < db_index)
                 return null;
             if (qb.list().size() == 0)
@@ -506,9 +508,9 @@ public class StockService extends Service implements Observer {
             Note note = qb.list().get(db_index);
             db_index += 1;
             print("db_index: " + db_index);
-            StockInfo stockInfo = StockInfo.parseNoteInfo(note);
-            if (EventBus.getDefault().hasSubscriberForEvent(StockEvent.class)) {
-                EventBus.getDefault().post(new StockEvent(stockInfo));
+            Stock2Info stockInfo = Stock2Info.parseNote2Info(note);
+            if (EventBus.getDefault().hasSubscriberForEvent(Stock2Event.class)) {
+                EventBus.getDefault().post(new Stock2Event(stockInfo));
             }
             return note;
         }
@@ -519,7 +521,6 @@ public class StockService extends Service implements Observer {
             db_num = 0;
             db_index = 0;
         }
-
     }
 
     public class sThread extends Thread {
@@ -556,10 +557,7 @@ public class StockService extends Service implements Observer {
                     sm_times = 0;
 
                     if (mApplication.isServerDisplayRun()) {
-//                        print("?????????????");
-
                         if (mApplication.isServerSimulation()) {
-//                            print("!!!!!!!!!!!!!!!!!");
                             if (sd == null) {
                                 print("new");
                                 sd = new SimulationDisplay(ST_CODE);
@@ -570,109 +568,110 @@ public class StockService extends Service implements Observer {
                 }
                 if (times >= STOCK_GETLOOP_TICK) {
                     times = 0;
-                    try {
-                        if (mClient != null) {
-                            List<Note> list = null;
-                            if (StockTime.checkTime()) {
-                                if (isNetworkAvailable() == false) {
-                                    print("network is unavaliable");
-                                    break;
-                                }
-                                try {
-                                    list = mClient.getStockInfoDB(new String[]{ST_CODE});
-                                } catch (HttpException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                } catch (StockInfo.ParseStockInfoException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                                if (list != null) {
-                                    if (storeNotes(list) == -1) {
-                                        mStockThread.set_times(STOCK_GETNEXTLOOP_TICK);
-                                    }
-                                }
-                            } else {
-                                print("is out of time");
-                            }
-                            if (!mApplication.isServerSimulation() && mApplication.isServerDisplayRun()) {
-
-                                if (sd instanceof SimulationDisplay) {
-                                    sd.SimulationOFF();
-                                    print("off");
-                                    sd = null;
-                                }
-                                Display(list);
-                            }
+                    //try {
+                    if (mClient != null) {
+                        List<Note> list = null;
+                        //if (StockTime.checkTime()) {
+                        if (isNetworkAvailable() == false) {
+                            print("network is unavaliable");
+                            break;
                         }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        try {
+                            list = mClient.getStockInfoDB(new String[]{ST_CODE});
+                        } catch (HttpException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+//                        if (list != null) {
+//                                    Note note;
+//                                    for (Iterator i = list.iterator(); i.hasNext(); ) {
+//                                        note = (Note) i.next();
+//                                        addNote(note);
+//                                    }
+//                                    print("store ok !!!");
+//                                    if (storeNotes(list) == -1) {
+//                            ;//mStockThread.set_times(STOCK_GETNEXTLOOP_TICK);
+//                                    }
+//                        }
+                        //} else {
+                        //    print("is out of time");
+                        //}
+//                        if (!mApplication.isServerSimulation() && mApplication.isServerDisplayRun()) {
+                        if (sd instanceof SimulationDisplay) {
+                            sd.SimulationOFF();
+                            print("off");
+                            sd = null;
+                        }
+                        Display(list);
+//                        }
                     }
+                    //} catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    //e.printStackTrace();
+                    // }
+                    //}
                 }
-
             }
             print("mStockThread thread exit");
         }
-    }
 
+        //    private boolean isstart = false;
+        //private MThread mThread = new MThread();
+        public class MThread extends Thread {
+            boolean isServiceRunning = false;
 
-//    private boolean isstart = false;
-
-    //private MThread mThread = new MThread();
-
-    public class MThread extends Thread {
-        boolean isServiceRunning = false;
-
-        @Override
-        public void run() {
-            while (isstart) {
-                ActivityManager manager = (ActivityManager) getApplicationContext()
-                        .getSystemService(Context.ACTIVITY_SERVICE);
-                isServiceRunning = false;
-                for (ActivityManager.RunningServiceInfo service : manager
-                        .getRunningServices(Integer.MAX_VALUE)) {
+            @Override
+            public void run() {
+                while (isstart) {
+                    ActivityManager manager = (ActivityManager) getApplicationContext()
+                            .getSystemService(Context.ACTIVITY_SERVICE);
+                    isServiceRunning = false;
+                    for (ActivityManager.RunningServiceInfo service : manager
+                            .getRunningServices(Integer.MAX_VALUE)) {
 //                print(service.service
 //                        .getClassName());
-                    if (MonitorService.class.getName().equals(service.service
-                            .getClassName())) {
-                        isServiceRunning = true;
+                        if (MonitorService.class.getName().equals(service.service
+                                .getClassName())) {
+                            isServiceRunning = true;
 //                        print(StockService.class.getName() + " is running");
 //                    while(true){
 //
 //                    }
 
+                        }
                     }
-                }
-                if (!isServiceRunning) {
-                    Intent intentScan = new Intent("zj.intent.monitor");
-                    //intentScan.addCategory(Intent.CATEGORY_DEFAULT);
-                    //intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (!isServiceRunning) {
+                        Intent intentScan = new Intent("zj.intent.monitor");
+                        //intentScan.addCategory(Intent.CATEGORY_DEFAULT);
+                        //intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                    getApplicationContext().sendBroadcast(intentScan);
-                    print("start service");
-                }
+                        getApplicationContext().sendBroadcast(intentScan);
+                        print("start service");
+                    }
 
-                try {
-                    Thread.sleep(5);// 10ms
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(5);// 10ms
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+
+        // public boolean isPause() {
+        // return pause;
+        // }
+        //
+        // public void setPause(boolean pause) {
+        // this.pause = pause;
+        // }
     }
-
-    // public boolean isPause() {
-    // return pause;
-    // }
-    //
-    // public void setPause(boolean pause) {
-    // this.pause = pause;
-    // }
-
 }
