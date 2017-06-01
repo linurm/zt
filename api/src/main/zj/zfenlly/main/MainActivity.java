@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity {
         }
         if (mContent == null)
             //mContent = new RecordFragment();
-            mContent = new Stock2Fragment();
+            mContent = new ColorFragment();
         // set the Above View
 
         getSupportFragmentManager().beginTransaction()

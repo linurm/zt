@@ -2,6 +2,7 @@ package zj.zfenlly.stock2;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +34,7 @@ import zj.zfenlly.tools.R;
 
 
 @SuppressLint({"ValidFragment"})
-@ContentView(R.layout.fragment_stock)
+@ContentView(R.layout.fragment_stock2)
 public class Stock2Fragment extends Fragment implements Observer {
 
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
@@ -136,7 +137,7 @@ public class Stock2Fragment extends Fragment implements Observer {
         // construct the RelativeLayout
         //View v = null;
 
-        View v = inflater.inflate(R.layout.fragment_stock, null);
+        View v = inflater.inflate(R.layout.fragment_stock2, null);
 
         holder = new ViewHolder();
         ViewUtils.inject(holder, v);
@@ -147,7 +148,9 @@ public class Stock2Fragment extends Fragment implements Observer {
         //initServiceDisplay();
 
         //initToggleButton(v);
-
+        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 //        initNotify2();
         return v;
     }
@@ -202,15 +205,13 @@ public class Stock2Fragment extends Fragment implements Observer {
         boolean a = mStockApplication.isServerDisplayRun();
 //        print("------------  " + (a ? "1" : "2"));
         toggleButton.setChecked(a);
-
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // getActivity().setContentView(R.layout.stock);
-
+        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //ViewUtils.inject(getActivity());
 
         mStockApplication = (MainApplication) getActivity().getApplication();
@@ -232,11 +233,15 @@ public class Stock2Fragment extends Fragment implements Observer {
         // print("========onCreate");
         getActivity().stopService(intent);
         print("onDestroy");
+
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // finish();
     }
 
     @Override
     public void onResume() {
+
+
         super.onResume();
         print("onResume");
     }
@@ -280,8 +285,6 @@ public class Stock2Fragment extends Fragment implements Observer {
 //        int i;
         float todayp, yestodayp, highp, lowp, nowp;
         long tradec;
-
-
         // stock_name.setText(event.mStockInfo.getName());
         holder.setChangeValueEmpty();
 
@@ -291,7 +294,6 @@ public class Stock2Fragment extends Fragment implements Observer {
         lowp = event.mStockInfo.getLowestPrice();
         nowp = event.mStockInfo.getNowPrice();
         tradec = event.mStockInfo.getTradeCount();
-
 
         holder.displayOtherValue(todayp, yestodayp, highp, lowp, nowp,
                 tradec);
@@ -303,7 +305,6 @@ public class Stock2Fragment extends Fragment implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         // TODO Auto-generated method stub
-
     }
 
     // This method will be called when a SomeOtherEvent is posted

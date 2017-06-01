@@ -537,7 +537,6 @@ public class StockService extends Service implements Observer {
             print("mStockThread thread run");
             //List<Note> list = null;
             while (isstart) {
-
                 try {
                     Thread.sleep(10);// 10ms
                 } catch (InterruptedException e) {
@@ -554,12 +553,8 @@ public class StockService extends Service implements Observer {
 
                 if (sm_times > 3) {
                     sm_times = 0;
-
                     if (mApplication.isServerDisplayRun()) {
-//                        print("?????????????");
-
                         if (mApplication.isServerSimulation()) {
-//                            print("!!!!!!!!!!!!!!!!!");
                             if (sd == null) {
                                 print("new");
                                 sd = new SimulationDisplay(ST_CODE);

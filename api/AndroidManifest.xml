@@ -108,9 +108,14 @@
             <!--</intent-filter>-->
         </activity>
         <activity android:name="zj.zfenlly.http.DownloadListActivity" />
-        <activity
-            android:name="zj.zfenlly.stock.StockFragment"
-            android:label="@string/device_config"></activity>
+        <!--<activity-->
+            <!--android:name="zj.zfenlly.stock.StockFragment"-->
+            <!--android:label="@string/device_config"></activity>-->
+        <!--<activity-->
+            <!--android:name="zj.zfenlly.stock2.Stock2Fragment"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:label="@string/device_config"></activity>-->
+
 
         <activity
             android:name="zj.zfenlly.wifiap.WifiApFragment"

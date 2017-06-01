@@ -57,8 +57,10 @@ android {
     }
     buildTypes {
         debug {
+            signingConfig signingConfigs.android
         }
         release {
+            signingConfig signingConfigs.android
         }
     }
 }
@@ -72,7 +74,8 @@ dependencies {
     compile project(':other:pulltorefresh')
     compile project(':EventBus')
     compile project(':DaoCore')
-    compile 'org.greenrobot:greendao:3.2.2' // add library
+    compile 'org.greenrobot:greendao:3.2.2'
+    // add library
 }
 
 //task clean(type: Delete) {

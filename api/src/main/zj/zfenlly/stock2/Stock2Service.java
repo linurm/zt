@@ -340,9 +340,9 @@ public class Stock2Service extends Service implements Observer {
 
         if (EventBus.getDefault().hasSubscriberForEvent(Stock2Event.class)) {
             EventBus.getDefault().post(new Stock2Event(stockInfo));
-            print("=======================");
+            //print("=======================");
         } else {
-            print("-------------------------");
+            ;//print("-------------------------");
         }
         // print(stockInfo.toString());
     }
@@ -465,12 +465,12 @@ public class Stock2Service extends Service implements Observer {
 //            }
 //        }
         mApplication.deleteObserver(this);
-        Intent intentScan = new Intent("zj.intent.RESTART");
+        //Intent intentScan = new Intent("zj.intent.RESTART");
         //intentScan.addCategory(Intent.CATEGORY_DEFAULT);
         //intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        getApplicationContext().sendBroadcast(intentScan);
+        //getApplicationContext().sendBroadcast(intentScan);
 //        startService(new Intent(this, StockService.class));
 //        Intent localIntent = new Intent();
 //        localIntent.setClass(this, StockService.class);  //销毁时重新启动Service
@@ -526,68 +526,34 @@ public class Stock2Service extends Service implements Observer {
     public class sThread extends Thread {
         int times;
         int sm_times;
-        long tmp_times = 0, last_times = 0;//, cmp_times = 1000;
+        long cur_times = 0, last_times = 0;//, cmp_times = 1000;
 
         public void set_times(int times) {
             this.times = times;
         }
 
-        @Override
-        public void run() {
-            // rs.Poll(1);
-            print("mStockThread thread run");
-            //List<Note> list = null;
-            while (isstart) {
+        public List<Note> getStockInfoFromNet() {
+            List<Note> l = null;
 
+            if (mClient != null) {
+
+                //if (StockTime.checkTime()) {
+                if (isNetworkAvailable() == false) {
+                    print("network is unavaliable");
+                    return null;
+                }
                 try {
-                    Thread.sleep(10);// 10ms
-                } catch (InterruptedException e) {
+                    l = mClient.getStockInfoDB(new String[]{ST_CODE});
+                } catch (HttpException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (Exception e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                tmp_times = System.currentTimeMillis();
-                if (last_times + 1000 < tmp_times) {//1s
-                    sm_times++;
-                    times++;
-                    last_times = last_times + 1000 * ((tmp_times - last_times) / 1000);
-                }
-                // 10s
-
-                if (sm_times > 3) {
-                    sm_times = 0;
-
-                    if (mApplication.isServerDisplayRun()) {
-                        if (mApplication.isServerSimulation()) {
-                            if (sd == null) {
-                                print("new");
-                                sd = new SimulationDisplay(ST_CODE);
-                            }
-                            sd.getNoteFromDB();
-                        }
-                    }
-                }
-                if (times >= STOCK_GETLOOP_TICK) {
-                    times = 0;
-                    //try {
-                    if (mClient != null) {
-                        List<Note> list = null;
-                        //if (StockTime.checkTime()) {
-                        if (isNetworkAvailable() == false) {
-                            print("network is unavaliable");
-                            break;
-                        }
-                        try {
-                            list = mClient.getStockInfoDB(new String[]{ST_CODE});
-                        } catch (HttpException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
 //                        if (list != null) {
 //                                    Note note;
 //                                    for (Iterator i = list.iterator(); i.hasNext(); ) {
@@ -599,18 +565,75 @@ public class Stock2Service extends Service implements Observer {
 //                            ;//mStockThread.set_times(STOCK_GETNEXTLOOP_TICK);
 //                                    }
 //                        }
-                        //} else {
-                        //    print("is out of time");
-                        //}
+                //} else {
+                //    print("is out of time");
+                //}
 //                        if (!mApplication.isServerSimulation() && mApplication.isServerDisplayRun()) {
-                        if (sd instanceof SimulationDisplay) {
-                            sd.SimulationOFF();
-                            print("off");
-                            sd = null;
-                        }
-                        Display(list);
+                if (sd instanceof SimulationDisplay) {
+                    sd.SimulationOFF();
+                    print("off");
+                    sd = null;
+                }
+                //Display(list);
 //                        }
+            }
+            return l;
+        }
+
+        @Override
+        public void run() {
+            // rs.Poll(1);
+            print("mStockThread thread run");
+            List<Note> list = null;
+            list = getStockInfoFromNet();
+            int index = 0;
+            //List<Note> list = null;
+            while (isstart) {
+                try {
+                    Thread.sleep(10);// 10ms
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                cur_times = System.currentTimeMillis();
+                if (last_times + 1000 < cur_times) {//1s
+                    sm_times++;
+                    times++;
+                    last_times = last_times + 1000 * ((cur_times - last_times) / 1000);
+                }
+                // 10s
+
+                if (sm_times > 3) {
+//                    sm_times = 0;
+
+//                    for (Iterator i = list.iterator(); i.hasNext(); ) {
+//                        note = (Note) i.next();
+
+                    displayNote(list.get(index));
+                    index++;
+                    print("index: " + index + " size: " + list.size());
+                    if (index < list.size()) {
+                        sm_times = 0;
                     }
+//                    }
+
+//                    Display(list);
+//                    if (mApplication.isServerDisplayRun()) {
+//                        if (mApplication.isServerSimulation()) {
+//                            if (sd == null) {
+//                                print("new");
+//                                sd = new SimulationDisplay(ST_CODE);
+//                            }
+//                            sd.getNoteFromDB();
+//                        }
+//                    }
+                }
+                if (times >= STOCK_GETLOOP_TICK) {
+                    times = 0;
+
+
+                    //try {
+
                     //} catch (Exception e) {
                     // TODO Auto-generated catch block
                     //e.printStackTrace();
