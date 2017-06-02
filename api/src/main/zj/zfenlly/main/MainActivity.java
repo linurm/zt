@@ -18,6 +18,7 @@ import zj.zfenlly.wifidevice.util.Constant;
 public class MainActivity extends BaseActivity {
 
 
+    private static final String KEY_CURRENT_PROGRESS = "current_fragment";
     private final String TAG = this.getClass().getName();
     private Fragment mContent = null;
 
@@ -25,13 +26,13 @@ public class MainActivity extends BaseActivity {
         super(R.string.changing_fragments);
         // TODO Auto-generated constructor stub
     }
+    //.substring(this.getClass().getName().lastIndexOf(".") + 1);
 
     public void showDialog(View mView) {
         DialogFragment newFragment = MyAlertDialogFragment.newInstance(
                 R.string.alert_dialog_two_buttons_title, mView);
         newFragment.show(getFragmentManager(), "dialog");
     }
-    //.substring(this.getClass().getName().lastIndexOf(".") + 1);
 
     private void print(String msg) {
         Log.i(TAG, msg);
@@ -42,13 +43,19 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.fragment_color);
-        Log.e("0000000", "show" + this);
+        //Log.e("0000000", "show" + this);
         // set the Above View
         if (savedInstanceState != null) {
             // mContent = getSupportFragmentManager().getFragment(
             // savedInstanceState, FRAGMENT_CONTENT_TAG);
+            if (1 == savedInstanceState.getInt(KEY_CURRENT_PROGRESS)) {
+                mContent = new Stock2Fragment();
+                print("33333333333333333333333");
+            }
+            ;
             print("have");
         }
+
         if (mContent == null)
             //mContent = new RecordFragment();
             mContent = new ColorFragment();
@@ -98,7 +105,7 @@ public class MainActivity extends BaseActivity {
         // FRAGMENT_CONTENT_TAG,
         // mContent);
         print("onSaveInstanceState:" + mContent);
-        outState.putInt("abc", 1);
+        outState.putInt(KEY_CURRENT_PROGRESS, 1);
 
     }
 
