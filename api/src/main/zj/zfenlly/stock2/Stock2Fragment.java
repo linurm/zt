@@ -94,7 +94,7 @@ public class Stock2Fragment extends Fragment implements Observer {
     }
 
     private void print(String msg) {
-        Log.i(TAG, msg);
+        Log.e(TAG, msg);
     }
 
 //    private void initNotify() {
@@ -148,9 +148,7 @@ public class Stock2Fragment extends Fragment implements Observer {
         //initServiceDisplay();
 
         //initToggleButton(v);
-        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
+
 //        initNotify2();
         return v;
     }
@@ -213,25 +211,30 @@ public class Stock2Fragment extends Fragment implements Observer {
         // getActivity().setContentView(R.layout.stock);
         //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //ViewUtils.inject(getActivity());
-
+        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            print("66666666666666666666666666666666");
+            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
         mStockApplication = (MainApplication) getActivity().getApplication();
         mStockApplication.addObserver(this);
-
-        Intent intent = new Intent(getActivity(), Stock2Service.class);
-        // mAPService =
-        // print("========onCreate");
-        getActivity().startService(intent);
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), Stock2Service.class);
+            // mAPService =
+            // print("========onCreate");
+            getActivity().startService(intent);
+        }
 
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Intent intent = new Intent(getActivity(), Stock2Service.class);
-        // mAPService =
-        // print("========onCreate");
-        getActivity().stopService(intent);
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), Stock2Service.class);
+            // mAPService =
+            // print("========onCreate");
+            getActivity().stopService(intent);
+        }
         print("onDestroy");
 
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -313,66 +316,7 @@ public class Stock2Fragment extends Fragment implements Observer {
     // }
 
     public class ViewHolder {
-        @ViewInject(R.id.textView00)
-        TextView tv00;
-        @ViewInject(R.id.textView01)
-        TextView tv01;
-        @ViewInject(R.id.textView02)
-        TextView tv02;
-        @ViewInject(R.id.textView10)
-        TextView tv10;
-        @ViewInject(R.id.textView11)
-        TextView tv11;
-        @ViewInject(R.id.textView12)
-        TextView tv12;
-        @ViewInject(R.id.textView20)
-        TextView tv20;
-        @ViewInject(R.id.textView21)
-        TextView tv21;
-        @ViewInject(R.id.textView22)
-        TextView tv22;
-        @ViewInject(R.id.textView30)
-        TextView tv30;
-        @ViewInject(R.id.textView31)
-        TextView tv31;
-        @ViewInject(R.id.textView32)
-        TextView tv32;
-        @ViewInject(R.id.textView40)
-        TextView tv40;
-        @ViewInject(R.id.textView41)
-        TextView tv41;
-        @ViewInject(R.id.textView42)
-        TextView tv42;
-        @ViewInject(R.id.textView50)
-        TextView tv50;
-        @ViewInject(R.id.textView51)
-        TextView tv51;
-        @ViewInject(R.id.textView52)
-        TextView tv52;
-        @ViewInject(R.id.textView60)
-        TextView tv60;
-        @ViewInject(R.id.textView61)
-        TextView tv61;
-        @ViewInject(R.id.textView62)
-        TextView tv62;
-        @ViewInject(R.id.textView70)
-        TextView tv70;
-        @ViewInject(R.id.textView71)
-        TextView tv71;
-        @ViewInject(R.id.textView72)
-        TextView tv72;
-        @ViewInject(R.id.textView80)
-        TextView tv80;
-        @ViewInject(R.id.textView81)
-        TextView tv81;
-        @ViewInject(R.id.textView82)
-        TextView tv82;
-        @ViewInject(R.id.textView90)
-        TextView tv90;
-        @ViewInject(R.id.textView91)
-        TextView tv91;
-        @ViewInject(R.id.textView92)
-        TextView tv92;
+
         @ViewInject(R.id.nowopen)
         TextView now_open;
         @ViewInject(R.id.lastclose)
@@ -395,16 +339,16 @@ public class Stock2Fragment extends Fragment implements Observer {
         }
 
         public void setChangeValueEmpty() {
-            tv02.setText("");
-            tv12.setText("");
-            tv22.setText("");
-            tv32.setText("");
-            tv42.setText("");
-            tv52.setText("");
-            tv62.setText("");
-            tv72.setText("");
-            tv82.setText("");
-            tv92.setText("");
+//            tv02.setText("");
+//            tv12.setText("");
+//            tv22.setText("");
+//            tv32.setText("");
+//            tv42.setText("");
+//            tv52.setText("");
+//            tv62.setText("");
+//            tv72.setText("");
+//            tv82.setText("");
+//            tv92.setText("");
         }
 
         public void displayOtherValue(float todayp, float yestodayp, float highp, float lowp,

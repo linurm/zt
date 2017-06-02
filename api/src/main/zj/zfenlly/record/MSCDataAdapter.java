@@ -76,7 +76,7 @@ public class MSCDataAdapter extends BaseAdapter {
         cp.id.setText((CharSequence) items.get(position).getDate());
         cp.ctv.setText((CharSequence) items.get(position).getLast7minites() + " " + (CharSequence) items.get(position).getTodayminites());
 
-        Log.e("TAG", "--------------------------------------");
+//        Log.e("TAG", "--------------------------------------");
         return convertView;
 
     }

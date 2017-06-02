@@ -75,7 +75,7 @@ public class WBDataAdapter extends BaseAdapter {
         cp.ts.setText((CharSequence) items.get(position).getTotalscore());
         cp.ns.setText((CharSequence) items.get(position).getNextscore());
 
-        Log.e("TAG", "--------------------------------------");
+//        Log.e("TAG", "--------------------------------------");
         return convertView;
 
     }

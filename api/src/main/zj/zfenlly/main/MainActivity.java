@@ -53,7 +53,6 @@ public class MainActivity extends BaseActivity {
             //mContent = new RecordFragment();
             mContent = new ColorFragment();
         // set the Above View
-
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_frame, mContent).commit();
 
