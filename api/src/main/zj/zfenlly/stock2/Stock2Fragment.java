@@ -1,6 +1,7 @@
 package zj.zfenlly.stock2;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -127,8 +128,11 @@ public class Stock2Fragment extends Fragment implements Observer {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (savedInstanceState != null)
+        print("onCreateView " + this);
+        if (savedInstanceState != null) {
             mColorRes = savedInstanceState.getInt("mColorRes");
+            print("getInt");
+        }
 
         int color = getResources().getColor(mColorRes);
 
@@ -157,6 +161,7 @@ public class Stock2Fragment extends Fragment implements Observer {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("mColorRes", mColorRes);
+        print("onSaveInstanceState " + this);
     }
 
     private void initServiceDisplay() {
@@ -211,10 +216,7 @@ public class Stock2Fragment extends Fragment implements Observer {
         // getActivity().setContentView(R.layout.stock);
         //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //ViewUtils.inject(getActivity());
-        if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            print("66666666666666666666666666666666");
-            getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
+        print("onCreate " + this);
         mStockApplication = (MainApplication) getActivity().getApplication();
         mStockApplication.addObserver(this);
         if (!Debug) {
@@ -235,9 +237,8 @@ public class Stock2Fragment extends Fragment implements Observer {
             // print("========onCreate");
             getActivity().stopService(intent);
         }
-        print("onDestroy");
+        print("onDestroy " + this);
 
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // finish();
     }
 
@@ -246,40 +247,60 @@ public class Stock2Fragment extends Fragment implements Observer {
 
 
         super.onResume();
-        print("onResume");
+        print("onResume " + this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        print("onPause");
+        print("onPause " + this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        print("onDestroyView " + this);
         mStockApplication.deleteObserver(this);
         if (!Debug) {
             Intent intent = new Intent(getActivity(), Stock2Service.class);
             getActivity().stopService(intent);
         }
-        print("onDestroyView");
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        print("event bus is register");
+        print("onStart " + this);
         EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        print("event bus is unregister");
+        print("onStop " + this);
         EventBus.getDefault().unregister(this);
         //tb_Simulation.setChecked(false);
         super.onStop();
+    }
+
+    @Override
+    public void onDetach() {
+        // TODO Auto-generated method stub
+        print("onDetach  " + this);
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        print("onAttach  " + this);
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        print("onActivityCreated  " + this);
+        super.onActivityCreated(savedInstanceState);
     }
 
     // This method will be called when a MessageEvent is posted

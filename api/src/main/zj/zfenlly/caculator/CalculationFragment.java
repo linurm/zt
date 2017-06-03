@@ -34,6 +34,7 @@ public class CalculationFragment extends Fragment implements Name, Observer {
 
     @ViewInject(R.id.result_calculate)
     public TextView result_calculate;
+    CalculationFragment mCalculationFragment;
     private int mColorRes = -1;
 
     public CalculationFragment() {
@@ -53,6 +54,13 @@ public class CalculationFragment extends Fragment implements Name, Observer {
             return 0;
         }
 
+    }
+
+    public CalculationFragment newInstance() {
+        if (mCalculationFragment == null) {
+            mCalculationFragment = new CalculationFragment();
+        }
+        return mCalculationFragment;
     }
 
     @OnClick(R.id.button_calculate)
@@ -133,6 +141,13 @@ public class CalculationFragment extends Fragment implements Name, Observer {
     public void onDestroyView() {
         super.onDestroyView();
         print("onDestroyView");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        print("onDestroy");
 
     }
 

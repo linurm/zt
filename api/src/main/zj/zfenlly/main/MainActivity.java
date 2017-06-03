@@ -11,6 +11,7 @@ import android.view.View;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import zj.zfenlly.record.MyAlertDialogFragment;
+import zj.zfenlly.record.RecordFragment;
 import zj.zfenlly.stock2.Stock2Fragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifidevice.util.Constant;
@@ -35,13 +36,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void print(String msg) {
-        Log.i(TAG, msg);
+        Log.e(TAG, msg);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        print("onCreate");
         setContentView(R.layout.fragment_color);
         //Log.e("0000000", "show" + this);
         // set the Above View
@@ -50,33 +51,49 @@ public class MainActivity extends BaseActivity {
             // savedInstanceState, FRAGMENT_CONTENT_TAG);
             if (1 == savedInstanceState.getInt(KEY_CURRENT_PROGRESS)) {
                 mContent = new Stock2Fragment();
-                print("33333333333333333333333");
+                print("33333333333333333333333 new Stock2Fragment");
+            } else {
+                mContent = new RecordFragment();
             }
-            ;
-            print("have");
         }
 
         if (mContent == null)
             //mContent = new RecordFragment();
             mContent = new ColorFragment();
-        // set the Above View
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, mContent).commit();
+
 
         // set the Behind View
         setBehindContentView(R.layout.menu_frame);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.menu_frame, new MenuFragment()).commit();
 
+        // set the Above View
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, mContent).commit();
+
         // customize the SlidingMenu
-        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        print("onCreate");
+         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+       // getSlidingMenu().showContent();
+
+        switchContent(mContent);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         print("onResume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        print("onStart");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        print("onStop");
     }
 
     @Override
@@ -104,16 +121,21 @@ public class MainActivity extends BaseActivity {
         // getSupportFragmentManager().putFragment(outState,
         // FRAGMENT_CONTENT_TAG,
         // mContent);
-        print("onSaveInstanceState:" + mContent);
-        outState.putInt(KEY_CURRENT_PROGRESS, 1);
-
+        print("onSaveInstanceState: " + mContent);
+        if (mContent instanceof Stock2Fragment) {
+            outState.putInt(KEY_CURRENT_PROGRESS, 1);
+        }
+        mContent = null;
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null)
-            print("savedInstanceState");
+        if (savedInstanceState != null) {
+
+            int t = savedInstanceState.getInt(KEY_CURRENT_PROGRESS);
+            print("savedInstanceState " + t);
+        }
         print("onRestoreInstanceState");
     }
 
@@ -124,14 +146,21 @@ public class MainActivity extends BaseActivity {
     }
 
     public void switchContent(Fragment fragment) {
+        if (fragment == null)
+            return;
         mContent = fragment;
+
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction();
 
         transaction.replace(R.id.content_frame, fragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
         getSlidingMenu().showContent();
-        print("switchContent:" + mContent);
+        print("switchContent: " + mContent);
+    }
+
+    public void setFragment(Fragment fragment) {
+        mContent = fragment;
     }
 }
