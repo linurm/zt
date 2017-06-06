@@ -26,10 +26,24 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.List;
 
+import zj.zfenlly.arc.ArcFragment;
+import zj.zfenlly.bluetooth.BluetoothFragment;
+import zj.zfenlly.caculator.CalculationFragment;
+import zj.zfenlly.camera.CameraFragment;
 import zj.zfenlly.camera.CameraJni;
+import zj.zfenlly.coloradjust.ColorAdjustFragment;
+import zj.zfenlly.http.HttpFragment;
+import zj.zfenlly.mobeta.DragsortFragment;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
+import zj.zfenlly.record.RecordFragment;
+import zj.zfenlly.stock.StockFragment;
+import zj.zfenlly.stock2.Stock2Fragment;
+import zj.zfenlly.usb.UsbFragment;
 import zj.zfenlly.wifi.WifiAdmin;
+import zj.zfenlly.wifi.WifiFragment;
+import zj.zfenlly.wifiap.WifiApFragment;
+import zj.zfenlly.wifidevice.WifiDeviceFragment;
 
 public class MainApplication extends Application implements Observable {
 
@@ -49,6 +63,12 @@ public class MainApplication extends Application implements Observable {
     private final String TAG = this.getClass().getName();
     public String SSIDNAME;
     public int port = 9111;
+
+    public List<BaseFragment> getFragments() {
+        return fragments;
+    }
+
+    List<BaseFragment> fragments = new ArrayList<BaseFragment>();
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         @Override
@@ -70,7 +90,6 @@ public class MainApplication extends Application implements Observable {
     private boolean server_display_run = true;
     private boolean server_simulation = false;
     private WifiAdmin mWifiAdmin;
-
     // private ComponentName mAPService;
     private List<String> mfinds = new ArrayList<String>();
 
@@ -150,6 +169,25 @@ public class MainApplication extends Application implements Observable {
         return true;
     }
 
+    public void addFragment() {
+        fragments.add(new ColorFragment());
+        fragments.add(new CameraFragment());
+        fragments.add(new BluetoothFragment());
+        fragments.add(new CalculationFragment());
+        fragments.add(new UsbFragment());
+        fragments.add(new WifiApFragment());
+        fragments.add(new HttpFragment());
+        fragments.add(new ColorAdjustFragment());
+        fragments.add(new WifiFragment());
+        fragments.add(new RecordFragment());
+        fragments.add(new StockFragment());
+        fragments.add(new DragsortFragment());
+        fragments.add(new ArcFragment());
+        fragments.add(new WifiDeviceFragment());
+        fragments.add(new Stock2Fragment());
+        print("++++++++++++++++++++++add fragment+++++++++++++++++++");
+    }
+
     private void print(String msg) {
         Log.e(TAG, msg);
     }
@@ -197,14 +235,17 @@ public class MainApplication extends Application implements Observable {
         super.onCreate();
         mWifiAdmin = new WifiAdmin(this);
         print("onCreate");
+        addFragment();
         //appRegister();
 
     }
+
 
     @Override
     public void onTerminate() {
         super.onTerminate();
         print("onTerminate");
+        fragments.clear();
     }
 
     private void appRegister() {
@@ -238,7 +279,6 @@ public class MainApplication extends Application implements Observable {
     }
 
     public void SendFind() {
-        // ִ����Ϻ��handler����һ������Ϣ
         Runnable networkTask = new Runnable() {
             @Override
             public void run() {

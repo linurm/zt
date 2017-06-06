@@ -37,8 +37,6 @@ import zj.zfenlly.tools.R;
 
 public class Stock2Service extends Service implements Observer {
 
-    private static final int STOCK_DATA_GET = 1;
-    private static final int SCAN_CAMERA_STOP = 2;
     private static final int STOCK_GETLOOP_TICK = 6;
     private static final int STOCK_GETNEXTLOOP_TICK = STOCK_GETLOOP_TICK - 1;
 
@@ -164,7 +162,7 @@ public class Stock2Service extends Service implements Observer {
         final String DATABASE_PATH = Environment.getExternalStorageDirectory()
                 + "/" + "xxx/";
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_PATH
-                + "notes-db", null);
+                + "notes2-db", null);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
@@ -183,7 +181,7 @@ public class Stock2Service extends Service implements Observer {
         mClient.getUrlString(new String[]{ST_CODE});
         //mClient.getStockInfoDB(new String[]{ST_CODE});
 
-        initDatabase();
+        //initDatabase();
         mStockThread.start();
         //mThread.start();
         print("onCreate");
@@ -281,7 +279,7 @@ public class Stock2Service extends Service implements Observer {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        flags = START_STICKY;
+        //flags = START_STICKY;
         print("onStartCommand:" + intent);
         //initNotify();
         //notificationSend4();
@@ -501,7 +499,7 @@ public class Stock2Service extends Service implements Observer {
         }
 
         public Note getNoteFromDB() {
-            if (db_num < db_index)
+            if (db_num <= db_index)
                 return null;
             if (qb.list().size() == 0)
                 return null;
@@ -586,7 +584,7 @@ public class Stock2Service extends Service implements Observer {
             print("mStockThread thread run");
             List<Note> list = null;
             list = getStockInfoFromNet();
-            int index = 0;
+            int index = list.size() - 1;
             //List<Note> list = null;
             while (isstart) {
                 try {
@@ -610,9 +608,9 @@ public class Stock2Service extends Service implements Observer {
 //                        note = (Note) i.next();
 
                     displayNote(list.get(index));
-                    index++;
+                    index--;
                     print("index: " + index + " size: " + list.size());
-                    if (index < list.size()) {
+                    if (index >= 0) {
                         sm_times = 0;
                     }
 //                    }

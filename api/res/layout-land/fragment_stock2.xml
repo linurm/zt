@@ -18,10 +18,9 @@
                 android:id="@+id/nowopen"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/nowopentv"
                 android:layout_alignBottom="@+id/nowopentv"
-                android:layout_toRightOf="@+id/nowopentv"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:layout_toEndOf="@+id/nowopentv" />
 
             <TextView
                 android:id="@+id/lastclose"
@@ -34,16 +33,16 @@
 
             <TextView
                 android:id="@+id/low"
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/nowlowtv"
                 android:layout_alignBottom="@+id/nowlowtv"
-                android:layout_toRightOf="@+id/nowlowtv"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:layout_toEndOf="@+id/hightv" />
 
             <TextView
                 android:id="@+id/high"
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/hightv"
                 android:layout_alignBottom="@+id/hightv"
@@ -52,11 +51,11 @@
 
             <TextView
                 android:id="@+id/nowopentv"
+                android:layout_marginLeft="150dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/now"
-                android:layout_marginTop="38dp"
+                android:layout_below="@+id/change"
+                android:layout_marginTop="8dp"
                 android:text="今开: "
                 android:textSize="12sp" />
 
@@ -73,7 +72,7 @@
 
             <TextView
                 android:id="@+id/hightv"
-                android:layout_width="100dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/low"
                 android:layout_alignLeft="@+id/nowlowtv"
@@ -82,7 +81,7 @@
 
             <TextView
                 android:id="@+id/voltv"
-                android:layout_width="100dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/lastclose"
                 android:layout_alignBottom="@+id/lastclose"
@@ -93,7 +92,7 @@
 
             <TextView
                 android:id="@+id/vol"
-                android:layout_width="50dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/voltv"
                 android:layout_alignBottom="@+id/voltv"
@@ -102,7 +101,7 @@
 
             <TextView
                 android:id="@+id/nowlowtv"
-                android:layout_width="100dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/voltv"
                 android:layout_alignLeft="@+id/voltv"
@@ -123,17 +122,18 @@
                 android:id="@+id/change"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/now"
-                android:layout_alignTop="@+id/hightv" />
+                android:layout_toEndOf="@+id/now"
+                android:layout_alignTop="@+id/now" />
 
             <TextView
                 android:id="@+id/percent"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_alignBaseline="@+id/change"
                 android:layout_alignBottom="@+id/change"
-                android:layout_alignLeft="@+id/lastclosetv"
-                android:layout_marginLeft="10dp" />
+                android:layout_toEndOf="@+id/change"
+                android:layout_marginStart="8dp" />
         </RelativeLayout>
 
         <View
@@ -148,8 +148,8 @@
 
             <SurfaceView
                 android:id="@+id/surfaceView1"
-                android:layout_width="482dp"
-                android:layout_height="158dp" />
+                android:layout_width="500dp"
+                android:layout_height="200dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -11,57 +11,57 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import zj.zfenlly.arc.ArcFragment;
-import zj.zfenlly.bluetooth.BluetoothFragment;
-import zj.zfenlly.caculator.CalculationFragment;
-import zj.zfenlly.camera.CameraFragment;
-import zj.zfenlly.coloradjust.ColorAdjustFragment;
-import zj.zfenlly.http.HttpFragment;
-import zj.zfenlly.mobeta.DragsortFragment;
-import zj.zfenlly.record.RecordFragment;
-import zj.zfenlly.stock.StockFragment;
-import zj.zfenlly.stock2.Stock2Fragment;
 import zj.zfenlly.tools.R;
-import zj.zfenlly.usb.UsbFragment;
-import zj.zfenlly.wifi.WifiFragment;
-import zj.zfenlly.wifiap.WifiApFragment;
-import zj.zfenlly.wifidevice.WifiDeviceFragment;
 
 public class MenuFragment extends ListFragment {
     private final String TAG = this.getClass().getName();
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     boolean landOritation = false;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.list, null);
+
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String[] colors = getResources().getStringArray(R.array.color_names);
+
+        List<BaseFragment> list = ((MainApplication) getActivity().getApplication()).getFragments();
+        String[] colors = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            colors[i] = list.get(i).getName();
+        }
+
+        //String[] colors = getResources().getStringArray(R.array.color_names);
         ArrayAdapter<String> colorAdapter = new ArrayAdapter<String>(
                 getActivity(), android.R.layout.simple_list_item_1,
                 android.R.id.text1, colors);
         setListAdapter(colorAdapter);
     }
-    //List<Fragment> fragments = new ArrayList<>();
-    //fragments.add(new RecordFragment());
+
+
     @Override
     public void onListItemClick(ListView lv, View v, int position, long id) {
-        Fragment newContent = null;
+        BaseFragment newContent = null;
 
-        // print("position: " + position);
-        switch (position) {
-            case 20:
-                //newContent = ((Fragment) (listF.get(0))).newInstance();
-                landOritation = false;
+
+        newContent = ((MainApplication) getActivity().getApplication()).getFragments().get(position);
+        landOritation = newContent.getOrientation();
+        print("position: " + position + " " + newContent.getName());
+        position = 0;
+       /* switch (position) {
             case 0:
+                //newContent = ((fragments.get(0)));
+                //landOritation = false;
+                break;
+            case 20:
                 newContent = new ColorFragment(R.color.white, "color");
                 landOritation = false;
                 break;
@@ -121,18 +121,19 @@ public class MenuFragment extends ListFragment {
                 newContent = new Stock2Fragment();
                 landOritation = true;
                 break;
-        }
+        }*/
+//        print("              @@@@@@@@" + getActivity().getRequestedOrientation());
         if (landOritation) {
             if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                print("66666666666666666666666666666666 -");
+                print("--------------");
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 setActivityFragment(newContent);
                 return;
             }
-        }else{
+        } else {
             if (getActivity().getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                print("44444444444444444444444444 |");
+                print("||||||||||||||||||");
                 setActivityFragment(newContent);
                 return;
             }
@@ -144,10 +145,10 @@ public class MenuFragment extends ListFragment {
 
     @SuppressWarnings("unused")
     private void print(String msg) {
-        Log.i(TAG, msg);
+        Log.e(TAG, msg);
     }
 
-    private void setActivityFragment(Fragment fragment) {
+    private void setActivityFragment(BaseFragment fragment) {
         if (getActivity() == null)
             return;
 
@@ -158,7 +159,7 @@ public class MenuFragment extends ListFragment {
     }
 
     // the meat of switching the above fragment
-    private void switchFragment(Fragment fragment) {
+    private void switchFragment(BaseFragment fragment) {
         if (getActivity() == null)
             return;
 

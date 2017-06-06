@@ -2,7 +2,6 @@ package zj.zfenlly.caculator;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +14,16 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-import zj.zfenlly.other.Name;
-import zj.zfenlly.other.Observable;
-import zj.zfenlly.other.Observer;
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2017/4/12.
  */
 @SuppressLint("ValidFragment")
-public class CalculationFragment extends Fragment implements Name, Observer {
+public class CalculationFragment extends BaseFragment {
     private final String TAG = this.getClass().getName();
-    public String mName;
+
     @ViewInject(R.id.edit_from)
     public EditText edit_from;
     @ViewInject(R.id.edit_to)
@@ -38,13 +35,12 @@ public class CalculationFragment extends Fragment implements Name, Observer {
     private int mColorRes = -1;
 
     public CalculationFragment() {
-        this(R.color.white, "wd");
+        this(R.color.white, "calculate");
     }
 
     public CalculationFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
     }
 
     public static float convertToFloat(String number) {
@@ -87,24 +83,6 @@ public class CalculationFragment extends Fragment implements Name, Observer {
     }
 
     @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
-        // Log.i(TAG, "update(" + arg + ")");
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
     }
@@ -132,7 +110,7 @@ public class CalculationFragment extends Fragment implements Name, Observer {
         int color = getResources().getColor(mColorRes);
         View view = inflater.inflate(R.layout.fragment_calculator, container, false);
         view.setBackgroundColor(color);
-
+        print("onCreateView");
         ViewUtils.inject(this, view);
         return view;
     }

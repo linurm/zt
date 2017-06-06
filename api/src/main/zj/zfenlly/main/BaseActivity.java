@@ -3,7 +3,6 @@ package zj.zfenlly.main;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -17,7 +16,6 @@ import zj.zfenlly.tools.R;
 public class BaseActivity extends SlidingFragmentActivity {
 
 
-    protected ListFragment mFrag;
     private int mTitleRes;
 
 
@@ -44,6 +42,7 @@ public class BaseActivity extends SlidingFragmentActivity {
         sm.setShadowDrawable(R.drawable.shadow);
         sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         sm.setFadeDegree(0.35f);
+        sm.setFadeEnabled(true);
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

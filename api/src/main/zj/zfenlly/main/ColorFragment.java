@@ -2,7 +2,6 @@ package zj.zfenlly.main;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,42 +12,41 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
-import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
-public class ColorFragment extends Fragment implements Name {
+public class ColorFragment extends BaseFragment {
+
+    private final String TAG = this.getClass().getName();
 
     private int mColorRes = -1;
-    public String mName;
-
     private ColorPresenter pColorPresenter;
+    private ApplicationManager am;
+    @ViewInject(R.id.button)
+    private Button mbutton;
+    @ViewInject(R.id.button2)
+    private Button mbutton2;
+    //.substring(this.getClass().getName().lastIndexOf(".") + 1);
 
     public ColorFragment() {
         this(R.color.white, "color");
     }
 
     public ColorFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
         setRetainInstance(true);
     }
 
-    private ApplicationManager am;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    private final String TAG = this.getClass().getName();
-    //.substring(this.getClass().getName().lastIndexOf(".") + 1);
+    }
 
     private void print(String msg) {
         Log.i(TAG, msg);
     }
-
-    @ViewInject(R.id.button)
-    private Button mbutton;
-
-    @ViewInject(R.id.button2)
-    private Button mbutton2;
-
 
     @OnClick(R.id.button2)
     public void button2(View view) {
@@ -59,23 +57,9 @@ public class ColorFragment extends Fragment implements Name {
         }
     }
 
-
     @OnClick(R.id.button)
     public void button(View view) {
         pColorPresenter.doStartApplicationWithPackageName("baidumapsdk.demo");
-    }
-
-
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
     }
 
     @Override
@@ -83,13 +67,9 @@ public class ColorFragment extends Fragment implements Name {
                              Bundle savedInstanceState) {
         if (savedInstanceState != null)
             mColorRes = savedInstanceState.getInt("mColorRes");
-
+        print("onCreateView");
         int color = getResources().getColor(mColorRes);
-
-
         pColorPresenter = new ColorPresenter(this);
-
-
 //        try {
 //            am = new ApplicationManager(getActivity());
 //            am.setOnInstalledPackaged(new OnInstalledPackaged() {

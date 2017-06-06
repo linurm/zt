@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
@@ -36,19 +37,20 @@ import zj.zfenlly.tools.R;
 
 @SuppressLint({"ValidFragment"})
 @ContentView(R.layout.fragment_stock2)
-public class Stock2Fragment extends Fragment implements Observer {
+public class Stock2Fragment extends BaseFragment implements Observer {
 
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private static final int MESSAGE_STOCK_SERVER_DISPLAYRUN = 1;
     private static final int MESSAGE_STOCK_SERVER_SIMULATION = 2;
     private static final int MESSAGE_STOCK_UPDATE_VIEW = 3;
     private final String TAG = this.getClass().getName();
-    private final boolean Debug = true;
+    private final boolean Debug = false;
     public MainApplication mStockApplication;
-    public String mName;
+
     // private SinaStockClient mClient;
     //@ViewInject(R.id.toggleButton)
     ToggleButton toggleButton;
+
 
     //    NotificationManager mNotificationManager;
 //    Notification mNotification;
@@ -91,7 +93,12 @@ public class Stock2Fragment extends Fragment implements Observer {
     };
 
     public Stock2Fragment() {
-        StockFragmentInit(R.color.protecteye, "s");
+        this(R.color.protecteye, "s2");
+    }
+
+    public Stock2Fragment(int colorRes, String name) {
+        super(name, true);
+        mColorRes = colorRes;
     }
 
     private void print(String msg) {
@@ -119,11 +126,6 @@ public class Stock2Fragment extends Fragment implements Observer {
 //        mNotificationManager.notify(0, mNotification);
 //    }
 
-    public void StockFragmentInit(int colorRes, String name) {
-        mColorRes = colorRes;
-        mName = name;
-        setRetainInstance(true);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

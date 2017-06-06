@@ -20,11 +20,12 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
-public class WifiApFragment extends Fragment implements
+public class WifiApFragment extends BaseFragment implements
 		AdapterView.OnItemSelectedListener, TextWatcher {
 
 	public MainApplication mZfenllyApplication;
@@ -58,12 +59,12 @@ public class WifiApFragment extends Fragment implements
 		Log.i(TAG, msg);
 	}
 
-	public String mName;
-
+	public WifiApFragment() {
+		this(R.color.white, "wifiap");
+	}
 	public WifiApFragment(int colorRes, String name) {
+		super(name, false);
 		mColorRes = colorRes;
-		mName = name;
-		setRetainInstance(true);
 	}
 
 	@Override

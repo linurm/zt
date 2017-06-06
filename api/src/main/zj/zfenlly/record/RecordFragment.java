@@ -21,15 +21,15 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import zj.zfenlly.daodb.MSC;
 import zj.zfenlly.daodb.WB;
 import zj.zfenlly.daodb.WB2;
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
-public class RecordFragment extends Fragment implements Name {
+public class RecordFragment extends BaseFragment {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    public String mName;
     @ViewInject(R.id.music_seven_day_minites)
     TextView mMusic7DayMinites;
     @ViewInject(R.id.mscListView)
@@ -59,13 +59,12 @@ public class RecordFragment extends Fragment implements Name {
     private int mColorRes = -1;
 
     public RecordFragment() {
-        this(R.color.black, "color");
+        this(R.color.protecteye, "record");
     }
 
     public RecordFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
     }
 
     public static int dip2px(Context context, float dpValue) {
@@ -162,17 +161,6 @@ public class RecordFragment extends Fragment implements Name {
         Log.e(TAG, msg);
     }
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
 
 
     @Override

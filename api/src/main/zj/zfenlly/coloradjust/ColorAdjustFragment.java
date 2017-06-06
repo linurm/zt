@@ -21,11 +21,12 @@ import com.lidroid.xutils.view.annotation.event.OnItemSelected;
 import com.lidroid.xutils.view.annotation.event.OnProgressChanged;
 import com.lidroid.xutils.view.annotation.event.OnStopTrackingTouch;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
-public class ColorAdjustFragment extends Fragment implements Name {
+public class ColorAdjustFragment extends BaseFragment {
 
 	private int value_temp;
 
@@ -45,29 +46,18 @@ public class ColorAdjustFragment extends Fragment implements Name {
 	private int opened;
 
 	private int mColorRes = -1;
-	public String mName;
+
 
 	public ColorAdjustFragment() {
-		this(R.color.white, "color");
+		this(R.color.white, "color adjust");
 	}
 
 	public ColorAdjustFragment(int colorRes, String name) {
+		super(name, false);
 		mColorRes = colorRes;
-		setName(name);
-		setRetainInstance(true);
 	}
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return mName;
-	}
 
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		mName = name;
-	}
 
 	private void init_view_value() {
 		String s = FileOpration.read_bcsh(sys_file);
@@ -227,7 +217,7 @@ public class ColorAdjustFragment extends Fragment implements Name {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActivity().setContentView(R.layout.fragment_color_adjust);
+		//getActivity().setContentView(R.layout.fragment_color_adjust);
 
 		print("onCreate");
 
@@ -260,10 +250,10 @@ public class ColorAdjustFragment extends Fragment implements Name {
 		ViewUtils.inject(this, view);
 
 		String[] mItems = getResources().getStringArray(R.array.spinnername);
-		// ����Adapter���Ұ�����?
+
 		ArrayAdapter<String> _Adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_spinner_item, mItems);
-		// �� Adapter���ؼ�
+
 		switchsp.setAdapter(_Adapter);
 		init_view_value();
 

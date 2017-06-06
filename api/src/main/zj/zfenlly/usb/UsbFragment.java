@@ -22,11 +22,12 @@ import com.lidroid.xutils.ViewUtils;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
-public class UsbFragment extends Fragment {
+public class UsbFragment extends BaseFragment {
 
 	public MainApplication mZfenllyApplication;
 	private final String TAG = this.getClass().getName()
@@ -39,12 +40,13 @@ public class UsbFragment extends Fragment {
 	private void print(String msg) {
 		Log.i(TAG, msg);
 	}
-	public String mName;
 
+	public UsbFragment() {
+		this(R.color.white, "usb");
+	}
 	public UsbFragment(int colorRes,String name) {
+		super(name, false);
 		mColorRes = colorRes;
-		mName = name;
-		setRetainInstance(true);
 	}
 
 	@Override

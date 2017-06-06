@@ -10,9 +10,9 @@ import android.view.View;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import java.util.List;
+
 import zj.zfenlly.record.MyAlertDialogFragment;
-import zj.zfenlly.record.RecordFragment;
-import zj.zfenlly.stock2.Stock2Fragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifidevice.util.Constant;
 
@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity {
 
     private static final String KEY_CURRENT_PROGRESS = "current_fragment";
     private final String TAG = this.getClass().getName();
-    private Fragment mContent = null;
+    private BaseFragment mContent = null;
 
     public MainActivity() {
         super(R.string.changing_fragments);
@@ -43,24 +43,24 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         print("onCreate");
-        setContentView(R.layout.fragment_color);
+        setContentView(R.layout.activity_method_one);
         //Log.e("0000000", "show" + this);
         // set the Above View
         if (savedInstanceState != null) {
             // mContent = getSupportFragmentManager().getFragment(
             // savedInstanceState, FRAGMENT_CONTENT_TAG);
-            if (1 == savedInstanceState.getInt(KEY_CURRENT_PROGRESS)) {
-                mContent = new Stock2Fragment();
-                print("33333333333333333333333 new Stock2Fragment");
-            } else {
-                mContent = new RecordFragment();
-            }
+            int l = savedInstanceState.getInt(KEY_CURRENT_PROGRESS);
+            List<BaseFragment> llb = ((MainApplication) getApplication()).getFragments();
+            mContent = llb.get(l);
+            //mContent = new Stock2Fragment();
+            print("33333333333333333333333 new " + mContent);
         }
 
-        if (mContent == null)
+        if (mContent == null) {
             //mContent = new RecordFragment();
+            print("create default fragment");
             mContent = new ColorFragment();
-
+        }
 
         // set the Behind View
         setBehindContentView(R.layout.menu_frame);
@@ -72,10 +72,11 @@ public class MainActivity extends BaseActivity {
                 .replace(R.id.content_frame, mContent).commit();
 
         // customize the SlidingMenu
-         getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-       // getSlidingMenu().showContent();
-
-        switchContent(mContent);
+        getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        //getSlidingMenu().showContent();
+        print(" " + getSlidingMenu().isMenuShowing() + " : " + getSlidingMenu().isSecondaryMenuShowing() + " : " + getSlidingMenu().isSlidingEnabled());
+        getSlidingMenu().showContent();
+        //switchContent(mContent);
     }
 
     @Override
@@ -122,8 +123,12 @@ public class MainActivity extends BaseActivity {
         // FRAGMENT_CONTENT_TAG,
         // mContent);
         print("onSaveInstanceState: " + mContent);
-        if (mContent instanceof Stock2Fragment) {
-            outState.putInt(KEY_CURRENT_PROGRESS, 1);
+        List<BaseFragment> llb = ((MainApplication) getApplication()).getFragments();
+        for (int i = 0; i < llb.size(); i++) {
+            if (((BaseFragment) mContent).getName().equals(llb.get(i).getName())) {
+                outState.putInt(KEY_CURRENT_PROGRESS, i);
+                break;
+            }
         }
         mContent = null;
     }
@@ -145,7 +150,7 @@ public class MainActivity extends BaseActivity {
         print("onDestroy");
     }
 
-    public void switchContent(Fragment fragment) {
+    public void switchContent(BaseFragment fragment) {
         if (fragment == null)
             return;
         mContent = fragment;
@@ -154,13 +159,13 @@ public class MainActivity extends BaseActivity {
                 .beginTransaction();
 
         transaction.replace(R.id.content_frame, fragment);
-        //transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit();
         getSlidingMenu().showContent();
         print("switchContent: " + mContent);
     }
 
-    public void setFragment(Fragment fragment) {
+    public void setFragment(BaseFragment fragment) {
         mContent = fragment;
     }
 }

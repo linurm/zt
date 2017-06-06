@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,15 +38,15 @@ import com.lidroid.xutils.view.annotation.event.OnItemClick;
 import java.util.HashMap;
 import java.util.List;
 
-import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.gua.SelectModeActivity;
-import zj.zfenlly.other.Name;
+import zj.zfenlly.main.BaseFragment;
+import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
 import zj.zfenlly.tools.R;
 
 @SuppressLint("ValidFragment")
-public class WifiFragment extends Fragment implements Name, Observer {
+public class WifiFragment extends BaseFragment implements Observer {
     public static final String ACTION_ADD_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
     public static final String ACTION_CREATE_SHORTCUT = "android.intent.action.CREATE_SHORTCUT";
     private static final int MESSAGE_NETWORK_SCAN = 1;
@@ -63,7 +62,7 @@ public class WifiFragment extends Fragment implements Name, Observer {
     @ViewInject(R.id.curNetWorkEvent)
     public TextView curNetWorkEvent;
     public MainApplication mApplication;
-    public String mName;
+
     @ViewInject(R.id.curWifiIV)
     ImageView mWifiStrength;
     @ViewInject(R.id.curNetWorkSSID)
@@ -125,30 +124,18 @@ public class WifiFragment extends Fragment implements Name, Observer {
     };
 
     public WifiFragment() {
-        this(R.color.white, "color");
+        this(R.color.white, "wifi");
     }
 
     public WifiFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
     }
 
     private void print(String msg) {
         Log.i(TAG, msg);
     }
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

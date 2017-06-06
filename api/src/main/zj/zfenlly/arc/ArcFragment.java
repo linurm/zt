@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Instrumentation;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +18,14 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import zj.zfenlly.camera.CameraJni;
-import zj.zfenlly.other.Name;
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2016/9/27.
  */
 @SuppressLint("ValidFragment")
-public class ArcFragment extends Fragment implements Name {
+public class ArcFragment extends BaseFragment {
     private static String soName = "libjiagu";
     private final String TAG = this.getClass().getName();
     public String mName;
@@ -40,13 +38,12 @@ public class ArcFragment extends Fragment implements Name {
     private int mColorRes = -1;
 
     public ArcFragment() {
-        this(R.color.white, "color");
+        this(R.color.white, "arc");
     }
 
     public ArcFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
     }
 
     public static void attactContext() throws Exception {
@@ -81,7 +78,6 @@ public class ArcFragment extends Fragment implements Name {
 
         Log.e("", "end context");
     }
-
 
 
     private void print(String msg) {
@@ -174,7 +170,6 @@ public class ArcFragment extends Fragment implements Name {
         Log.w("test", mSecureAppDataDir.getAbsolutePath());
         Log.w("tested", mDalvikCacheDir.getAbsolutePath());
     }
-
 
 
     @Override

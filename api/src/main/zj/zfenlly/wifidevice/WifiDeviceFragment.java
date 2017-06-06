@@ -31,6 +31,7 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import java.util.ArrayList;
 import java.util.Map;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.other.Observable;
@@ -46,11 +47,11 @@ import zj.zfenlly.wifidevice.util.Person;
  * Created by Administrator on 2017/4/12.
  */
 @SuppressLint("ValidFragment")
-public class WifiDeviceFragment extends Fragment implements Name, Observer, View.OnClickListener {
+public class WifiDeviceFragment extends BaseFragment implements  Observer, View.OnClickListener {
 
     private final String TAG = this.getClass().getName();
     private String[] groupIndicatorLabeles = null;
-    public String mName;
+
     public MainApplication mStockApplication;
 
     private Intent mMainServiceIntent = null;
@@ -81,13 +82,12 @@ public class WifiDeviceFragment extends Fragment implements Name, Observer, View
     private AlertDialog dialog = null;
 
     public WifiDeviceFragment() {
-        this(R.color.white, "wd");
+        this(R.color.white, "wifi device");
     }
 
     public WifiDeviceFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
     }
 
     public static boolean isWiFiConnected(Context context) {
@@ -115,17 +115,6 @@ public class WifiDeviceFragment extends Fragment implements Name, Observer, View
         }
     }
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
 
     @Override
     public void update(Observable o, Object arg) {
