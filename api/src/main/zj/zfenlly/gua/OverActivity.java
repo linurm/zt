@@ -49,6 +49,7 @@ public class OverActivity extends Activity {
             t = -(60 * 60 - DEC_SEC * 2);
         } else if (v.equals("a0")) {
             t = 0;
+            return;
         } else {
             return;
         }

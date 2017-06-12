@@ -63,7 +63,6 @@ public class WifiStatusLoader {
             //mFloatView.setEnabled(true);
             //mFloatView.setClickable(true);
         }
-
     }
 
     public void StartAPP() {

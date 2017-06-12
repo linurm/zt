@@ -117,8 +117,8 @@ public class FloatWinService extends Service {
         // 调整悬浮窗口至左上角，便于调整坐标
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
         // 以屏幕左上角为原点，设置x、y初始值
-        wmParams.x = 800;
-        wmParams.y = 0;
+        wmParams.x = 200;
+        wmParams.y = 100;
         // 设置悬浮窗口长宽数据
         wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
