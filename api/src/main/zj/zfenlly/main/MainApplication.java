@@ -26,6 +26,7 @@ import java.net.MulticastSocket;
 import java.util.ArrayList;
 import java.util.List;
 
+import zj.zfenlly.MNClick.MnClickFragment;
 import zj.zfenlly.arc.ArcFragment;
 import zj.zfenlly.bluetooth.BluetoothFragment;
 import zj.zfenlly.caculator.CalculationFragment;
@@ -185,6 +186,7 @@ public class MainApplication extends Application implements Observable {
         fragments.add(new ArcFragment());
         fragments.add(new WifiDeviceFragment());
         fragments.add(new Stock2Fragment());
+        fragments.add(new MnClickFragment());
         print("++++++++++++++++++++++add fragment+++++++++++++++++++");
     }
 

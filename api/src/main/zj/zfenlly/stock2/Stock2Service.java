@@ -584,6 +584,8 @@ public class Stock2Service extends Service implements Observer {
             print("mStockThread thread run");
             List<Note> list = null;
             list = getStockInfoFromNet();
+            if (list == null)
+                return;
             int index = list.size() - 1;
             //List<Note> list = null;
             while (isstart) {
