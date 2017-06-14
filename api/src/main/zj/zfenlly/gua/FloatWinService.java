@@ -1,14 +1,17 @@
 package zj.zfenlly.gua;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import zj.zfenlly.tools.R;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
@@ -54,7 +58,7 @@ public class FloatWinService extends Service {
     private Button startClickView;
     private boolean add_flag = false;
     private boolean settings_flag = false;
-    private FloatView CoordinateView;
+    private MZFloatView CoordinateView;
     private int click_times;
     private int click_interval;
 
@@ -394,7 +398,12 @@ public class FloatWinService extends Service {
         startClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (add_flag) {
+                    add_flag = false;
+                    Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
+                    delCView();
+                }
+                StartClick(CoordinateView);
             }
         });
         mDownFloatLayout.addView(refreshView);
@@ -409,6 +418,60 @@ public class FloatWinService extends Service {
         mWifiStatusLoader.setRecentsPanel(floatView);
         mWindowManager.addView(mFloatLayout, wmParams);
         Log.e("addCView", "add cview");
+    }
+
+    private void StartClick(MZFloatView bv) {
+        final MZFloatView v = bv;
+
+        new Thread() {
+
+            int x = v.x1, y = v.y1;
+            int times = getTimes();
+            int interval = getInterval() * 100;
+            Instrumentation mInst = new Instrumentation();
+            long downTime;
+            long eventTime;
+
+            @Override
+            public void run() {
+                while (times-- > 0) {
+                    synchronized (this) {
+                        try {
+                            wait(interval); //1秒
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+
+                    try {
+                        downTime = SystemClock.uptimeMillis();
+                        eventTime = SystemClock.uptimeMillis();
+
+                        MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0);
+                        mInst.sendPointerSync(me1);
+                    } catch (Exception e) {
+                    }
+                    synchronized (this) {
+                        try {
+                            wait(200);
+                        } catch (InterruptedException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                    try {
+                        downTime = SystemClock.uptimeMillis();
+                        eventTime = SystemClock.uptimeMillis();
+                        MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, 0);
+                        mInst.sendPointerSync(me2);
+                        Log.e("instrument", "send pointersync " + x + ":" + y);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     private void addCView() {
@@ -440,7 +503,7 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mFloatLayout2.setLayoutParams(mFloatLayoutLP);
         mFloatLayout2.setOrientation(LinearLayout.VERTICAL);
-        CoordinateView = new FloatView(getApplicationContext(), mFloatLayout2, mWindowManager, wmParams);
+        CoordinateView = new MZFloatView(getApplicationContext(), mFloatLayout2, mWindowManager, wmParams);
         //CoordinateView.setBackgroundResource(R.drawable.button_shape);
         CoordinateView.setImageResource(R.drawable.mz);
         mFloatLayout2.addView(CoordinateView);
@@ -499,6 +562,7 @@ public class FloatWinService extends Service {
         mMidFloatLayout.addView(delTimesView);
 
         //
+
         addIntervalView = new Button(this);
         click_interval = getInterval();
         addIntervalView.setText("" + click_interval);
@@ -522,7 +586,8 @@ public class FloatWinService extends Service {
         delIntervalView = new Button(this);
         delIntervalView.setText("" + click_interval);
         delIntervalView.setHeight(dip2px(mContext, ButtonWeight));
-        delIntervalView.setWidth(dip2px(mContext, ButtonWeight));delIntervalView.setLayoutParams(p);
+        delIntervalView.setWidth(dip2px(mContext, ButtonWeight));
+        delIntervalView.setLayoutParams(p);
 //        delIntervalView.setBackgroundResource(R.drawable.button_shape);
 //        delIntervalView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
         delIntervalView.setOnClickListener(new View.OnClickListener() {
