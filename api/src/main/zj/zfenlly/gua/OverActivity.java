@@ -3,12 +3,10 @@ package zj.zfenlly.gua;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.TextView;
-
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
 
 import java.util.Calendar;
 
@@ -20,22 +18,18 @@ import zj.zfenlly.tools.R;
 
 public class OverActivity extends Activity {
     private final int DEC_SEC = 3;
-    @ViewInject(R.id.textView)
-    public TextView display_view;
-    private int id = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.over_main);
-        ViewUtils.inject(this);
-        Bundle bundle = this.getIntent().getExtras();
-        if (bundle != null)
-            id = bundle.getInt("key");
+
+        Bundle bundle = getIntent().getExtras();
 
         String v = bundle.getString("value");
-        display_view.setText(v);
+
         int t = 0;
         if (v.equals("b10")) {
             t = -(10 * 60);
@@ -69,13 +63,22 @@ public class OverActivity extends Activity {
     String getStartAppPkg() {
         SharedPreferences mySharedPreferences = getSharedPreferences("gua",
                 Activity.MODE_PRIVATE);
-        return mySharedPreferences.getString("pkg", null);
+        return mySharedPreferences.getString("pkg", getPackageName());
+    }
+
+    public String getLunchActivity() {
+
+        PackageManager pm = getPackageManager();
+        Intent it = pm.getLaunchIntentForPackage(getPackageName());
+        String className = it.getComponent().getClassName();
+        System.out.println(className);
+        return className;
     }
 
     String getStartAppAct() {
         SharedPreferences mySharedPreferences = getSharedPreferences("gua",
                 Activity.MODE_PRIVATE);
-        return mySharedPreferences.getString("act", null);
+        return mySharedPreferences.getString("act", getLunchActivity());
     }
 //
 //    void setTimeAfter10Minites(int t) {

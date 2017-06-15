@@ -5,20 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.view.View;
 
 import zj.zfenlly.tools.R;
 
 
 public class WifiStateReceiver extends BroadcastReceiver {
 
-	//Context mcontext;
 	private WifiFragment mWifiFragment;
 
 
 	// private WifiApplication mWifiApplication = null;
 
-	public WifiStateReceiver(WifiFragment mWA, View view) {
+	public WifiStateReceiver(WifiFragment mWA) {
 		// TODO Auto-generated constructor stub
 		// context.getApplicationInfo().
 		this.mWifiFragment = mWA;

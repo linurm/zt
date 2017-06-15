@@ -202,7 +202,7 @@ public class WifiFragment extends BaseFragment implements Observer {
         //if(BUG_T) {
 //
 //		// test();
-        wifiRegister(view);
+        wifiRegister();
         //}
         print("onCreateView");
 
@@ -221,9 +221,9 @@ public class WifiFragment extends BaseFragment implements Observer {
         //}
     }
 
-    private void wifiRegister(View view) {
+    private void wifiRegister() {
         // WIFI状态接收器
-        wifiReceiver = new WifiStateReceiver(this, view);
+        wifiReceiver = new WifiStateReceiver(this);
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.RSSI_CHANGED_ACTION);
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);

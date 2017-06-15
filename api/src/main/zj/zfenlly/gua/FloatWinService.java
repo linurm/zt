@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
@@ -19,11 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import zj.zfenlly.tools.R;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
 import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
+
+//import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2016/8/17.
@@ -32,6 +34,9 @@ public class FloatWinService extends Service {
 
     private static final String TAG = "FloatWinService";
     private static final int ButtonWeight = 30;
+    private static final int SET_VIEW_START = 1;
+    private static final int SET_VIEW_STOP = 2;
+
     Context mContext;
     LinearLayout mFloatLayout;
     LinearLayout mFloatLayout2;
@@ -41,6 +46,7 @@ public class FloatWinService extends Service {
     WindowManager.LayoutParams wmParams;
     WindowManager.LayoutParams wmParams2;
     WindowManager mWindowManager;
+    MZFloatView v;
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
@@ -56,11 +62,28 @@ public class FloatWinService extends Service {
     private Button delIntervalView;
     private Button addCoordinateView;
     private Button startClickView;
+    public Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case SET_VIEW_START:
+                    startClickView.setText("START");
+                    break;
+                case SET_VIEW_STOP:
+                    startClickView.setText("STOP");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     private boolean add_flag = false;
     private boolean settings_flag = false;
     private MZFloatView CoordinateView;
     private int click_times;
     private int click_interval;
+    private ClickThread ct = null;
 
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -78,7 +101,13 @@ public class FloatWinService extends Service {
         super.onCreate();
         mWifiAdmin = new WifiAdmin(this);
         createView2(this);
+        ct = new ClickThread();
     }
+//    int getStartAppNumber() {
+//        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+//                Activity.MODE_PRIVATE);
+//        return mySharedPreferences.getInt("app_num", 1);
+//    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -101,11 +130,6 @@ public class FloatWinService extends Service {
     void setTimeAfter30Minites() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "a30");
     }
-//    int getStartAppNumber() {
-//        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
-//                Activity.MODE_PRIVATE);
-//        return mySharedPreferences.getInt("app_num", 1);
-//    }
 
     void setTimeAfter1Hour() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "a60");
@@ -389,7 +413,7 @@ public class FloatWinService extends Service {
             }
         });
         startClickView = new Button(this);
-        startClickView.setText("S");
+        startClickView.setText("Start");
         startClickView.setLayoutParams(p);
         startClickView.setHeight(dip2px(mContext, ButtonWeight));
         startClickView.setWidth(dip2px(mContext, ButtonWeight));
@@ -421,57 +445,28 @@ public class FloatWinService extends Service {
     }
 
     private void StartClick(MZFloatView bv) {
-        final MZFloatView v = bv;
 
-        new Thread() {
+        if(ct !=null && ct.isStart){
+            ct.stopThread();
+            ct = null;
+        }else{
+            ct = new ClickThread();
+            ct.start();
+        }
 
-            int x = v.x1, y = v.y1;
-            int times = getTimes();
-            int interval = getInterval() * 100;
-            Instrumentation mInst = new Instrumentation();
-            long downTime;
-            long eventTime;
-
-            @Override
-            public void run() {
-                while (times-- > 0) {
-                    synchronized (this) {
-                        try {
-                            wait(interval); //1秒
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-
-                    try {
-                        downTime = SystemClock.uptimeMillis();
-                        eventTime = SystemClock.uptimeMillis();
-
-                        MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0);
-                        mInst.sendPointerSync(me1);
-                    } catch (Exception e) {
-                    }
-                    synchronized (this) {
-                        try {
-                            wait(200);
-                        } catch (InterruptedException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                    try {
-                        downTime = SystemClock.uptimeMillis();
-                        eventTime = SystemClock.uptimeMillis();
-                        MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x, y, 0);
-                        mInst.sendPointerSync(me2);
-                        Log.e("instrument", "send pointersync " + x + ":" + y);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }.start();
+//        if (ct == null) {
+//            ct = new ClickThread();
+//            ct.start();
+//        } else {
+//            if (ct.isStart) {
+//                ct.stopThread();
+//                ct = null;
+//            } else {
+//                ct = null;
+//                ct = new ClickThread();
+//                ct.start();
+//            }
+//        }
     }
 
     private void addCView() {
@@ -642,7 +637,6 @@ public class FloatWinService extends Service {
         editor.commit();
     }
 
-
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
@@ -656,6 +650,70 @@ public class FloatWinService extends Service {
         if (settings_flag) {
             settings_flag = false;
             delSettingsView();
+        }
+    }
+
+
+    class ClickThread extends Thread {
+
+        //        int x, y;
+        int times = getTimes();
+        int interval = getInterval() * 100;
+        Instrumentation mInst = new Instrumentation();
+        long downTime;
+        long eventTime;
+        boolean isStart = false;
+
+        public void stopThread() {
+            isStart = false;
+            if (isAlive()) {
+                interrupt();
+            }
+        }
+
+        @Override
+        public void run() {
+            isStart = true;
+            mHandler.sendMessage(mHandler.obtainMessage(
+                    SET_VIEW_STOP, null));
+            while (times-- > 0 && isStart) {
+                synchronized (this) {
+                    try {
+                        wait(interval); //1秒
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    downTime = SystemClock.uptimeMillis();
+                    eventTime = SystemClock.uptimeMillis();
+                    MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, CoordinateView.x1, CoordinateView.y1, 0);
+                    mInst.sendPointerSync(me1);
+                } catch (Exception e) {
+                }
+                synchronized (this) {
+                    try {
+                        wait(200);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    downTime = SystemClock.uptimeMillis();
+                    eventTime = SystemClock.uptimeMillis();
+                    MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, CoordinateView.x1, CoordinateView.y1, 0);
+                    mInst.sendPointerSync(me2);
+                    Log.e("instrument", "send pointersync " + CoordinateView.x1 + ":" + CoordinateView.y1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            isStart = false;
+            mHandler.sendMessage(mHandler.obtainMessage(
+                    SET_VIEW_START, null));
         }
     }
 }
