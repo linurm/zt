@@ -109,25 +109,6 @@ public final class Stock2Client {
 //    }
 
     public String getUrlString(String[] stockCodes) {
-<<<<<<< HEAD
-        int iStockCode = Integer.parseInt(stockCodes[0]);
-        String strUrl = null;
-        String iCurStart = "19900101";
-        String iCurEnd = "20170526";
-        if (iStockCode >= 600000) {
-            strUrl = String.format("http://quotes.money.163.com/service/chddata.html?code=0%06d&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;VOTURNOVER;VATURNOVER", iStockCode, iCurStart, iCurEnd);
-        } else {
-            strUrl = String.format("http://quotes.money.163.com/service/chddata.html?code=1%06d&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;VOTURNOVER;VATURNOVER", iStockCode, iCurStart, iCurEnd);
-        }
-
-        return strUrl;
-    }
-
-    public List<Note> getStock2InfoDB(String[] stockCodes) throws HttpException,
-            IOException, Stock2Info.ParseStockInfoException {
-        String url = getUrlString(stockCodes);
-        print("url: " + url);
-=======
         int istock = Integer.parseInt(stockCodes[0]);
         String iCurStart = "19980101";
         String iCurEnd = "20170526";
@@ -147,7 +128,6 @@ public final class Stock2Client {
         String url = getUrlString(stockCodes);
 
         //print("url: " + url);
->>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         HttpMethod method = new GetMethod(url);
         int statusCode = 0;
         try {
@@ -166,11 +146,7 @@ public final class Stock2Client {
                 new BufferedInputStream(is), Charset.forName("gbk"));
         BufferedReader bReader = new BufferedReader(reader);
 
-<<<<<<< HEAD
-        List<Note> list = parseStockInfosDBFromReader(bReader);
-=======
         List<Note> list = parseStockInfo2DBFromReader(bReader);
->>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         bReader.close();
         method.releaseConnection();
 
@@ -222,28 +198,16 @@ public final class Stock2Client {
         return sb.toString();
     }
 
-<<<<<<< HEAD
-    private List<Note> parseStockInfosDBFromReader(BufferedReader reader)
-=======
     private List<Note> parseStockInfo2DBFromReader(BufferedReader reader)
->>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
             throws IOException, Stock2Info.ParseStockInfoException {
 
         ArrayList<Note> list = new ArrayList<Note>(10);
         String sourceLine = null;
-<<<<<<< HEAD
-
-        while ((sourceLine = reader.readLine()) != null) {
-            //print("sourceLine: " + sourceLine);
-//            Stock2Info.parseStock2Info2DB(sourceLine);
-            list.add(Stock2Info.parseStock2Info2DB(sourceLine));
-=======
         reader.readLine();//skip first row
         while ((sourceLine = reader.readLine()) != null) {
             //print("sourceLine: " + sourceLine);
             //Stock2Info.parseStockInfoDB(sourceLine);
             list.add(Stock2Info.parseStockInfoDB(sourceLine));
->>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         }
 
         return list;
@@ -257,12 +221,7 @@ public final class Stock2Client {
 
         while ((sourceLine = reader.readLine()) != null) {
             // print("sourceLine: " + sourceLine);
-<<<<<<< HEAD
-            Stock2Info.parseStock2Info(sourceLine);
-            //list.add(Stock2Info.parseStock2Info(sourceLine));
-=======
             list.add(Stock2Info.parseStockInfo(sourceLine));
->>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         }
 
         return list;

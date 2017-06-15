@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/nowopen"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/nowopentv"
+                android:textSize="12sp"
+                android:layout_toEndOf="@+id/nowopentv" />
+
+            <TextView
+                android:id="@+id/lastclose"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/lastclosetv"
+                android:layout_alignBottom="@+id/lastclosetv"
+                android:layout_toRightOf="@+id/lastclosetv"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/low"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/nowlowtv"
+                android:layout_alignBottom="@+id/nowlowtv"
+                android:textSize="12sp"
+                android:layout_toEndOf="@+id/hightv" />
+
+            <TextView
+                android:id="@+id/high"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/hightv"
+                android:layout_alignBottom="@+id/hightv"
+                android:layout_toRightOf="@+id/nowlowtv"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/nowopentv"
+                android:layout_marginLeft="150dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/change"
+                android:layout_marginTop="8dp"
+                android:text="今开: "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/lastclosetv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/nowopen"
+                android:layout_alignBottom="@+id/nowopen"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/nowopen"
+                android:text="昨收: "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/hightv"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/low"
+                android:layout_alignLeft="@+id/nowlowtv"
+                android:text="最高: "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/voltv"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/lastclose"
+                android:layout_alignBottom="@+id/lastclose"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/lastclose"
+                android:text="成交量: "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/vol"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/voltv"
+                android:layout_alignBottom="@+id/voltv"
+                android:layout_toRightOf="@+id/voltv"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/nowlowtv"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/voltv"
+                android:layout_alignLeft="@+id/voltv"
+                android:text="最低: "
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/now"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:textSize="35sp" />
+
+            <TextView
+                android:id="@+id/change"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/now"
+                android:layout_alignTop="@+id/now" />
+
+            <TextView
+                android:id="@+id/percent"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_alignBaseline="@+id/change"
+                android:layout_alignBottom="@+id/change"
+                android:layout_toEndOf="@+id/change"
+                android:layout_marginStart="8dp" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="4px"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <SurfaceView
+                android:id="@+id/surfaceView1"
+                android:layout_width="500dp"
+                android:layout_height="200dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/buy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Button" />
+
+                <Button
+                    android:id="@+id/sell"
+                    android:layout_below="@id/buy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Button" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2px"
+                    android:background="?android:attr/listDivider" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ToggleButton
+                android:id="@+id/toggleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ToggleButton" />
+
+            <ToggleButton
+                android:id="@+id/toggleButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:text="ToggleButton" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>
