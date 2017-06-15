@@ -15,8 +15,6 @@ public class WifiStatusLoader {
     private Context mContext;
     private FloatView mFloatView;
     private boolean isStartApp = false;
-    //private Activity theActivity;
-    private int selectId = 1;
 
     private WifiStatusLoader(Context context) {
         mContext = context;
@@ -35,13 +33,9 @@ public class WifiStatusLoader {
 
     public void setIsStartAPP(Activity act) {
         isStartApp = true;
-        //theActivity = act;
-        //selectId = id;
+
     }
 
-//    public void setActivity(Activity act) {
-//       // theActivity = act;
-//    }
 
     public void setIsStopAPP() {
         isStartApp = false;
@@ -52,7 +46,6 @@ public class WifiStatusLoader {
         if (mFloatView != null) {
             mFloatView.setbClickable(true);
             mFloatView.setImageResource(R.drawable.wifi_off);
-            //mFloatView.setEnabled(true);
         }
     }
 
@@ -60,8 +53,6 @@ public class WifiStatusLoader {
         if (mFloatView != null) {
             mFloatView.setbClickable(true);
             mFloatView.setImageResource(R.drawable.wifi_on);
-            //mFloatView.setEnabled(true);
-            //mFloatView.setClickable(true);
         }
     }
 
@@ -69,13 +60,11 @@ public class WifiStatusLoader {
 
         if (isStartApp) {
             isStartApp = false;
-            //OtherAPP.startActivity2(theActivity, selectId);
             startO(0, "0");
         }
     }
 
     public void startAPP(int id, String v) {
-        //OtherAPP.startActivity2(theActivity, id);
         startO(id, v);
     }
 
