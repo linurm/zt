@@ -111,9 +111,7 @@
         <activity
             android:name="zj.zfenlly.stock.StockFragment"
             android:label="@string/device_config"></activity>
-        <activity
-            android:name="zj.zfenlly.stock2.Stock2Fragment"
-            android:label="@string/device_config"></activity>
+
         <activity
             android:name="zj.zfenlly.wifiap.WifiApFragment"
             android:label="@string/device_config"></activity>
@@ -277,12 +275,7 @@
                 <action android:name="zj.zfenlly.StockService" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </service><service android:name="zj.zfenlly.stock2.Stock2Service">
-        <intent-filter>
-            <action android:name="zj.zfenlly.Stock2Service" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </service>
+        </service>
         <!-- android:process=":MonitorService" android:process=":StockService"-->
         <service android:name="zj.zfenlly.main.MonitorService">
             <intent-filter>

@@ -1,4 +1,4 @@
-# Install script for directory: F:/prog/android/ztools/zj/123/zt/zt/api
+# Install script for directory: E:/WORK/arm/rk3288/arm/rk3288/source/uvc/ztest3/zt/api
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "F:/prog/android/ztools/zj/123/zt/zt/api/.externalNativeBuild/cmake/debug/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "E:/WORK/arm/rk3288/arm/rk3288/source/uvc/ztest3/zt/api/.externalNativeBuild/cmake/debug/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
