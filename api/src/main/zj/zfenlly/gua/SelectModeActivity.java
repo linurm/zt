@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,6 +63,10 @@ public class SelectModeActivity extends Activity {
     public Button wifion_btn;
     @ViewInject(R.id.wifioff)
     public Button wifioff_btn;
+    @ViewInject(R.id.click_interval)
+    public EditText cinterval;
+    @ViewInject(R.id.click_times)
+    public EditText ctimes;
 
     @ViewInject(R.id.startapp)
     public Button startApp_btn;
@@ -177,9 +182,39 @@ public class SelectModeActivity extends Activity {
             startFloatWin();
             floatWin.setChecked(true);
         }
+        ctimes.setText("" + getTimes());
+        cinterval.setText("" + getInterval());
         Log.e(TAG, "start check: " + (mAutoStart ? "true" : "false"));
         Log.e(TAG, "floatwin check: " + (getGuaFloatWin().equals("true") ? "true" : "false"));
 
+    }
+
+    private int getTimes() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getInt("click_times", 0);
+    }
+
+    private void setTimes(int t) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putInt("click_times", t);
+        editor.commit();
+    }
+
+    private int getInterval() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getInt("click_interval", 0);
+    }
+
+    private void setInterval(int t) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putInt("click_interval", t);
+        editor.commit();
     }
 
     @Override
@@ -477,6 +512,7 @@ public class SelectModeActivity extends Activity {
     private void startFloatWin() {
         Intent intent = new Intent(this, FloatWinService.class);
         startService(intent);
+
     }
 
     private void startFloatWinAndSet() {

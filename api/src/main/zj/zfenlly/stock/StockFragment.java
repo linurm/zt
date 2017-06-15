@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
@@ -34,15 +34,15 @@ import zj.zfenlly.tools.R;
 
 @SuppressLint({"ValidFragment"})
 @ContentView(R.layout.fragment_stock)
-public class StockFragment extends Fragment implements Observer {
+public class StockFragment extends BaseFragment implements Observer {
 
-    private final String TAG = this.getClass().getName();
-    private final boolean Debug = true;
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private static final int MESSAGE_STOCK_SERVER_DISPLAYRUN = 1;
     private static final int MESSAGE_STOCK_SERVER_SIMULATION = 2;
     private static final int MESSAGE_STOCK_UPDATE_VIEW = 3;
-    private int mColorRes = -1;
+    private final String TAG = this.getClass().getName();
+    private final boolean Debug = true;
+    public MainApplication mStockApplication;
     // private SinaStockClient mClient;
     //@ViewInject(R.id.toggleButton)
     ToggleButton toggleButton;
@@ -55,32 +55,45 @@ public class StockFragment extends Fragment implements Observer {
 
     float p[] = new float[10];
     long v[] = new long[10];
-
+    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    private int mColorRes = -1;
     private StockInfo preStockInfo = null;
-
-    public MainApplication mStockApplication;
-
-    private ViewHolder holder;
 
     // TextView stock_name, now_open, last_close, high, low, now, vol, change,
     // percent;
+    private ViewHolder holder;
+    private Handler mHandler = new Handler() {
+        // String ssid;
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_STOCK_SERVER_DISPLAYRUN:
+                    boolean running = (String) (msg.obj) == "yes" ? true : false;
+                    mStockApplication.setServerDisplayRun(running);
+                    //print("run:" + msg.obj);
+                    // scanWifi();
+                    break;
+                case MESSAGE_STOCK_SERVER_SIMULATION:
+                    boolean Simulation = (String) (msg.obj) == "yes" ? true : false;
+                    mStockApplication.setServerSimulation(Simulation);
+                    //print("simu:" + msg.obj);
+                    // scanWifi();
+                    break;
+                case MESSAGE_STOCK_UPDATE_VIEW:
 
-    DecimalFormat decimalFormat = new DecimalFormat("0.00");
-
-    private void print(String msg) {
-        Log.i(TAG, msg);
-    }
-
-    public String mName;
+                default:
+                    break;
+            }
+        }
+    };
 
     public StockFragment() {
-        StockFragmentInit(R.color.white, "stock");
+        this(R.color.white, "stock");
     }
 
-    public void StockFragmentInit(int colorRes, String name) {
+    public StockFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        mName = name;
-        setRetainInstance(true);
     }
 
 //    private void initNotify() {
@@ -103,6 +116,10 @@ public class StockFragment extends Fragment implements Observer {
 //        mNotification.flags |= Notification.FLAG_ONGOING_EVENT;
 //        mNotificationManager.notify(0, mNotification);
 //    }
+
+    private void print(String msg) {
+        Log.e(TAG, msg);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,6 +151,164 @@ public class StockFragment extends Fragment implements Observer {
         super.onSaveInstanceState(outState);
         outState.putInt("mColorRes", mColorRes);
     }
+
+    private void initServiceDisplay() {
+        Message textMsg = mHandler
+                .obtainMessage(MESSAGE_STOCK_SERVER_DISPLAYRUN);
+        textMsg.obj = "yes";
+        mHandler.sendMessage(textMsg);
+    }
+
+    private void initToggleButton(View v) {
+
+        toggleButton = (ToggleButton) v.findViewById(R.id.toggleButton);
+
+        toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                toggleButton.setChecked(isChecked);
+
+                Message textMsg = mHandler
+                        .obtainMessage(MESSAGE_STOCK_SERVER_DISPLAYRUN);
+                textMsg.obj = isChecked ? "yes" : "no";
+                mHandler.sendMessage(textMsg);
+            }
+
+        });
+
+        tb_Simulation = (ToggleButton) v.findViewById(R.id.toggleButton2);
+
+        tb_Simulation.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                tb_Simulation.setChecked(isChecked);
+                // print("fffff: " + isChecked);
+                Message textMsg = mHandler
+                        .obtainMessage(MESSAGE_STOCK_SERVER_SIMULATION);
+                textMsg.obj = isChecked ? "yes" : "no";
+                mHandler.sendMessage(textMsg);
+            }
+
+        });
+
+        //tb_Simulation.setChecked(!mStockApplication.isServerSimulation());
+        tb_Simulation.setChecked(false);
+        boolean a = mStockApplication.isServerDisplayRun();
+//        print("------------  " + (a ? "1" : "2"));
+        toggleButton.setChecked(a);
+
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // getActivity().setContentView(R.layout.stock);
+
+        //ViewUtils.inject(getActivity());
+
+        mStockApplication = (MainApplication) getActivity().getApplication();
+        mStockApplication.addObserver(this);
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), StockService.class);
+            // mAPService =
+            // print("========onCreate");
+            getActivity().startService(intent);
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), StockService.class);
+            // mAPService =
+            // print("========onCreate");
+            getActivity().stopService(intent);
+        }
+        print("onDestroy");
+        // finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        print("onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        print("onPause");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mStockApplication.deleteObserver(this);
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), StockService.class);
+            getActivity().stopService(intent);
+        }
+        print("onDestroyView");
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        print("event bus is register");
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        print("event bus is unregister");
+        EventBus.getDefault().unregister(this);
+        tb_Simulation.setChecked(false);
+        super.onStop();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(StockEvent event) {
+//        int i;
+        float todayp, yestodayp, highp, lowp, nowp;
+        long tradec;
+
+        StockInfo.BuyOrSellInfo[] b = event.mStockInfo.getBuyInfo();
+        StockInfo.BuyOrSellInfo[] s = event.mStockInfo.getSellInfo();
+
+        // stock_name.setText(event.mStockInfo.getName());
+        holder.setChangeValueEmpty();
+
+        todayp = event.mStockInfo.getTodayPrice();
+        yestodayp = event.mStockInfo.getYestodayPrice();
+        highp = event.mStockInfo.getHighestPrice();
+        lowp = event.mStockInfo.getLowestPrice();
+        nowp = event.mStockInfo.getNowPrice();
+        tradec = event.mStockInfo.getTradeCount();
+
+        preStockInfo = event.mStockInfo;
+
+        holder.displayOtherValue(b, s, todayp, yestodayp, highp, lowp, nowp,
+                tradec);
+
+        // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        // print("event: " + event.mStockInfo.toString());
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        // TODO Auto-generated method stub
+
+    }
+
+    // This method will be called when a SomeOtherEvent is posted
+    // public void onEvent(SomeOtherEvent event) {
+    // doSomethingWith(event);
+    // }
 
     public class ViewHolder {
         @ViewInject(R.id.textView00)
@@ -358,188 +533,6 @@ public class StockFragment extends Fragment implements Observer {
             p[9] = b[4].mPrice;
             v[9] = b[4].mCount;
         }
-
-    }
-
-    private void initServiceDisplay() {
-        Message textMsg = mHandler
-                .obtainMessage(MESSAGE_STOCK_SERVER_DISPLAYRUN);
-        textMsg.obj = "yes";
-        mHandler.sendMessage(textMsg);
-    }
-
-    private void initToggleButton(View v) {
-
-        toggleButton = (ToggleButton) v.findViewById(R.id.toggleButton);
-
-        toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                toggleButton.setChecked(isChecked);
-
-                Message textMsg = mHandler
-                        .obtainMessage(MESSAGE_STOCK_SERVER_DISPLAYRUN);
-                textMsg.obj = isChecked ? "yes" : "no";
-                mHandler.sendMessage(textMsg);
-            }
-
-        });
-
-        tb_Simulation = (ToggleButton) v.findViewById(R.id.toggleButton2);
-
-        tb_Simulation.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView,
-                                         boolean isChecked) {
-                tb_Simulation.setChecked(isChecked);
-                // print("fffff: " + isChecked);
-                Message textMsg = mHandler
-                        .obtainMessage(MESSAGE_STOCK_SERVER_SIMULATION);
-                textMsg.obj = isChecked ? "yes" : "no";
-                mHandler.sendMessage(textMsg);
-            }
-
-        });
-
-        //tb_Simulation.setChecked(!mStockApplication.isServerSimulation());
-        tb_Simulation.setChecked(false);
-        boolean a = mStockApplication.isServerDisplayRun();
-//        print("------------  " + (a ? "1" : "2"));
-        toggleButton.setChecked(a);
-
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // getActivity().setContentView(R.layout.stock);
-
-        //ViewUtils.inject(getActivity());
-
-        mStockApplication = (MainApplication) getActivity().getApplication();
-        mStockApplication.addObserver(this);
-
-        Intent intent = new Intent(getActivity(), StockService.class);
-        // mAPService =
-        // print("========onCreate");
-        getActivity().startService(intent);
-
-    }
-
-    private Handler mHandler = new Handler() {
-        // String ssid;
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_STOCK_SERVER_DISPLAYRUN:
-                    boolean running = (String) (msg.obj) == "yes" ? true : false;
-                    mStockApplication.setServerDisplayRun(running);
-                    //print("run:" + msg.obj);
-                    // scanWifi();
-                    break;
-                case MESSAGE_STOCK_SERVER_SIMULATION:
-                    boolean Simulation = (String) (msg.obj) == "yes" ? true : false;
-                    mStockApplication.setServerSimulation(Simulation);
-                    //print("simu:" + msg.obj);
-                    // scanWifi();
-                    break;
-                case MESSAGE_STOCK_UPDATE_VIEW:
-
-                default:
-                    break;
-            }
-        }
-    };
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        Intent intent = new Intent(getActivity(), StockService.class);
-        // mAPService =
-        // print("========onCreate");
-        getActivity().stopService(intent);
-        print("onDestroy");
-        // finish();
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        print("onResume");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        print("onPause");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mStockApplication.deleteObserver(this);
-        if (!Debug) {
-            Intent intent = new Intent(getActivity(), StockService.class);
-            getActivity().stopService(intent);
-        }
-        print("onDestroyView");
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        print("event bus is register");
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        print("event bus is unregister");
-        EventBus.getDefault().unregister(this);
-        tb_Simulation.setChecked(false);
-        super.onStop();
-    }
-
-    // This method will be called when a MessageEvent is posted
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(StockEvent event) {
-//        int i;
-        float todayp, yestodayp, highp, lowp, nowp;
-        long tradec;
-
-        StockInfo.BuyOrSellInfo[] b = event.mStockInfo.getBuyInfo();
-        StockInfo.BuyOrSellInfo[] s = event.mStockInfo.getSellInfo();
-
-        // stock_name.setText(event.mStockInfo.getName());
-        holder.setChangeValueEmpty();
-
-        todayp = event.mStockInfo.getTodayPrice();
-        yestodayp = event.mStockInfo.getYestodayPrice();
-        highp = event.mStockInfo.getHighestPrice();
-        lowp = event.mStockInfo.getLowestPrice();
-        nowp = event.mStockInfo.getNowPrice();
-        tradec = event.mStockInfo.getTradeCount();
-
-        preStockInfo = event.mStockInfo;
-
-        holder.displayOtherValue(b, s, todayp, yestodayp, highp, lowp, nowp,
-                tradec);
-
-        // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
-        // print("event: " + event.mStockInfo.toString());
-    }
-
-    // This method will be called when a SomeOtherEvent is posted
-    // public void onEvent(SomeOtherEvent event) {
-    // doSomethingWith(event);
-    // }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
 
     }
 

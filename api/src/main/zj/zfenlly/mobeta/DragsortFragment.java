@@ -1,5 +1,6 @@
 package zj.zfenlly.mobeta;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,53 +21,40 @@ import com.mobeta.android.demodslv.RemoveModeDialog;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-import zj.zfenlly.other.Name;
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.tools.R;
 
-
-public class DragsortFragment extends Fragment implements Name,
+@SuppressLint("ValidFragment")
+public class DragsortFragment extends BaseFragment implements
         RemoveModeDialog.RemoveOkListener,
         DragInitModeDialog.DragOkListener,
         EnablesDialog.EnabledOkListener {
 
+    private final String TAG = this.getClass().getName();
+    //private String mTag = Tag;
+    public String mName;
     private int mNumHeaders = 0;
     private int mNumFooters = 0;
-
     private int mDragStartMode = DragSortController.ON_DRAG;
     private boolean mRemoveEnabled = true;
     private int mRemoveMode = DragSortController.FLING_REMOVE;
     private boolean mSortEnabled = true;
     private boolean mDragEnabled = true;
     private int mColorRes = -1;
-    //private String mTag = Tag;
-    public String mName;
-    private final String TAG = this.getClass().getName();
+
+    public DragsortFragment() {
+        this(R.color.white, "dragsort");
+    }
+
+    public DragsortFragment(int colorRes, String name) {
+        super(name, false);
+        mColorRes = colorRes;
+    }
 
     private void print(String msg) {
         Log.i(TAG, msg);
     }
 
-    public DragsortFragment() {
-        DragsortFragmentInit(R.color.white, "dragsort");
-    }
-
-    public void DragsortFragmentInit(int colorRes, String name) {
-        mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
-    }
-
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

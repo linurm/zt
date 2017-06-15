@@ -5,7 +5,6 @@ import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -20,33 +19,38 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import zj.zfenlly.other.Name;
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.tools.R;
 
 
 @SuppressLint("ValidFragment")
-public class CameraFragment extends Fragment implements Name {
+public class CameraFragment extends BaseFragment {
 
+    private final String TAG = this.getClass().getName();//
+
+
+    Camera.Parameters parameters;
     private int mColorRes = -1;
     private SurfaceHolder surfaceHolder;
-    Camera.Parameters parameters;
     private Camera pCamera;
-    public String mName;
     @ViewInject(R.id.surface_camera)
-
     private SurfaceView surfaceView;
-    private final String TAG = this.getClass().getName();//
+
+    public CameraFragment() {
+        this(R.color.white, "camera");
+    }
 
     // .substring(this.getClass().getName().lastIndexOf(".") + 1);
 
-    private void print(String msg) {
-        Log.i(TAG, msg);
+    public CameraFragment(int colorRes, String name) {
+        super(name, false);
+        mColorRes = colorRes;
     }
 
-    public CameraFragment(int colorRes, String name) {
-        mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
+
+
+    private void print(String msg) {
+        Log.i(TAG, msg);
     }
 
     @Override
@@ -54,7 +58,6 @@ public class CameraFragment extends Fragment implements Name {
         super.onSaveInstanceState(outState);
         outState.putInt("mColorRes", mColorRes);
     }
-
 
 
     @Override
@@ -78,7 +81,6 @@ public class CameraFragment extends Fragment implements Name {
                 // TODO Auto-generated method stub
                 print("surfaceDestroyed");
                 //topCam();
-
             }
 
             @Override
@@ -113,10 +115,7 @@ public class CameraFragment extends Fragment implements Name {
                     }
                 });
             }
-
-
         });
-
         return view;
     }
 
@@ -203,6 +202,7 @@ public class CameraFragment extends Fragment implements Name {
             Log.e("Came_e", "图像出错");
         }
     }
+
     public void turnLightOff(Camera mCamera) {
         if (mCamera == null) {
             return;
@@ -227,6 +227,7 @@ public class CameraFragment extends Fragment implements Name {
             }
         }
     }
+
     //相机参数的初始化设置
     private void initCamera() {
         if (pCamera == null) return;
@@ -244,18 +245,5 @@ public class CameraFragment extends Fragment implements Name {
 
         //pCamera.cancelAutoFocus();// 2如果要实现连续的自动对焦，这一句必须加上
 
-    }
-
-
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
     }
 }

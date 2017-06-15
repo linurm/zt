@@ -51,14 +51,27 @@ public class Stock2Info {
     private long mTradeCount;
     // 成交额，单位“元”。一般需要转换成“万元”。
     private long mTradeMoney;
+<<<<<<< HEAD
     // 日期
     private String mDate;
+=======
+
+    // 日期
+    private String mDate;
+    // 时间
+    private String mTime;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
 
     private Stock2Info(String name, float todayPrice, float yestodayPrice,
                        float nowPrice, float highestPrice, float lowestPrice,
+<<<<<<< HEAD
                        float buy1Price, float sell1Price, long tradeCount,
                        long tradeMoney, BuyOrSellInfo[] buy, BuyOrSellInfo[] sell,
+=======
+                       long tradeCount,
+                       long tradeMoney,
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
                        String date, String time) {
 
         mName = name;
@@ -75,6 +88,10 @@ public class Stock2Info {
 
 
         mDate = date;
+<<<<<<< HEAD
+=======
+        mTime = time;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
     }
 
     /**
@@ -87,6 +104,7 @@ public class Stock2Info {
      * @throws ParseStockInfoException
      */
 
+<<<<<<< HEAD
     public static Note parseStock2Info2DB(String source)
             throws ParseStockInfoException {
 
@@ -106,6 +124,25 @@ public class Stock2Info {
 //        print("time: " + time);
 //        print("d: " + d);
 //        print("ID: " + idString);
+=======
+    public static Note parseStockInfoDB(String source)
+            throws ParseStockInfoException {
+
+        String[] infoStr = source.split(",");
+        String d="";
+        String idString = infoStr[1];
+
+
+        for (int i = 3; i < infoStr.length - 1; i++) {
+            d += infoStr[i] + ",";
+        }
+        d += infoStr[infoStr.length - 1];
+
+        String time = infoStr[0];
+
+        // print("time: " + time);
+        // print("d: " + d);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         Note note = new Note(null, idString, d, time, null);
         // print("idString: " + idString);
@@ -119,6 +156,7 @@ public class Stock2Info {
         return note;
     }
 
+<<<<<<< HEAD
     public static Stock2Info parseNoteInfo(Note note) {
         String s = note.getContent();
         String n = note.getStockid();
@@ -181,10 +219,38 @@ public class Stock2Info {
                 tradeCount, tradeMoney, new BuyOrSellInfo[]{buy1, buy2, buy3,
                 buy4, buy5}, new BuyOrSellInfo[]{sell1, sell2,
                 sell3, sell4, sell5}, date, time);
+=======
+    public static Stock2Info parseNote2Info(Note note) {
+        String s = note.getContent();
+        String n = note.getStockid();
+        String d = note.getDate();
+
+        String[] infoStr = s.split(",");
+        String[] dateStr = d.split(",");
+
+        if (infoStr.length != 32) {
+            ;// return null;// throw new ParseStockInfoException();
+        }
+        final String name = n;
+        final float todayPrice = Float.parseFloat(infoStr[3]);
+        final float yestodayPrice = Float.parseFloat(infoStr[4]);
+        final float nowPrice = Float.parseFloat(infoStr[0]);
+        final float highestPrice = Float.parseFloat(infoStr[1]);
+        final float lowestPrice = Float.parseFloat(infoStr[2]);
+        final long tradeCount = Long.parseLong(infoStr[5]);
+        final long tradeMoney = Long.parseLong(infoStr[6].split("\\.")[0]);
+
+        final String date = dateStr[0];
+
+        Stock2Info stockInfo = new Stock2Info(name, todayPrice, yestodayPrice,
+                nowPrice, highestPrice, lowestPrice,
+                tradeCount, tradeMoney, date, null);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         return stockInfo;
     }
 
+<<<<<<< HEAD
     public static Stock2Info parseStock2Info(String source)
             throws ParseStockInfoException {
 
@@ -193,6 +259,22 @@ public class Stock2Info {
         // print("contentString: " + contentString);
         // print(" : " + infoStr.length + " : " + source.length());
 
+=======
+    public static Stock2Info parseStockInfo(String source)
+            throws ParseStockInfoException {
+        // 取""中数据
+        int start = source.indexOf(' ');
+        int first = source.indexOf("=");
+        String idString = source.substring(start + 1, first);
+        String contentString = source.substring(first + 2, source.length() - 2);
+        String[] infoStr = contentString.split(",");
+        // print("idString: " + idString);
+        // print("contentString: " + contentString);
+        // print(" : " + infoStr.length + " : " + source.length());
+        if (infoStr.length != 32) {
+            ;// throw new ParseStockInfoException();
+        }
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         final String name = infoStr[0];
         final float todayPrice = Float.parseFloat(infoStr[1]);
@@ -200,6 +282,7 @@ public class Stock2Info {
         final float nowPrice = Float.parseFloat(infoStr[3]);
         final float highestPrice = Float.parseFloat(infoStr[4]);
         final float lowestPrice = Float.parseFloat(infoStr[5]);
+<<<<<<< HEAD
         final float buy1Price = Float.parseFloat(infoStr[6]);
         final float sell1Price = Float.parseFloat(infoStr[7]);
         final long tradeCount = Long.parseLong(infoStr[8]);
@@ -226,15 +309,25 @@ public class Stock2Info {
                 Float.parseFloat(infoStr[27]));
         BuyOrSellInfo sell5 = new BuyOrSellInfo(Long.parseLong(infoStr[28]),
                 Float.parseFloat(infoStr[29]));
+=======
+        final long tradeCount = Long.parseLong(infoStr[8]);
+        final long tradeMoney = Long.parseLong(infoStr[9]);
+
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         final String date = infoStr[30];
         final String time = infoStr[31];
 
         Stock2Info stockInfo = new Stock2Info(name, todayPrice, yestodayPrice,
+<<<<<<< HEAD
                 nowPrice, highestPrice, lowestPrice, buy1Price, sell1Price,
                 tradeCount, tradeMoney, new BuyOrSellInfo[]{buy1, buy2, buy3,
                 buy4, buy5}, new BuyOrSellInfo[]{sell1, sell2,
                 sell3, sell4, sell5}, date, time);
+=======
+                nowPrice, highestPrice, lowestPrice,
+                tradeCount, tradeMoney, date, time);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         return stockInfo;
     }
@@ -325,6 +418,17 @@ public class Stock2Info {
         return mDate;
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * 获取对应股票信息的时间。例如周末，或者其他休市期间获取的数据将不是实时的。
+     *
+     * @return 获取对应股票信息的时间。
+     */
+    public String getTime() {
+        return mTime;
+    }
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
     @Override
     public String toString() {
@@ -339,7 +443,11 @@ public class Stock2Info {
         sb.append("今日交易量： " + getTradeCount() + "股\n");
         sb.append("今日成交量： " + getTradeMoney() + "元\n");
 
+<<<<<<< HEAD
 
+=======
+        sb.append("时间： " + getTime() + "\n");
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         sb.append("日期： " + getDate() + "\n");
 
         return sb.toString();

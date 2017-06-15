@@ -2,7 +2,6 @@ package zj.zfenlly.utils;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,45 +9,26 @@ import android.view.ViewGroup;
 
 import com.lidroid.xutils.ViewUtils;
 
-import zj.zfenlly.other.Name;
-import zj.zfenlly.other.Observable;
-import zj.zfenlly.other.Observer;
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2017/4/12.
  */
 @SuppressLint("ValidFragment")
-public class Utils extends Fragment implements Name, Observer {
+public class Utils extends BaseFragment {
     private final String TAG = this.getClass().getName();
-    public String mName;
     private int mColorRes = -1;
+
     public Utils() {
-        this(R.color.white, "wd");
+        this(R.color.white, "Utils");
     }
 
     public Utils(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
-    }
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
     }
 
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        // TODO Auto-generated method stub
-        // Log.i(TAG, "update(" + arg + ")");
-    }
 
     @Override
     public void onResume() {

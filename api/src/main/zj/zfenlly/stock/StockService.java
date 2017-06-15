@@ -16,8 +16,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-
-
 import org.apache.commons.httpclient.HttpException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.greendao.query.QueryBuilder;
@@ -26,15 +24,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import zj.zfenlly.daodb.DaoMaster;
+import zj.zfenlly.daodb.DaoSession;
+import zj.zfenlly.daodb.Note;
+import zj.zfenlly.daodb.NoteDao;
 import zj.zfenlly.main.MainActivity;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.main.MonitorService;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
-import zj.zfenlly.daodb.DaoMaster;
-import zj.zfenlly.daodb.DaoSession;
-import zj.zfenlly.daodb.Note;
-import zj.zfenlly.daodb.NoteDao;
 import zj.zfenlly.tools.R;
 
 public class StockService extends Service implements Observer {
@@ -503,6 +501,8 @@ public class StockService extends Service implements Observer {
 
             if (db_num < db_index)
                 return null;
+            if (qb.list().size() == 0)
+                return null;
             Note note = qb.list().get(db_index);
             db_index += 1;
             print("db_index: " + db_index);
@@ -537,7 +537,6 @@ public class StockService extends Service implements Observer {
             print("mStockThread thread run");
             //List<Note> list = null;
             while (isstart) {
-
                 try {
                     Thread.sleep(10);// 10ms
                 } catch (InterruptedException e) {
@@ -554,12 +553,8 @@ public class StockService extends Service implements Observer {
 
                 if (sm_times > 3) {
                     sm_times = 0;
-
                     if (mApplication.isServerDisplayRun()) {
-//                        print("?????????????");
-
                         if (mApplication.isServerSimulation()) {
-//                            print("!!!!!!!!!!!!!!!!!");
                             if (sd == null) {
                                 print("new");
                                 sd = new SimulationDisplay(ST_CODE);

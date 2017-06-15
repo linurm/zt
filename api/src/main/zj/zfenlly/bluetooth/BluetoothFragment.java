@@ -42,13 +42,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
 
 @SuppressLint("ValidFragment")
-public class BluetoothFragment extends Fragment implements Name {
+public class BluetoothFragment extends BaseFragment {
 	public BluetoothAdapter mBluetoothAdapter = null;
 
 	ConnectThread mConnectThread = null;
@@ -70,7 +71,7 @@ public class BluetoothFragment extends Fragment implements Name {
 	IntentFilter filter = null;
 
 	private int mColorRes = -1;
-	public String mName;
+
 	private final String TAG = this.getClass().getName();
 
 	private void print(String msg) {
@@ -78,25 +79,13 @@ public class BluetoothFragment extends Fragment implements Name {
 	}
 
 	public BluetoothFragment() {
-		this(R.color.white, "color");
+		this(R.color.white, "bluetooth");
 	}
 
 	public BluetoothFragment(int colorRes, String name) {
+		super(name, false);
 		mColorRes = colorRes;
-		setName(name);
-		setRetainInstance(true);
-	}
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return mName;
-	}
-
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		mName = name;
 	}
 
 	@Override

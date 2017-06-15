@@ -27,12 +27,13 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 
 import java.io.File;
 
+import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.other.Name;
 import zj.zfenlly.tools.R;
 
 
 @SuppressLint("ValidFragment")
-public class HttpFragment extends Fragment implements Name {
+public class HttpFragment extends BaseFragment {
 
     // private HttpHandler handler;
 
@@ -42,7 +43,7 @@ public class HttpFragment extends Fragment implements Name {
     private PreferencesCookieStore preferencesCookieStore;
 
     private int mColorRes = -1;
-    public String mName;
+
 
     private final String TAG = this.getClass().getName();
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
@@ -52,26 +53,14 @@ public class HttpFragment extends Fragment implements Name {
     }
 
     public HttpFragment() {
-        this(R.color.white, "color");
+        this(R.color.white, "http");
     }
 
     public HttpFragment(int colorRes, String name) {
+        super(name, false);
         mColorRes = colorRes;
-        setName(name);
-        setRetainInstance(true);
     }
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return mName;
-    }
-
-    @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-        mName = name;
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

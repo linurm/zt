@@ -14,22 +14,24 @@ import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
  * Created by Administrator on 2016/8/17.
  */
 public class FloatView extends ImageView {
-    private static int i = 0;
+    public static int i = 0;
     private Context mContext = null;
-    private float mTouchX;
-    private float mTouchY;
-    private float x;
-    private float y;
+    public float mTouchX;
+    public float mTouchY;
+    public float x;
+    public float y;
     private Long t_down;
     private Long t_up;
     private float mStartX;
     private float mStartY;
     private boolean bClickable;
     private OnClickListener mClickListener;
-    private LinearLayout mLinearLayout;
-    private WindowManager windowManager = null;
+    public LinearLayout mLinearLayout;
+    public WindowManager windowManager = null;
     // 此windowManagerParams变量为获取的全局变量，用以保存悬浮窗口的属性
-    private WindowManager.LayoutParams windowManagerParams;
+    public WindowManager.LayoutParams windowManagerParams;
+
+
 
     public FloatView(Context context, LinearLayout mLinearLayout, WindowManager mWindowManager, WindowManager.LayoutParams wmParams) {
         super(context);
@@ -111,7 +113,7 @@ public class FloatView extends ImageView {
         this.mClickListener = l;
     }
 
-    private void updateViewPosition() {
+    public void updateViewPosition() {
         if (i++ > 5) {
             //i = 0;
             // 更新浮动窗口位置参数

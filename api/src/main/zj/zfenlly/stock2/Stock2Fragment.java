@@ -1,7 +1,14 @@
 package zj.zfenlly.stock2;
 
 import android.annotation.SuppressLint;
+<<<<<<< HEAD
 import android.content.Intent;
+=======
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +32,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
 
+<<<<<<< HEAD
+=======
+import zj.zfenlly.main.BaseFragment;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.other.Observable;
 import zj.zfenlly.other.Observer;
@@ -32,15 +43,22 @@ import zj.zfenlly.tools.R;
 
 
 @SuppressLint({"ValidFragment"})
+<<<<<<< HEAD
 @ContentView(R.layout.fragment_stock)
 public class Stock2Fragment extends Fragment implements Observer {
 
     private final String TAG = this.getClass().getName();
     private final boolean Debug = true;
+=======
+@ContentView(R.layout.fragment_stock2)
+public class Stock2Fragment extends BaseFragment implements Observer {
+
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
     //.substring(this.getClass().getName().lastIndexOf(".") + 1);
     private static final int MESSAGE_STOCK_SERVER_DISPLAYRUN = 1;
     private static final int MESSAGE_STOCK_SERVER_SIMULATION = 2;
     private static final int MESSAGE_STOCK_UPDATE_VIEW = 3;
+<<<<<<< HEAD
     private int mColorRes = -1;
     // private SinaStockClient mClient;
     //@ViewInject(R.id.toggleButton)
@@ -80,6 +98,68 @@ public class Stock2Fragment extends Fragment implements Observer {
         mColorRes = colorRes;
         mName = name;
         setRetainInstance(true);
+=======
+    private final String TAG = this.getClass().getName();
+    private final boolean Debug = false;
+    public MainApplication mStockApplication;
+
+    // private SinaStockClient mClient;
+    //@ViewInject(R.id.toggleButton)
+    ToggleButton toggleButton;
+
+
+    //    NotificationManager mNotificationManager;
+//    Notification mNotification;
+//    PendingIntent mPendingIntent;
+    //@ViewInject(R.id.toggleButton2)
+    ToggleButton tb_Simulation;
+    float p[] = new float[10];
+
+    //private StockInfo preStockInfo = null;
+    long v[] = new long[10];
+    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+
+    // TextView stock_name, now_open, last_close, high, low, now, vol, change,
+    // percent;
+    private int mColorRes = -1;
+    private ViewHolder holder;
+    private Handler mHandler = new Handler() {
+        // String ssid;
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_STOCK_SERVER_DISPLAYRUN:
+                    boolean running = (String) (msg.obj) == "yes" ? true : false;
+                    mStockApplication.setServerDisplayRun(running);
+                    //print("run:" + msg.obj);
+                    // scanWifi();
+                    break;
+                case MESSAGE_STOCK_SERVER_SIMULATION:
+                    boolean Simulation = (String) (msg.obj) == "yes" ? true : false;
+                    mStockApplication.setServerSimulation(Simulation);
+                    //print("simu:" + msg.obj);
+                    // scanWifi();
+                    break;
+                case MESSAGE_STOCK_UPDATE_VIEW:
+
+                default:
+                    break;
+            }
+        }
+    };
+
+    public Stock2Fragment() {
+        this(R.color.protecteye, "s2");
+    }
+
+    public Stock2Fragment(int colorRes, String name) {
+        super(name, true);
+        mColorRes = colorRes;
+    }
+
+    private void print(String msg) {
+        Log.e(TAG, msg);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
     }
 
 //    private void initNotify() {
@@ -103,6 +183,7 @@ public class Stock2Fragment extends Fragment implements Observer {
 //        mNotificationManager.notify(0, mNotification);
 //    }
 
+<<<<<<< HEAD
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -113,6 +194,26 @@ public class Stock2Fragment extends Fragment implements Observer {
         // print("qqqqqqqqqqqqqqqq");
         // construct the RelativeLayout
         View v = inflater.inflate(R.layout.fragment_stock, null);
+=======
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        print("onCreateView " + this);
+        if (savedInstanceState != null) {
+            mColorRes = savedInstanceState.getInt("mColorRes");
+            print("getInt");
+        }
+
+        int color = getResources().getColor(mColorRes);
+
+
+        // print("qqqqqqqqqqqqqqqq");
+        // construct the RelativeLayout
+        //View v = null;
+
+        View v = inflater.inflate(R.layout.fragment_stock2, null);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         holder = new ViewHolder();
         ViewUtils.inject(holder, v);
@@ -120,9 +221,15 @@ public class Stock2Fragment extends Fragment implements Observer {
 //        initNotify();
         // View v = new View(getActivity());
         v.setBackgroundColor(color);
+<<<<<<< HEAD
         initServiceDisplay();
 
         initToggleButton(v);
+=======
+        //initServiceDisplay();
+
+        //initToggleButton(v);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
 //        initNotify2();
         return v;
@@ -132,6 +239,7 @@ public class Stock2Fragment extends Fragment implements Observer {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("mColorRes", mColorRes);
+<<<<<<< HEAD
     }
 
     public class ViewHolder {
@@ -195,6 +303,185 @@ public class Stock2Fragment extends Fragment implements Observer {
         TextView tv91;
         @ViewInject(R.id.textView92)
         TextView tv92;
+=======
+        print("onSaveInstanceState " + this);
+    }
+
+    private void initServiceDisplay() {
+        Message textMsg = mHandler
+                .obtainMessage(MESSAGE_STOCK_SERVER_DISPLAYRUN);
+        textMsg.obj = "yes";
+        mHandler.sendMessage(textMsg);
+    }
+
+    private void initToggleButton(View v) {
+
+        toggleButton = (ToggleButton) v.findViewById(R.id.toggleButton);
+
+        toggleButton.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                toggleButton.setChecked(isChecked);
+
+                Message textMsg = mHandler
+                        .obtainMessage(MESSAGE_STOCK_SERVER_DISPLAYRUN);
+                textMsg.obj = isChecked ? "yes" : "no";
+                mHandler.sendMessage(textMsg);
+            }
+
+        });
+
+        tb_Simulation = (ToggleButton) v.findViewById(R.id.toggleButton2);
+
+        tb_Simulation.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                tb_Simulation.setChecked(isChecked);
+                // print("fffff: " + isChecked);
+                Message textMsg = mHandler
+                        .obtainMessage(MESSAGE_STOCK_SERVER_SIMULATION);
+                textMsg.obj = isChecked ? "yes" : "no";
+                mHandler.sendMessage(textMsg);
+            }
+
+        });
+
+        //tb_Simulation.setChecked(!mStockApplication.isServerSimulation());
+        tb_Simulation.setChecked(false);
+        boolean a = mStockApplication.isServerDisplayRun();
+//        print("------------  " + (a ? "1" : "2"));
+        toggleButton.setChecked(a);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // getActivity().setContentView(R.layout.stock);
+        //getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //ViewUtils.inject(getActivity());
+        print("onCreate " + this);
+        mStockApplication = (MainApplication) getActivity().getApplication();
+        mStockApplication.addObserver(this);
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), Stock2Service.class);
+            // mAPService =
+            // print("========onCreate");
+            getActivity().startService(intent);
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), Stock2Service.class);
+            // mAPService =
+            // print("========onCreate");
+            getActivity().stopService(intent);
+        }
+        print("onDestroy " + this);
+
+        // finish();
+    }
+
+    @Override
+    public void onResume() {
+
+
+        super.onResume();
+        print("onResume " + this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        print("onPause " + this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        print("onDestroyView " + this);
+        mStockApplication.deleteObserver(this);
+        if (!Debug) {
+            Intent intent = new Intent(getActivity(), Stock2Service.class);
+            getActivity().stopService(intent);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        print("onStart " + this);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        print("onStop " + this);
+        EventBus.getDefault().unregister(this);
+        //tb_Simulation.setChecked(false);
+        super.onStop();
+    }
+
+    @Override
+    public void onDetach() {
+        // TODO Auto-generated method stub
+        print("onDetach  " + this);
+        super.onDetach();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        // TODO Auto-generated method stub
+        print("onAttach  " + this);
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        print("onActivityCreated  " + this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    // This method will be called when a MessageEvent is posted
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(Stock2Event event) {
+//        int i;
+        float todayp, yestodayp, highp, lowp, nowp;
+        long tradec;
+        // stock_name.setText(event.mStockInfo.getName());
+        holder.setChangeValueEmpty();
+
+        todayp = event.mStockInfo.getTodayPrice();
+        yestodayp = event.mStockInfo.getYestodayPrice();
+        highp = event.mStockInfo.getHighestPrice();
+        lowp = event.mStockInfo.getLowestPrice();
+        nowp = event.mStockInfo.getNowPrice();
+        tradec = event.mStockInfo.getTradeCount();
+
+        holder.displayOtherValue(todayp, yestodayp, highp, lowp, nowp,
+                tradec);
+
+        // Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show();
+        // print("event: " + event.mStockInfo.toString());
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        // TODO Auto-generated method stub
+    }
+
+    // This method will be called when a SomeOtherEvent is posted
+    // public void onEvent(SomeOtherEvent event) {
+    // doSomethingWith(event);
+    // }
+
+    public class ViewHolder {
+
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         @ViewInject(R.id.nowopen)
         TextView now_open;
         @ViewInject(R.id.lastclose)
@@ -217,6 +504,7 @@ public class Stock2Fragment extends Fragment implements Observer {
         }
 
         public void setChangeValueEmpty() {
+<<<<<<< HEAD
             tv02.setText("");
             tv12.setText("");
             tv22.setText("");
@@ -231,6 +519,21 @@ public class Stock2Fragment extends Fragment implements Observer {
 
         /*public void displayOtherValue(StockInfo.BuyOrSellInfo[] b, StockInfo.BuyOrSellInfo[] s,
                                       float todayp, float yestodayp, float highp, float lowp,
+=======
+//            tv02.setText("");
+//            tv12.setText("");
+//            tv22.setText("");
+//            tv32.setText("");
+//            tv42.setText("");
+//            tv52.setText("");
+//            tv62.setText("");
+//            tv72.setText("");
+//            tv82.setText("");
+//            tv92.setText("");
+        }
+
+        public void displayOtherValue(float todayp, float yestodayp, float highp, float lowp,
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
                                       float nowp, float tradec) {
             int i;
 
@@ -259,7 +562,11 @@ public class Stock2Fragment extends Fragment implements Observer {
 
             vol.setText("" + tradec);
 
+<<<<<<< HEAD
             if (preStockInfo != null) {
+=======
+            /*if (preStockInfo != null) {
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
                 for (i = 0; i < 10; i++) {
                     // print(":" + p[i]);
                     if (s[4].mPrice == p[i]) {
@@ -304,10 +611,16 @@ public class Stock2Fragment extends Fragment implements Observer {
                     }
                 }
             }
+<<<<<<< HEAD
 
             // preStockInfo = event.mStockInfo;
 
             tv00.setText("" + s[4].mCount);
+=======
+*/
+            // preStockInfo = event.mStockInfo;
+            /*tv00.setText("" + s[4].mCount);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
             tv01.setText("" + s[4].mPrice);
             p[0] = s[4].mPrice;
             v[0] = s[4].mCount;
@@ -355,6 +668,7 @@ public class Stock2Fragment extends Fragment implements Observer {
             tv90.setText("" + b[4].mCount);
             tv91.setText("" + b[4].mPrice);
             p[9] = b[4].mPrice;
+<<<<<<< HEAD
             v[9] = b[4].mCount;
         }*/
 
@@ -539,6 +853,10 @@ public class Stock2Fragment extends Fragment implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         // TODO Auto-generated method stub
+=======
+            v[9] = b[4].mCount;*/
+        }
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
     }
 

@@ -37,8 +37,11 @@ import zj.zfenlly.tools.R;
 
 public class Stock2Service extends Service implements Observer {
 
+<<<<<<< HEAD
     private static final int STOCK_DATA_GET = 1;
     private static final int SCAN_CAMERA_STOP = 2;
+=======
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
     private static final int STOCK_GETLOOP_TICK = 6;
     private static final int STOCK_GETNEXTLOOP_TICK = STOCK_GETLOOP_TICK - 1;
 
@@ -164,7 +167,11 @@ public class Stock2Service extends Service implements Observer {
         final String DATABASE_PATH = Environment.getExternalStorageDirectory()
                 + "/" + "xxx/";
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, DATABASE_PATH
+<<<<<<< HEAD
                 + "notes-db", null);
+=======
+                + "notes2-db", null);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
@@ -180,8 +187,15 @@ public class Stock2Service extends Service implements Observer {
         mApplication.addObserver(this);
         isstart = true;
         mClient = Stock2Client.getInstance();
+<<<<<<< HEAD
         print(mClient.getUrlString(new String[]{ST_CODE}));
         initDatabase();
+=======
+        mClient.getUrlString(new String[]{ST_CODE});
+        //mClient.getStockInfoDB(new String[]{ST_CODE});
+
+        //initDatabase();
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         mStockThread.start();
         //mThread.start();
         print("onCreate");
@@ -279,7 +293,11 @@ public class Stock2Service extends Service implements Observer {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+<<<<<<< HEAD
         flags = START_STICKY;
+=======
+        //flags = START_STICKY;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         print("onStartCommand:" + intent);
         //initNotify();
         //notificationSend4();
@@ -301,7 +319,11 @@ public class Stock2Service extends Service implements Observer {
         if (qb.list().size() > 0)
             qb.where(NoteDao.Properties.Date.eq(note.getDate()));
 
+<<<<<<< HEAD
         // print("date: " + note.getDate() + ": " + qb.list().size());
+=======
+        print("date: " + note.getDate() + ": " + qb.list().size());
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         // qb.buildCount().count();
         return qb.list().size() > 0 ? true : false;// 锟斤拷锟斤拷锟秸藏憋拷
     }
@@ -311,12 +333,21 @@ public class Stock2Service extends Service implements Observer {
         // String comment = "Added on " + df.format(new Date());
         // Note note = new Note(null, id, content, time);
         if (isSaved(note)) {
+<<<<<<< HEAD
             print("is already exist!!!");
             return -1;
         } else {
             noteDao.insert(note);
             print("Inserted new note, ID: " + note.getId() + "time: "
                     + note.getDate());
+=======
+//            print("is already exist!!!");
+            return -1;
+        } else {
+            noteDao.insert(note);
+//            print("Inserted new note, ID: " + note.getId() + "time: "
+//                    + note.getDate());
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
             return 0;
         }
 
@@ -328,12 +359,17 @@ public class Stock2Service extends Service implements Observer {
         Note note;
         for (Iterator i = al.iterator(); i.hasNext(); ) {
             note = (Note) i.next();
+<<<<<<< HEAD
             return addNote(note);
+=======
+            addNote(note);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         }
         return 0;
     }
 
     private void displayNote(Note note) {
+<<<<<<< HEAD
         Stock2Info stockInfo = Stock2Info.parseNoteInfo(note);
 
         /*if (EventBus.getDefault().hasSubscriberForEvent(StockEvent.class)) {
@@ -341,6 +377,16 @@ public class Stock2Service extends Service implements Observer {
             print("=======================");
         }*/
         print("-------------------------");
+=======
+        Stock2Info stockInfo = Stock2Info.parseNote2Info(note);
+
+        if (EventBus.getDefault().hasSubscriberForEvent(Stock2Event.class)) {
+            EventBus.getDefault().post(new Stock2Event(stockInfo));
+            //print("=======================");
+        } else {
+            ;//print("-------------------------");
+        }
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         // print(stockInfo.toString());
     }
 
@@ -462,12 +508,20 @@ public class Stock2Service extends Service implements Observer {
 //            }
 //        }
         mApplication.deleteObserver(this);
+<<<<<<< HEAD
         Intent intentScan = new Intent("zj.intent.RESTART");
+=======
+        //Intent intentScan = new Intent("zj.intent.RESTART");
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         //intentScan.addCategory(Intent.CATEGORY_DEFAULT);
         //intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+<<<<<<< HEAD
         getApplicationContext().sendBroadcast(intentScan);
+=======
+        //getApplicationContext().sendBroadcast(intentScan);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 //        startService(new Intent(this, StockService.class));
 //        Intent localIntent = new Intent();
 //        localIntent.setClass(this, StockService.class);  //销毁时重新启动Service
@@ -498,6 +552,7 @@ public class Stock2Service extends Service implements Observer {
         }
 
         public Note getNoteFromDB() {
+<<<<<<< HEAD
 
             if (db_num <= db_index)
                 return null;
@@ -508,6 +563,19 @@ public class Stock2Service extends Service implements Observer {
             /*if (EventBus.getDefault().hasSubscriberForEvent(StockEvent.class)) {
                 EventBus.getDefault().post(new StockEvent(stockInfo));
             }*/
+=======
+            if (db_num <= db_index)
+                return null;
+            if (qb.list().size() == 0)
+                return null;
+            Note note = qb.list().get(db_index);
+            db_index += 1;
+            print("db_index: " + db_index);
+            Stock2Info stockInfo = Stock2Info.parseNote2Info(note);
+            if (EventBus.getDefault().hasSubscriberForEvent(Stock2Event.class)) {
+                EventBus.getDefault().post(new Stock2Event(stockInfo));
+            }
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
             return note;
         }
 
@@ -517,40 +585,117 @@ public class Stock2Service extends Service implements Observer {
             db_num = 0;
             db_index = 0;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
     }
 
     public class sThread extends Thread {
         int times;
         int sm_times;
+<<<<<<< HEAD
         long tmp_times = 0, last_times = 0;//, cmp_times = 1000;
+=======
+        long cur_times = 0, last_times = 0;//, cmp_times = 1000;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 
         public void set_times(int times) {
             this.times = times;
         }
 
+<<<<<<< HEAD
+=======
+        public List<Note> getStockInfoFromNet() {
+            List<Note> l = null;
+
+            if (mClient != null) {
+
+                //if (StockTime.checkTime()) {
+                if (isNetworkAvailable() == false) {
+                    print("network is unavaliable");
+                    return null;
+                }
+                try {
+                    l = mClient.getStockInfoDB(new String[]{ST_CODE});
+                } catch (HttpException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+//                        if (list != null) {
+//                                    Note note;
+//                                    for (Iterator i = list.iterator(); i.hasNext(); ) {
+//                                        note = (Note) i.next();
+//                                        addNote(note);
+//                                    }
+//                                    print("store ok !!!");
+//                                    if (storeNotes(list) == -1) {
+//                            ;//mStockThread.set_times(STOCK_GETNEXTLOOP_TICK);
+//                                    }
+//                        }
+                //} else {
+                //    print("is out of time");
+                //}
+//                        if (!mApplication.isServerSimulation() && mApplication.isServerDisplayRun()) {
+                if (sd instanceof SimulationDisplay) {
+                    sd.SimulationOFF();
+                    print("off");
+                    sd = null;
+                }
+                //Display(list);
+//                        }
+            }
+            return l;
+        }
+
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
         @Override
         public void run() {
             // rs.Poll(1);
             print("mStockThread thread run");
+<<<<<<< HEAD
             //List<Note> list = null;
             while (isstart) {
 
+=======
+            List<Note> list = null;
+            list = getStockInfoFromNet();
+            if (list == null)
+                return;
+            int index = list.size() - 1;
+            //List<Note> list = null;
+            while (isstart) {
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
                 try {
                     Thread.sleep(10);// 10ms
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+<<<<<<< HEAD
                 tmp_times = System.currentTimeMillis();
                 if (last_times + 1000 < tmp_times) {//1s
                     sm_times++;
                     times++;
                     last_times = last_times + 1000 * ((tmp_times - last_times) / 1000);
+=======
+                cur_times = System.currentTimeMillis();
+                if (last_times + 1000 < cur_times) {//1s
+                    sm_times++;
+                    times++;
+                    last_times = last_times + 1000 * ((cur_times - last_times) / 1000);
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
                 }
                 // 10s
 
                 if (sm_times > 3) {
+<<<<<<< HEAD
                     sm_times = 0;
 
                     if (mApplication.isServerDisplayRun()) {
@@ -638,11 +783,72 @@ public class Stock2Service extends Service implements Observer {
                     if (MonitorService.class.getName().equals(service.service
                             .getClassName())) {
                         isServiceRunning = true;
+=======
+//                    sm_times = 0;
+
+//                    for (Iterator i = list.iterator(); i.hasNext(); ) {
+//                        note = (Note) i.next();
+
+                    displayNote(list.get(index));
+                    index--;
+                    print("index: " + index + " size: " + list.size());
+                    if (index >= 0) {
+                        sm_times = 0;
+                    }
+//                    }
+
+//                    Display(list);
+//                    if (mApplication.isServerDisplayRun()) {
+//                        if (mApplication.isServerSimulation()) {
+//                            if (sd == null) {
+//                                print("new");
+//                                sd = new SimulationDisplay(ST_CODE);
+//                            }
+//                            sd.getNoteFromDB();
+//                        }
+//                    }
+                }
+                if (times >= STOCK_GETLOOP_TICK) {
+                    times = 0;
+
+
+                    //try {
+
+                    //} catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    //e.printStackTrace();
+                    // }
+                    //}
+                }
+            }
+            print("mStockThread thread exit");
+        }
+
+        //    private boolean isstart = false;
+        //private MThread mThread = new MThread();
+        public class MThread extends Thread {
+            boolean isServiceRunning = false;
+
+            @Override
+            public void run() {
+                while (isstart) {
+                    ActivityManager manager = (ActivityManager) getApplicationContext()
+                            .getSystemService(Context.ACTIVITY_SERVICE);
+                    isServiceRunning = false;
+                    for (ActivityManager.RunningServiceInfo service : manager
+                            .getRunningServices(Integer.MAX_VALUE)) {
+//                print(service.service
+//                        .getClassName());
+                        if (MonitorService.class.getName().equals(service.service
+                                .getClassName())) {
+                            isServiceRunning = true;
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 //                        print(StockService.class.getName() + " is running");
 //                    while(true){
 //
 //                    }
 
+<<<<<<< HEAD
                     }
                 }
                 if (!isServiceRunning) {
@@ -673,4 +879,36 @@ public class Stock2Service extends Service implements Observer {
     // this.pause = pause;
     // }
 
+=======
+                        }
+                    }
+                    if (!isServiceRunning) {
+                        Intent intentScan = new Intent("zj.intent.monitor");
+                        //intentScan.addCategory(Intent.CATEGORY_DEFAULT);
+                        //intentScan.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        getApplicationContext().sendBroadcast(intentScan);
+                        print("start service");
+                    }
+
+                    try {
+                        Thread.sleep(5);// 10ms
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // public boolean isPause() {
+        // return pause;
+        // }
+        //
+        // public void setPause(boolean pause) {
+        // this.pause = pause;
+        // }
+    }
+>>>>>>> 0724f51241eb0ad9205c28da1da928cf85c586f0
 }
