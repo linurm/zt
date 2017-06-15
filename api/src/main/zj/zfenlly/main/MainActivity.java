@@ -11,6 +11,7 @@ import android.view.View;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
 import zj.zfenlly.record.MyAlertDialogFragment;
+import zj.zfenlly.stock2.Stock2Fragment;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifidevice.util.Constant;
 
@@ -50,7 +51,7 @@ public class MainActivity extends BaseActivity {
         }
         if (mContent == null)
             //mContent = new RecordFragment();
-            mContent = new ColorFragment(R.color.protecteye, "color");
+            mContent = new Stock2Fragment();
         // set the Above View
 
         getSupportFragmentManager().beginTransaction()
