@@ -171,8 +171,8 @@ public class SelectModeActivity extends Activity {
         if (getGuaAutoStart().equals("true")) {
             mAutoStart = true;
             autostart.setChecked(true);
-            startFloatWin();
-            floatWin.setChecked(true);
+//            startFloatWin();
+//            floatWin.setChecked(true);
         } else {
             mAutoStart = false;
             autostart.setChecked(false);
