@@ -81,23 +81,10 @@ public class SelectModeActivity extends Activity {
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onTheCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e(TAG, "_______________________________" + requestCode);
-        if ((requestCode & FLAG_START_ACTIVITY) == FLAG_START_ACTIVITY) {
-        } else {
-        }
-        if ((requestCode & FLAG_EXIT) == FLAG_EXIT) {
-            finish();
-        }
-        Log.i(TAG, "onActivityResult");
     }
 
 //    private void setAirplaneMode(Context context, int flags) {
@@ -112,12 +99,25 @@ public class SelectModeActivity extends Activity {
 //        return (isAirplaneMode == 1) ? true : false;
 //    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, "_______________________________" + requestCode);
+        if ((requestCode & FLAG_START_ACTIVITY) == FLAG_START_ACTIVITY) {
+        } else {
+        }
+        if ((requestCode & FLAG_EXIT) == FLAG_EXIT) {
+            finish();
+        }
+        Log.i(TAG, "onActivityResult");
+    }
+
     void onTheCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         if (intent != null) {
             autoMode = intent.getBooleanExtra("auto", false);
             Log.e(TAG, "auto mode");
         }
+
         setContentView(R.layout.nettest);
         mWifiAdmin = new WifiAdmin(this);
         ViewUtils.inject(this);
@@ -398,12 +398,6 @@ public class SelectModeActivity extends Activity {
         stopFloatWin();
     }
 
-    @OnClick(R.id.wifioff)
-    public void wifiOff(View v) {
-        mWifiAdmin.closeWifi();
-        OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
-    }
-
 //    @OnRadioGroupCheckedChange(R.id.myRadioGroup)
 //    public void radioGroup(RadioGroup group, int checkedId) {
 //        switch (checkedId) {
@@ -420,6 +414,12 @@ public class SelectModeActivity extends Activity {
 //        Log.e(TAG, "selectId: " + selectId);
 //        setStartAppNumber(selectId);
 //    }
+
+    @OnClick(R.id.wifioff)
+    public void wifiOff(View v) {
+        mWifiAdmin.closeWifi();
+        OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
+    }
 
     @OnClick(R.id.startapp)
     public void startApp(View v) {
@@ -502,12 +502,18 @@ public class SelectModeActivity extends Activity {
     @OnCompoundButtonCheckedChange(R.id.floatwin)
     public void floatWin(CompoundButton buttonView,
                          boolean isChecked) {
+        Log.e("66", "666666666666");
         if (isChecked) {
             startFloatWinAndSet();
         } else {
             stopFloatWinAndSet();
         }
+
+
+
+
     }
+
 
     private void startFloatWin() {
         Intent intent = new Intent(this, FloatWinService.class);

@@ -47,6 +47,7 @@ public class FloatWinService extends Service {
     WindowManager.LayoutParams wmParams2;
     WindowManager mWindowManager;
     MZFloatView v;
+    NotifySound ns = new NotifySound();
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
@@ -100,6 +101,7 @@ public class FloatWinService extends Service {
         // TODO Auto-generated method stub
         super.onCreate();
         mWifiAdmin = new WifiAdmin(this);
+        ns.init(this);
         createView2(this);
         ct = new ClickThread();
     }
@@ -446,10 +448,10 @@ public class FloatWinService extends Service {
 
     private void StartClick(MZFloatView bv) {
 
-        if(ct !=null && ct.isStart){
+        if (ct != null && ct.isStart) {
             ct.stopThread();
             ct = null;
-        }else{
+        } else {
             ct = new ClickThread();
             ct.start();
         }
@@ -677,14 +679,6 @@ public class FloatWinService extends Service {
             mHandler.sendMessage(mHandler.obtainMessage(
                     SET_VIEW_STOP, null));
             while (times-- > 0 && isStart) {
-                synchronized (this) {
-                    try {
-                        wait(interval); //1秒
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
 
                 try {
                     downTime = SystemClock.uptimeMillis();
@@ -701,6 +695,7 @@ public class FloatWinService extends Service {
                         e.printStackTrace();
                     }
                 }
+                if (isStart == false) break;
                 try {
                     downTime = SystemClock.uptimeMillis();
                     eventTime = SystemClock.uptimeMillis();
@@ -710,8 +705,18 @@ public class FloatWinService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                synchronized (this) {
+                    try {
+                        wait(interval); //1秒
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                if (isStart == false) break;
             }
             isStart = false;
+            ns.play(2);
             mHandler.sendMessage(mHandler.obtainMessage(
                     SET_VIEW_START, null));
         }
