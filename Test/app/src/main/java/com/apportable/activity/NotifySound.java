@@ -1,13 +1,11 @@
-package zj.zfenlly.gua;
+package com.apportable.activity;
 
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
 
-
-
 /**
- * Created by Administrator on 2017/6/17.
+ * Created by Administrator on 2017/6/30.
  */
 
 public class NotifySound {
@@ -37,13 +35,17 @@ public class NotifySound {
         // 初始化声音
         mContext = context;
 
-        mSoundPlayer.load(mContext, Rfile.beep, 1);// 1
-        mSoundPlayer.load(mContext, Rfile.nfcsuccess, 1);// 2
+        mSoundPlayer.load(mContext, R.raw.beep, 1);// 1
+        mSoundPlayer.load(mContext, R.raw.nfcsuccess, 1);// 2
 
         return soundPlayUtils;
     }
 
-
+    /**
+     * 播放声音
+     *
+     * @param soundID
+     */
     public static void play(int soundID) {
         mSoundPlayer.play(soundID, 1, 1, 0, 0, 1);
     }
@@ -54,6 +56,4 @@ public class NotifySound {
 //        i = soundPool.load(mContext, R.raw.beep, 1);
 //        soundPool.play(i, 1, 1, 0, 0, 1);
 //    }
-
-
 }

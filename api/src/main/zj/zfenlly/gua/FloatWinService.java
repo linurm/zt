@@ -20,12 +20,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
 import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
 
-//import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2016/8/17.
@@ -270,17 +268,17 @@ public class FloatWinService extends Service {
         });
 
         if (mWifiAdmin.isWifiEnabled()) {
-            floatView.setImageResource(R.drawable.wifi_on); // 这里简单的用自带的icon来做演示
+            floatView.setImageResource(Rfile.wifi_on); // 这里简单的用自带的icon来做演示
         } else {
-            floatView.setImageResource(R.drawable.wifi_off);
+            floatView.setImageResource(Rfile.wifi_off);
         }
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
             after1hour = new Button(this);
             after1hour.setText("+ hour");
             after1hour.setHeight(dip2px(mContext, ButtonWeight));
             after1hour.setWidth(dip2px(mContext, ButtonWeight));
-            after1hour.setBackgroundResource(R.drawable.button_shape);
-            after1hour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            after1hour.setBackgroundResource(Rfile.button_shape);
+            after1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
             after1hour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -292,8 +290,8 @@ public class FloatWinService extends Service {
             before1hour.setText("- hour");
             before1hour.setHeight(dip2px(mContext, ButtonWeight));
             before1hour.setWidth(dip2px(mContext, ButtonWeight));
-            before1hour.setBackgroundResource(R.drawable.button_shape);
-            before1hour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            before1hour.setBackgroundResource(Rfile.button_shape);
+            before1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
             before1hour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -305,8 +303,8 @@ public class FloatWinService extends Service {
             afterhalfhour.setText("+ 30m");
             afterhalfhour.setHeight(dip2px(mContext, ButtonWeight));
             afterhalfhour.setWidth(dip2px(mContext, ButtonWeight));
-            afterhalfhour.setBackgroundResource(R.drawable.button_shape);
-            afterhalfhour.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            afterhalfhour.setBackgroundResource(Rfile.button_shape);
+            afterhalfhour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
             afterhalfhour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -319,8 +317,8 @@ public class FloatWinService extends Service {
             before10minites.setText("- 10m");
             before10minites.setHeight(dip2px(mContext, ButtonWeight));
             before10minites.setWidth(dip2px(mContext, ButtonWeight));
-            before10minites.setBackgroundResource(R.drawable.button_shape);
-            before10minites.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            before10minites.setBackgroundResource(Rfile.button_shape);
+            before10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
             before10minites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -333,8 +331,8 @@ public class FloatWinService extends Service {
             after10minites.setText("+ 10m");
             after10minites.setHeight(dip2px(mContext, ButtonWeight));
             after10minites.setWidth(dip2px(mContext, ButtonWeight));
-            after10minites.setBackgroundResource(R.drawable.button_shape);
-            after10minites.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+            after10minites.setBackgroundResource(Rfile.button_shape);
+            after10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
             after10minites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -361,8 +359,8 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         settingsView.setLayoutParams(p);
-        settingsView.setBackgroundResource(R.drawable.button_shape);
-        settingsView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        settingsView.setBackgroundResource(Rfile.button_shape);
+        settingsView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         settingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -383,8 +381,8 @@ public class FloatWinService extends Service {
         refreshView.setHeight(dip2px(mContext, ButtonWeight));
         refreshView.setWidth(dip2px(mContext, ButtonWeight));
         refreshView.setLayoutParams(p);
-        refreshView.setBackgroundResource(R.drawable.button_shape);
-        refreshView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        refreshView.setBackgroundResource(Rfile.button_shape);
+        refreshView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         refreshView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -397,8 +395,8 @@ public class FloatWinService extends Service {
         addCoordinateView.setLayoutParams(p);
         addCoordinateView.setHeight(dip2px(mContext, ButtonWeight));
         addCoordinateView.setWidth(dip2px(mContext, ButtonWeight));
-        addCoordinateView.setBackgroundResource(R.drawable.button_shape);
-        addCoordinateView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        addCoordinateView.setBackgroundResource(Rfile.button_shape);
+        addCoordinateView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         addCoordinateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -419,8 +417,8 @@ public class FloatWinService extends Service {
         startClickView.setLayoutParams(p);
         startClickView.setHeight(dip2px(mContext, ButtonWeight));
         startClickView.setWidth(dip2px(mContext, ButtonWeight));
-        startClickView.setBackgroundResource(R.drawable.button_shape);
-        startClickView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
+        startClickView.setBackgroundResource(Rfile.button_shape);
+        startClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         startClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -502,7 +500,7 @@ public class FloatWinService extends Service {
         mFloatLayout2.setOrientation(LinearLayout.VERTICAL);
         CoordinateView = new MZFloatView(getApplicationContext(), mFloatLayout2, mWindowManager, wmParams);
         //CoordinateView.setBackgroundResource(R.drawable.button_shape);
-        CoordinateView.setImageResource(R.drawable.mz);
+        CoordinateView.setImageResource(Rfile.mz);
         mFloatLayout2.addView(CoordinateView);
         mWindowManager.addView(mFloatLayout2, wmParams2);
     }
