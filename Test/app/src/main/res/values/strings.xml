@@ -1,6 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TestZJ</string>
-    <string name="number">number</string>
-    <string name="phone">phone</string>
+
+    <string name="app_name">ztest</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="buy">   BUY  </string>
+    <string name="sell">  SELL  </string>
+    <string name="start">  START </string>
+    <string name="pause">  pause  </string>
+    <string name="gains">涨    幅:</string>
+    <string name="stock_value">资产:</string>
+    <string name="stock_market">市值:</string>
+    <string name="btn1">b1</string>
+    <string name="btn2">b2</string>
+    <string name="btn3">b3</string>
+    <string name="num1">1</string>
+    <string name="num2">2</string>
+    <string name="money">可用:</string>
     <string name="textPassword">textPassword</string>
+    <string name="phone">phone</string>
+    <string name="number">number</string>
+
 </resources>

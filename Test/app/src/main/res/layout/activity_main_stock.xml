@@ -1,0 +1,212 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainStock" >
+
+    <com.zj.stock.Coordinates
+        android:id="@+id/kline"
+        android:layout_width="400dp"
+        android:layout_height="100dp" />
+
+    <com.zj.stock.Coordinates
+        android:id="@+id/volume"
+        android:layout_width="400dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/kline"
+        android:layout_marginTop="2dp" />
+
+    <com.zj.stock.Coordinates
+        android:id="@+id/kdj"
+        android:layout_width="400dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/volume"
+        android:layout_marginTop="2dp" />
+    <com.zj.stock.Coordinates
+        android:id="@+id/macd"
+        android:layout_width="400dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/kdj"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/gains"
+        android:layout_alignBottom="@+id/gains"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/gains"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/stock_market_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/stock_market"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/stock_market"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/stock_value_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/stock_value"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/stock_value"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/high"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/kline"
+        android:layout_marginLeft="120dp"
+        android:layout_toRightOf="@+id/kline"
+        android:text="最高价:" />
+
+    <TextView
+        android:id="@+id/low"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/high"
+        android:layout_marginLeft="120dp"
+        android:layout_toRightOf="@+id/kline"
+        android:text="最低价:" />
+
+    <TextView
+        android:id="@+id/open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/kline"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/kline"
+        android:text="开盘价:" />
+
+    <TextView
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/open"
+        android:layout_below="@+id/open"
+        android:layout_toRightOf="@+id/kline"
+        android:text="收盘价:" />
+
+    <TextView
+        android:id="@+id/high_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/high"
+        android:layout_alignBottom="@+id/high"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/high"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/open_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/open"
+        android:layout_alignBottom="@+id/open"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/open"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/close_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/close"
+        android:layout_alignBottom="@+id/close"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/close"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/low_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/low"
+        android:layout_alignBottom="@+id/low"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/low"
+        android:text="0" />
+
+    <TextView
+        android:id="@+id/gains"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/close"
+        android:layout_below="@+id/close"
+        android:text="@string/gains" />
+
+    <TextView
+        android:id="@+id/stock_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/gains"
+        android:layout_below="@+id/gains"
+        android:text="@string/stock_value" />
+
+    <TextView
+        android:id="@+id/stock_market"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/stock_value"
+        android:layout_below="@+id/stock_value"
+        android:text="@string/stock_market" />
+
+    <TextView
+        android:id="@+id/balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/stock_market"
+        android:layout_below="@+id/stock_market"
+        android:text="@string/money" />
+
+    <TextView
+        android:id="@+id/balance_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/balance"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/balance"
+        android:text="0" />
+
+    <ImageButton
+        android:id="@+id/btn_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_pause"
+        android:layout_below="@+id/balance"
+        android:background="@layout/btn_start"
+        android:contentDescription="@string/pause"
+        android:text="@string/start" />
+
+    <ImageButton
+        android:id="@+id/btn_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_start"
+        android:layout_alignBottom="@+id/btn_start"
+        android:layout_alignParentRight="true"
+        android:background="@layout/btn_transaction"
+        android:contentDescription="@string/pause"
+        android:text="@string/buy" />
+
+    <ImageButton
+        android:id="@+id/btn_pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/balance"
+        android:layout_below="@+id/btn_start"
+        android:background="@layout/btn_pause"
+        android:contentDescription="@string/pause"
+        android:text="@string/pause" />
+
+</RelativeLayout>

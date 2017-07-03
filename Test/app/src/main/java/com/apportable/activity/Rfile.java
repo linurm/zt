@@ -2,6 +2,8 @@ package com.apportable.activity;
 
 import android.util.Log;
 
+import com.zj.stock.R;
+
 /**
  * Created by Administrator on 2017/6/30.
  */

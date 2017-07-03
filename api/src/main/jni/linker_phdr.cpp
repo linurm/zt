@@ -30,7 +30,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/exec_elf.h>
-#include<sys/mman.h>
+#include <sys/mman.h>
 #include <errno.h>
 
 #include <android/log.h>
@@ -332,7 +332,8 @@ bool ElfReader::LoadSegments() {
         // Segment addresses in memory.
         Elf32_Addr seg_start = phdr->p_vaddr + load_bias_;
         Elf32_Addr seg_end = seg_start + phdr->p_memsz;
-        DL_ERR("+++++++++++++++phdr->p_vaddr = 0x%08x phdr->p_memsz = 0x%08x", phdr->p_vaddr, phdr->p_memsz);
+        DL_ERR("+++++++++++++++phdr->p_vaddr = 0x%08x phdr->p_memsz = 0x%08x", phdr->p_vaddr,
+               phdr->p_memsz);
         //+++++++++++++++phdr->p_vaddr = 0x00000000 phdr->p_memsz = 0x00028cf8
         //+++++++++++++++phdr->p_vaddr = 0x0002a5d8 phdr->p_memsz = 0x00068b24
         //readelf -l
