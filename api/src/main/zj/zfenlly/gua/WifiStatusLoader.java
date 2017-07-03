@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2016/8/17.
@@ -45,14 +44,14 @@ public class WifiStatusLoader {
     public void WifiDisableDisplay() {
         if (mFloatView != null) {
             mFloatView.setbClickable(true);
-            mFloatView.setImageResource(R.drawable.wifi_off);
+            mFloatView.setImageResource(Rfile.wifi_off);
         }
     }
 
     public void WifiEnableDisplay() {
         if (mFloatView != null) {
             mFloatView.setbClickable(true);
-            mFloatView.setImageResource(R.drawable.wifi_on);
+            mFloatView.setImageResource(Rfile.wifi_on);
         }
     }
 

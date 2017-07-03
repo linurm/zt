@@ -10,7 +10,6 @@ import android.os.Bundle;
 
 import java.util.Calendar;
 
-import zj.zfenlly.tools.R;
 
 /**
  * Created by Administrator on 2017/2/15.
@@ -24,7 +23,7 @@ public class OverActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.over_main);
+        setContentView(Rfile.over_main);
 
         Bundle bundle = getIntent().getExtras();
 

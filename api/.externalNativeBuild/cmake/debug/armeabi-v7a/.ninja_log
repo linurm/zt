@@ -41,3 +41,12 @@
 3	361	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	f21804e54fe21614
 2	364	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	f4be531158dbb386
 364	888	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	bc5f81c5c276fbb4
+3	1262	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	f21804e54fe21614
+2	1352	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	f4be531158dbb386
+1352	2617	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	bc5f81c5c276fbb4
+1	279	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	f4be531158dbb386
+2	280	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	f21804e54fe21614
+280	490	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	bc5f81c5c276fbb4
+3	274	0	CMakeFiles/JniCamera.dir/src/main/jni/linker_phdr.cpp.o	f21804e54fe21614
+2	274	0	CMakeFiles/JniCamera.dir/src/main/jni/zj_zfenlly_camera_CameraJni.cpp.o	f4be531158dbb386
+274	468	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libJniCamera.so	bc5f81c5c276fbb4
