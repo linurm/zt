@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />
+
     <EditText
         android:id="@+id/textPassword"
         android:layout_width="wrap_content"
@@ -25,8 +26,6 @@
         android:inputType="phone"
         android:lineSpacingExtra="8sp" />
 
-
-
     <EditText
         android:id="@+id/number"
         android:layout_width="wrap_content"
@@ -34,6 +33,14 @@
         android:ems="10"
         android:hint="@string/number"
         android:inputType="number" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/text"
+        android:inputType="textPersonName" />
 
 
 </LinearLayout>
