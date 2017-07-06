@@ -76,7 +76,7 @@ dependencies {
     compile project(':DaoCore')
     compile 'org.greenrobot:greendao:3.2.2'
     // add library
-    compile files('libs/com.teamlava.castlestory1.2.5.1g.jar')
+   // compile files('libs/com.teamlava.castlestory1.2.5.1g.jar')
 }
 
 //task clean(type: Delete) {

@@ -26,7 +26,8 @@
         android:layout_height="60dp"
         android:layout_below="@+id/volume"
         android:layout_marginTop="2dp" />
-    <com.zj.stock.Coordinates
+
+    <com.zj.stock.Coordinates
         android:id="@+id/macd"
         android:layout_width="400dp"
         android:layout_height="60dp"
@@ -186,7 +187,9 @@
         android:layout_below="@+id/balance"
         android:background="@layout/btn_start"
         android:contentDescription="@string/pause"
-        android:text="@string/start" />
+        android:text="@string/start"
+        android:layout_toStartOf="@+id/close_value"
+        android:layout_alignEnd="@+id/btn_pause" />
 
     <ImageButton
         android:id="@+id/btn_transaction"
@@ -203,10 +206,21 @@
         android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/balance"
-        android:layout_below="@+id/btn_start"
         android:background="@layout/btn_pause"
         android:contentDescription="@string/pause"
-        android:text="@string/pause" />
+        android:text="@string/pause"
+        android:layout_alignTop="@+id/kdj"
+        android:layout_toStartOf="@+id/close_value" />
+
+    <ImageButton
+        android:id="@+id/btn_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@layout/btn_pause"
+        android:contentDescription="@string/pause"
+        android:text="@string/pause"
+        android:layout_below="@+id/btn_pause"
+        android:layout_toEndOf="@+id/low"
+        android:layout_marginTop="24dp" />
 
 </RelativeLayout>
