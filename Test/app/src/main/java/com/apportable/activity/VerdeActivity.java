@@ -10,6 +10,17 @@ import java.lang.reflect.Method;
 
 public class VerdeActivity extends Activity {
     static NotifySound ns = new NotifySound();
+    private static Vibrator vibrator;
+    public  static int a;
+
+    public static void doVibrate() {
+        long[] pattern = {100, 200, 100, 200, 100, 200};   // 停止 开启 停止 开启
+        vibrator.vibrate(pattern, -1);           //重复两次上面的pattern 如果只想震动一次，index设
+    }
+
+    public static void playSound() {
+        ns.play(2);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +35,14 @@ public class VerdeActivity extends Activity {
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ns.init(this);
+        a = 0;
         Log.e("ZTAG", "Z LOOK");
         setContentView(Rfile.content_view);
         playSound();
         testreflect();
         vibrateInit();
         doVibrate();
+        //test();
         Log.e("TEST", "---" + uuid());
     }
 
@@ -40,28 +53,25 @@ public class VerdeActivity extends Activity {
         vibrator.cancel();
     }
 
-    public static void doVibrate(){
-        long [] pattern = {100,200,100,200,100,200};   // 停止 开启 停止 开启
-        vibrator.vibrate(pattern,-1);           //重复两次上面的pattern 如果只想震动一次，index设
+    public  static void NotifyVibrate() {
+        if (a == 0) {
+            a = 1;
+            doVibrate();
+        }
     }
 
-    public void vibrateInit(){
-        vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-
+    public void vibrateInit() {
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
-    private static Vibrator vibrator;
-    public void testreflect(){
+
+    public void testreflect() {
         try {
             Class<?> threadClazz = Class.forName("com.test.testzj.Rfile");
             Method getTipMethod1 = threadClazz.getDeclaredMethod("yes");
             getTipMethod1.invoke(null);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void playSound() {
-        ns.play(2);
     }
 
     public String uuid() {
