@@ -46,6 +46,7 @@ public class STApplication extends Application implements Observable {
     private float maxVolume = 0;
     private float highValue = 0, lowValue = 0;
     private float KDJhigh = 0, KDJlow = 0;
+    private int DisNum = 0;
     private ServiceConnection mcoon = new ServiceConnection() {
 
         @Override
@@ -53,14 +54,20 @@ public class STApplication extends Application implements Observable {
             // TODO Auto-generated method stub
             mService = null;
             isConn = false;
-            Log.d(TAG, "service disconnected!!!");
+            Log.e(TAG, "service disconnected!!!");
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = (ISTServiceAIDLInterface) service;
             isConn = true;
-            Log.d(TAG, "service connected!!!");
+            try {
+                mService.setDisNum(DisNum);
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            Log.e(TAG, "service connected!!!");
 
         }
     };
@@ -196,41 +203,50 @@ public class STApplication extends Application implements Observable {
     }
 
     public boolean isServerRun() {
-        try {
-            return mService.IsServerRun();
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (isConn) {
+            try {
+                return mService.IsServerRun();
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return false;
     }
 
     public boolean haveStock() {
-        try {
-            return mService.HaveStock();
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (isConn) {
+            try {
+                return mService.HaveStock();
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return false;
 
     }
 
     public void setDisplayNum(int n) {
-        try {
-            mService.setDisNum(n);
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        DisNum = n;
+        if (isConn) {
+            try {
+                mService.setDisNum(n);
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
     public boolean isServerPause() {
-        try {
-            return mService.IsServerPause();
-        } catch (RemoteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        if (isConn) {
+            try {
+                return mService.IsServerPause();
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return false;
 

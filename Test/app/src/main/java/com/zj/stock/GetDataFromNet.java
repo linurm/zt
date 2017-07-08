@@ -1,9 +1,6 @@
 package com.zj.stock;
 
 
-import org.apache.commons.httpclient.HttpException;
-
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -11,24 +8,23 @@ public class GetDataFromNet {
 
     private static final String TAG = "GetDataFromNet";
 
-    private static final String ST_CODE = "100844";
+    private static final String ST_CODE = "600844";
+
+    private String genSTCode() {
+        return ST_CODE;
+    }
 
     private List<StockData> getStockCsvData(Stock2Client msc) {
         List<StockData> l = null;
         //run
         //do {
-            try {
-                l = msc.getStockInfoDB(new String[]{ST_CODE});
-            } catch (HttpException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        try {
+            l = msc.getStockInfoDB(genSTCode());
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         //} while (l.size() == 0);
 
         return l;

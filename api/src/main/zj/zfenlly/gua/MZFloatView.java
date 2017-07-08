@@ -25,7 +25,7 @@ public class MZFloatView extends FloatView {
             windowManagerParams.x = (int) (x - mTouchX);
             windowManagerParams.y = (int) (y - mTouchY);
             this.windowManager.updateViewLayout(this.mLinearLayout, this.windowManagerParams); // 刷新显示
-            Log.e("TAG", "UPDATE location");
+//            Log.e("TAG", "UPDATE location");
             final int[] anchorPos = new int[2];
             getLocationOnScreen(anchorPos);
 

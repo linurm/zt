@@ -166,6 +166,15 @@ public class MainStock extends Activity implements Observer {
                 }
             }
         });
+
+
+        int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+        Log.e(TAG, "CPU cores = " + NUMBER_OF_CORES);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         ViewTreeObserver vto2 = mDKline.getViewTreeObserver();
         vto2.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -176,15 +185,6 @@ public class MainStock extends Activity implements Observer {
                 mSTApplication.setDisplayNum(mDKline.dayNum);
             }
         });
-
-        int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
-        Log.e(TAG, "CPU cores = " + NUMBER_OF_CORES);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
 //        Log.e(TAG, "" + mDKline.getRight() + ":" + mDKline.getLeft());
 //        Log.e(TAG, "" + DensityUtil.dip2px(this, mDKline.getWidth()));
         Log.i(TAG, "onResume");

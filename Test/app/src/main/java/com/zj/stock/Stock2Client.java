@@ -106,8 +106,8 @@ public final class Stock2Client {
 //        return list;
 //    }
 
-    public String getUrlString(String[] stockCodes) {
-        int istock = Integer.parseInt(stockCodes[0]);
+    public String getUrlString(String stockCodes) {
+        int istock = Integer.parseInt(stockCodes);
         String iCurStart = "19980101";
         String iCurEnd = "20170526";
         String strUrl = new String();
@@ -120,7 +120,7 @@ public final class Stock2Client {
         return strUrl;
     }
 
-    public List<StockData> getStockInfoDB(String[] stockCodes) throws HttpException,
+    public List<StockData> getStockInfoDB(String stockCodes) throws HttpException,
             IOException, Stock2Info.ParseStockInfoException {
         //String url = STOCK_URL + generateStockCodeRequest(stockCodes);
         String url = getUrlString(stockCodes);

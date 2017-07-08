@@ -31,7 +31,7 @@ import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
 public class FloatWinService extends Service {
 
     private static final String TAG = "FloatWinService";
-    private static final int ButtonWeight = 30;
+    private static final int ButtonHeight = 66;
     private static final int SET_VIEW_START = 1;
     private static final int SET_VIEW_STOP = 2;
 
@@ -55,6 +55,7 @@ public class FloatWinService extends Service {
     private Button before1hour;
     private Button refreshView;
     private Button settingsView;
+    private Button wifiControlView;
     private Button addTimesView;
     private Button delTimesView;
     private Button addIntervalView;
@@ -67,10 +68,10 @@ public class FloatWinService extends Service {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SET_VIEW_START:
-                    startClickView.setText("START");
+                    startClickView.setText("s");
                     break;
                 case SET_VIEW_STOP:
-                    startClickView.setText("STOP");
+                    startClickView.setText("t");
                     break;
                 default:
                     break;
@@ -83,6 +84,7 @@ public class FloatWinService extends Service {
     private int click_times;
     private int click_interval;
     private ClickThread ct = null;
+    private boolean isOnExpandView = false;
 
     public static int dip2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -94,20 +96,16 @@ public class FloatWinService extends Service {
         return (int) (pxValue / scale + 0.5f);
     }
 
+
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
         mWifiAdmin = new WifiAdmin(this);
         ns.init(this);
-        createView2(this);
+        createView(this);
         ct = new ClickThread();
     }
-//    int getStartAppNumber() {
-//        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
-//                Activity.MODE_PRIVATE);
-//        return mySharedPreferences.getInt("app_num", 1);
-//    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -193,7 +191,7 @@ public class FloatWinService extends Service {
         WifiStatusLoader.getInstance(mContext).startAPP(0, "d60");
     }
 
-    private void createView2(Context context) {
+    private void createView(Context context) {
         // 获取WindowManager
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(getApplicationContext().WINDOW_SERVICE);
         // 设置LayoutParams(全局变量）相关参数
@@ -203,14 +201,6 @@ public class FloatWinService extends Service {
         // 设置Window flag
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        /*
-         * 注意，flag的值可以为：
-		 * 下面的flags属性的效果形同“锁定”。
-		 * 悬浮窗不可触摸，不接受任何事件,同时不影响后面的事件响应。
-		 * LayoutParams.FLAG_NOT_TOUCH_MODAL 不影响后面的事件
-		 * LayoutParams.FLAG_NOT_FOCUSABLE  不可聚焦
-		 * LayoutParams.FLAG_NOT_TOUCHABLE 不可触摸
-		 */
         // 调整悬浮窗口至左上角，便于调整坐标
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
         // 以屏幕左上角为原点，设置x、y初始值
@@ -229,24 +219,15 @@ public class FloatWinService extends Service {
         mContext = context;
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
             mUpFloatLayout = new LinearLayout(context);
-            LinearLayout.LayoutParams mUpFloatLayoutLP = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            mUpFloatLayout.setLayoutParams(mUpFloatLayoutLP);
+            mUpFloatLayout.setLayoutParams(mFloatLayoutLP);
             mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
         }
         mMidFloatLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams mMidFloatLayoutLP = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        mMidFloatLayout.setLayoutParams(mMidFloatLayoutLP);
+        mMidFloatLayout.setLayoutParams(mFloatLayoutLP);
         mMidFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         mDownFloatLayout = new LinearLayout(context);
-        LinearLayout.LayoutParams mDownFloatLayoutLP = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        mDownFloatLayout.setLayoutParams(mDownFloatLayoutLP);
+        mDownFloatLayout.setLayoutParams(mFloatLayoutLP);
         mDownFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
         floatView = new FloatView(getApplicationContext(), mFloatLayout, mWindowManager, wmParams);
         floatView.setbClickable(true);
@@ -255,13 +236,17 @@ public class FloatWinService extends Service {
             public void onClick(View var1) {
                 if (floatView.isbClickable()) {
                     Log.e("click", "click");
-                    floatView.setbClickable(false);
-                    if (mWifiAdmin.isWifiEnabled()) {
-                        mWifiAdmin.closeWifi();
-                        Toast.makeText(FloatWinService.this, "close wifi", Toast.LENGTH_SHORT).show();
+                    //floatView.setbClickable(false);
+                    if (isOnExpandView == false) {
+                        addExpandView();
                     } else {
-                        mWifiAdmin.openWifi();
-                        Toast.makeText(FloatWinService.this, "open wifi", Toast.LENGTH_SHORT).show();
+                        delExpandView();
+                        if (settings_flag)
+                            delSettingsView();
+                        if (add_flag) {
+                            Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
+                            delCView();
+                        }
                     }
                 }
             }
@@ -272,105 +257,66 @@ public class FloatWinService extends Service {
         } else {
             floatView.setImageResource(Rfile.wifi_off);
         }
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
-            after1hour = new Button(this);
-            after1hour.setText("+ hour");
-            after1hour.setHeight(dip2px(mContext, ButtonWeight));
-            after1hour.setWidth(dip2px(mContext, ButtonWeight));
-            after1hour.setBackgroundResource(Rfile.button_shape);
-            after1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-            after1hour.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setTimeAfter1Hour();
-                    Toast.makeText(FloatWinService.this, "+1 hour", Toast.LENGTH_SHORT).show();
-                }
-            });
-            before1hour = new Button(this);
-            before1hour.setText("- hour");
-            before1hour.setHeight(dip2px(mContext, ButtonWeight));
-            before1hour.setWidth(dip2px(mContext, ButtonWeight));
-            before1hour.setBackgroundResource(Rfile.button_shape);
-            before1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-            before1hour.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setTimeBefore1Hour();
-                    Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
-                }
-            });
-            afterhalfhour = new TextView(this);
-            afterhalfhour.setText("+ 30m");
-            afterhalfhour.setHeight(dip2px(mContext, ButtonWeight));
-            afterhalfhour.setWidth(dip2px(mContext, ButtonWeight));
-            afterhalfhour.setBackgroundResource(Rfile.button_shape);
-            afterhalfhour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-            afterhalfhour.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setTimeAfter30Minites();
-                    Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
-                }
-            });
 
-            before10minites = new TextView(this);
-            before10minites.setText("- 10m");
-            before10minites.setHeight(dip2px(mContext, ButtonWeight));
-            before10minites.setWidth(dip2px(mContext, ButtonWeight));
-            before10minites.setBackgroundResource(Rfile.button_shape);
-            before10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-            before10minites.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setTimeBefore10Minites();
-                    Toast.makeText(FloatWinService.this, "-10m", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            after10minites = new TextView(this);
-            after10minites.setText("+ 10m");
-            after10minites.setHeight(dip2px(mContext, ButtonWeight));
-            after10minites.setWidth(dip2px(mContext, ButtonWeight));
-            after10minites.setBackgroundResource(Rfile.button_shape);
-            after10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-            after10minites.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setTimeAfter10Minites();
-                    Toast.makeText(FloatWinService.this, "+10m", Toast.LENGTH_SHORT).show();
-                }
-            });
-            mUpFloatLayout.addView(before10minites);
-            mUpFloatLayout.addView(after10minites);
-            mUpFloatLayout.addView(afterhalfhour);
-            mFloatLayout.addView(mUpFloatLayout);
-            mMidFloatLayout.addView(before1hour);
-        }
         mMidFloatLayout.addView(floatView);
+        mFloatLayout.addView(mMidFloatLayout);
+
+        final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(this);
+        mWifiStatusLoader.setRecentsPanel(floatView);
+        mWindowManager.addView(mFloatLayout, wmParams);
+        Log.e("addCView", "add cview");
+    }
+
+    private void delExpandView() {
+        isOnExpandView = false;
+        Log.e(TAG, "delExpandView");
+        mMidFloatLayout.removeView(settingsView);
+        mMidFloatLayout.removeView(wifiControlView);
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
-            mMidFloatLayout.addView(after1hour);
+            mMidFloatLayout.removeView(before1hour);
+            mMidFloatLayout.removeView(after1hour);
         }
+        mDownFloatLayout.removeAllViews();
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            mUpFloatLayout.removeAllViews();
+            mFloatLayout.removeView(mUpFloatLayout);
+        }
+        mFloatLayout.removeView(mDownFloatLayout);
+    }
+
+    private void addExpandView() {
+        isOnExpandView = true;
+        Log.e(TAG, "addExpandView");
+        wifiControlView = new Button(this);
+        wifiControlView.setText("WIFI");
         settingsView = new Button(this);
         settingsView.setText("Set");
-//        settingsView.setHeight(dip2px(mContext, ButtonWeight));
-//        settingsView.setWidth(dip2px(mContext, ButtonWeight));
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
-                200,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                dip2px(mContext, ButtonHeight),
+                dip2px(mContext, ButtonHeight)
         );
+        wifiControlView.setLayoutParams(p);
+        wifiControlView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mWifiAdmin.isWifiEnabled()) {
+                    mWifiAdmin.closeWifi();
+                    Toast.makeText(FloatWinService.this, "close wifi", Toast.LENGTH_SHORT).show();
+                } else {
+                    mWifiAdmin.openWifi();
+                    Toast.makeText(FloatWinService.this, "open wifi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         settingsView.setLayoutParams(p);
         settingsView.setBackgroundResource(Rfile.button_shape);
         settingsView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         settingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (settings_flag) {
-                    settings_flag = false;
                     delSettingsView();
-
                 } else {
-                    settings_flag = true;
                     addSettingsView();
                 }
             }
@@ -378,8 +324,6 @@ public class FloatWinService extends Service {
 
         refreshView = new Button(this);
         refreshView.setText("F5");
-        refreshView.setHeight(dip2px(mContext, ButtonWeight));
-        refreshView.setWidth(dip2px(mContext, ButtonWeight));
         refreshView.setLayoutParams(p);
         refreshView.setBackgroundResource(Rfile.button_shape);
         refreshView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
@@ -393,8 +337,6 @@ public class FloatWinService extends Service {
         addCoordinateView = new Button(this);
         addCoordinateView.setText("[ + ]");
         addCoordinateView.setLayoutParams(p);
-        addCoordinateView.setHeight(dip2px(mContext, ButtonWeight));
-        addCoordinateView.setWidth(dip2px(mContext, ButtonWeight));
         addCoordinateView.setBackgroundResource(Rfile.button_shape);
         addCoordinateView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         addCoordinateView.setOnClickListener(new View.OnClickListener() {
@@ -402,21 +344,17 @@ public class FloatWinService extends Service {
             public void onClick(View view) {
                 //setRefresh();
                 if (add_flag) {
-                    add_flag = false;
                     Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
                     delCView();
                 } else {
-                    add_flag = true;
                     Toast.makeText(FloatWinService.this, "[ + ]", Toast.LENGTH_SHORT).show();
                     addCView();
                 }
             }
         });
         startClickView = new Button(this);
-        startClickView.setText("Start");
+        startClickView.setText("st");
         startClickView.setLayoutParams(p);
-        startClickView.setHeight(dip2px(mContext, ButtonWeight));
-        startClickView.setWidth(dip2px(mContext, ButtonWeight));
         startClickView.setBackgroundResource(Rfile.button_shape);
         startClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         startClickView.setOnClickListener(new View.OnClickListener() {
@@ -430,18 +368,86 @@ public class FloatWinService extends Service {
                 StartClick(CoordinateView);
             }
         });
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            after1hour = new Button(this);
+            after1hour.setText("+ hour");
+            after1hour.setLayoutParams(p);
+            after1hour.setBackgroundResource(Rfile.button_shape);
+            after1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            after1hour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeAfter1Hour();
+                    Toast.makeText(FloatWinService.this, "+1 hour", Toast.LENGTH_SHORT).show();
+                }
+            });
+            before1hour = new Button(this);
+            before1hour.setText("- hour");
+            before1hour.setLayoutParams(p);
+            before1hour.setBackgroundResource(Rfile.button_shape);
+            before1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            before1hour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeBefore1Hour();
+                    Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
+                }
+            });
+            afterhalfhour = new TextView(this);
+            afterhalfhour.setText("+ 30m");
+            afterhalfhour.setLayoutParams(p);
+            afterhalfhour.setBackgroundResource(Rfile.button_shape);
+            afterhalfhour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            afterhalfhour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeAfter30Minites();
+                    Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            before10minites = new TextView(this);
+            before10minites.setText("- 10m");
+            before10minites.setLayoutParams(p);
+            before10minites.setBackgroundResource(Rfile.button_shape);
+            before10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            before10minites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeBefore10Minites();
+                    Toast.makeText(FloatWinService.this, "-10m", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            after10minites = new TextView(this);
+            after10minites.setText("+ 10m");
+            after10minites.setLayoutParams(p);
+            after10minites.setBackgroundResource(Rfile.button_shape);
+            after10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            after10minites.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeAfter10Minites();
+                    Toast.makeText(FloatWinService.this, "+10m", Toast.LENGTH_SHORT).show();
+                }
+            });
+            mUpFloatLayout.addView(before10minites);
+            mUpFloatLayout.addView(after10minites);
+            mUpFloatLayout.addView(afterhalfhour);
+
+            mMidFloatLayout.addView(before1hour);
+
+            mMidFloatLayout.addView(after1hour);
+        }
         mDownFloatLayout.addView(refreshView);
         mDownFloatLayout.addView(addCoordinateView);
         mDownFloatLayout.addView(startClickView);
-
+        mMidFloatLayout.addView(wifiControlView);
         mMidFloatLayout.addView(settingsView);
-
-        mFloatLayout.addView(mMidFloatLayout);
+        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+            mFloatLayout.addView(mUpFloatLayout);
+        }
         mFloatLayout.addView(mDownFloatLayout);
-        final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(this);
-        mWifiStatusLoader.setRecentsPanel(floatView);
-        mWindowManager.addView(mFloatLayout, wmParams);
-        Log.e("addCView", "add cview");
     }
 
     private void StartClick(MZFloatView bv) {
@@ -470,6 +476,7 @@ public class FloatWinService extends Service {
     }
 
     private void addCView() {
+        add_flag = true;
         wmParams2 = new WindowManager.LayoutParams();
         wmParams2.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
         wmParams2.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
@@ -488,7 +495,7 @@ public class FloatWinService extends Service {
         wmParams2.gravity = Gravity.LEFT | Gravity.TOP;
         // 以屏幕左上角为原点，设置x、y初始值
         wmParams2.x = 600;
-        wmParams2.y = 100;
+        wmParams2.y = 200;
         // 设置悬浮窗口长宽数据
         wmParams2.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams2.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -506,11 +513,13 @@ public class FloatWinService extends Service {
     }
 
     private void delCView() {
+        add_flag = false;
         mFloatLayout2.removeAllViews();
         mWindowManager.removeView(mFloatLayout2);
     }
 
     private void addSettingsView() {
+        settings_flag = true;
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
                 200,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -518,8 +527,8 @@ public class FloatWinService extends Service {
         addTimesView = new Button(this);
         click_times = getTimes();
         addTimesView.setText("" + click_times);
-        addTimesView.setHeight(dip2px(mContext, ButtonWeight));
-        addTimesView.setWidth(dip2px(mContext, ButtonWeight));
+        addTimesView.setHeight(dip2px(mContext, ButtonHeight));
+        addTimesView.setWidth(dip2px(mContext, ButtonHeight));
         addTimesView.setLayoutParams(p);
 //        addTimesView.setBackgroundResource(R.drawable.button_shape);
 //        addTimesView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
@@ -537,8 +546,8 @@ public class FloatWinService extends Service {
 
         delTimesView = new Button(this);
         delTimesView.setText("" + click_times);
-        delTimesView.setHeight(dip2px(mContext, ButtonWeight));
-        delTimesView.setWidth(dip2px(mContext, ButtonWeight));
+        delTimesView.setHeight(dip2px(mContext, ButtonHeight));
+        delTimesView.setWidth(dip2px(mContext, ButtonHeight));
         delTimesView.setLayoutParams(p);
 //        delTimesView.setBackgroundResource(R.drawable.button_shape);
 //        delTimesView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
@@ -561,8 +570,8 @@ public class FloatWinService extends Service {
         addIntervalView = new Button(this);
         click_interval = getInterval();
         addIntervalView.setText("" + click_interval);
-        addIntervalView.setHeight(dip2px(mContext, ButtonWeight));
-        addIntervalView.setWidth(dip2px(mContext, ButtonWeight));
+        addIntervalView.setHeight(dip2px(mContext, ButtonHeight));
+        addIntervalView.setWidth(dip2px(mContext, ButtonHeight));
         addIntervalView.setLayoutParams(p);
 //        addIntervalView.setBackgroundResource(R.drawable.button_shape);
 //        addIntervalView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
@@ -580,8 +589,8 @@ public class FloatWinService extends Service {
 
         delIntervalView = new Button(this);
         delIntervalView.setText("" + click_interval);
-        delIntervalView.setHeight(dip2px(mContext, ButtonWeight));
-        delIntervalView.setWidth(dip2px(mContext, ButtonWeight));
+        delIntervalView.setHeight(dip2px(mContext, ButtonHeight));
+        delIntervalView.setWidth(dip2px(mContext, ButtonHeight));
         delIntervalView.setLayoutParams(p);
 //        delIntervalView.setBackgroundResource(R.drawable.button_shape);
 //        delIntervalView.setTextColor(getResources().getColor(R.color.abs__bright_foreground_disabled_holo_light));
@@ -602,6 +611,7 @@ public class FloatWinService extends Service {
     }
 
     private void delSettingsView() {
+        settings_flag = false;
         Log.e("TAG", "del settings view");
         mMidFloatLayout.removeView(delTimesView);
         mMidFloatLayout.removeView(addTimesView);
