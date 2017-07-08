@@ -15,4 +15,5 @@ public final class Rfile {
     public static int mz = R.drawable.mz;
     public static int beep = R.raw.beep;
     public static int nfcsuccess = R.raw.nfcsuccess;
+    public static int green = R.color.green;
 }

@@ -296,6 +296,8 @@ public class FloatWinService extends Service {
                 dip2px(mContext, ButtonHeight)
         );
         wifiControlView.setLayoutParams(p);
+        wifiControlView.setBackgroundResource(Rfile.button_shape);
+        wifiControlView.setTextColor(getResources().getColor(Rfile.green));
         wifiControlView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -309,8 +311,8 @@ public class FloatWinService extends Service {
             }
         });
         settingsView.setLayoutParams(p);
-        settingsView.setBackgroundResource(Rfile.button_shape);
-        settingsView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+//        settingsView.setBackgroundResource(Rfile.button_shape);
+//        settingsView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
         settingsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
