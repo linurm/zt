@@ -78,6 +78,9 @@ public class FloatWinService extends Service {
             }
         }
     };
+    private Button start18ClickView;
+    private Button start6ClickView;
+    private Button start3ClickView;
     private boolean add_flag = false;
     private boolean settings_flag = false;
     private MZFloatView CoordinateView;
@@ -270,7 +273,11 @@ public class FloatWinService extends Service {
     private void delExpandView() {
         isOnExpandView = false;
         Log.e(TAG, "delExpandView");
-        mMidFloatLayout.removeView(settingsView);
+        mMidFloatLayout.removeView(startClickView);
+        mMidFloatLayout.removeView(start18ClickView);
+        mMidFloatLayout.removeView(start6ClickView);
+        mMidFloatLayout.removeView(start3ClickView);
+
         mMidFloatLayout.removeView(wifiControlView);
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
             mMidFloatLayout.removeView(before1hour);
@@ -355,7 +362,7 @@ public class FloatWinService extends Service {
             }
         });
         startClickView = new Button(this);
-        startClickView.setText("st");
+        startClickView.setText("N");
         startClickView.setLayoutParams(p);
         startClickView.setBackgroundResource(Rfile.button_shape);
         startClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
@@ -364,10 +371,61 @@ public class FloatWinService extends Service {
             public void onClick(View view) {
                 if (add_flag) {
                     add_flag = false;
-                    Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FloatWinService.this, "start", Toast.LENGTH_SHORT).show();
                     delCView();
                 }
-                StartClick(CoordinateView);
+                StartClick(0);
+            }
+        });
+
+        start18ClickView = new Button(this);
+        start18ClickView.setText("18");
+        start18ClickView.setLayoutParams(p);
+        start18ClickView.setBackgroundResource(Rfile.button_shape);
+        start18ClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+        start18ClickView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (add_flag) {
+                    add_flag = false;
+                    Toast.makeText(FloatWinService.this, "start", Toast.LENGTH_SHORT).show();
+                    delCView();
+                }
+                StartClick(18);
+            }
+        });
+
+        start6ClickView = new Button(this);
+        start6ClickView.setText("6");
+        start6ClickView.setLayoutParams(p);
+        start6ClickView.setBackgroundResource(Rfile.button_shape);
+        start6ClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+        start6ClickView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (add_flag) {
+                    add_flag = false;
+                    Toast.makeText(FloatWinService.this, "start", Toast.LENGTH_SHORT).show();
+                    delCView();
+                }
+                StartClick(6);
+            }
+        });
+
+        start3ClickView = new Button(this);
+        start3ClickView.setText("3");
+        start3ClickView.setLayoutParams(p);
+        start3ClickView.setBackgroundResource(Rfile.button_shape);
+        start3ClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+        start3ClickView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (add_flag) {
+                    add_flag = false;
+                    Toast.makeText(FloatWinService.this, "start", Toast.LENGTH_SHORT).show();
+                    delCView();
+                }
+                StartClick(3);
             }
         });
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
@@ -443,38 +501,33 @@ public class FloatWinService extends Service {
         }
         mDownFloatLayout.addView(refreshView);
         mDownFloatLayout.addView(addCoordinateView);
-        mDownFloatLayout.addView(startClickView);
+
+
         mMidFloatLayout.addView(wifiControlView);
-        mMidFloatLayout.addView(settingsView);
+        mDownFloatLayout.addView(settingsView);//
+        mMidFloatLayout.addView(startClickView);//
+        mMidFloatLayout.addView(start18ClickView);//
+        mMidFloatLayout.addView(start6ClickView);//
+        mMidFloatLayout.addView(start3ClickView);//
+
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
             mFloatLayout.addView(mUpFloatLayout);
         }
         mFloatLayout.addView(mDownFloatLayout);
     }
 
-    private void StartClick(MZFloatView bv) {
+    private void StartClick(int t) {
 
         if (ct != null && ct.isStart) {
             ct.stopThread();
             ct = null;
         } else {
             ct = new ClickThread();
+            if (t != 0) {
+                ct.setTempTimes(t);
+            }
             ct.start();
         }
-
-//        if (ct == null) {
-//            ct = new ClickThread();
-//            ct.start();
-//        } else {
-//            if (ct.isStart) {
-//                ct.stopThread();
-//                ct = null;
-//            } else {
-//                ct = null;
-//                ct = new ClickThread();
-//                ct.start();
-//            }
-//        }
     }
 
     private void addCView() {
@@ -544,7 +597,7 @@ public class FloatWinService extends Service {
             }
         });
 
-        mMidFloatLayout.addView(addTimesView);
+        mDownFloatLayout.addView(addTimesView);
 
         delTimesView = new Button(this);
         delTimesView.setText("" + click_times);
@@ -565,7 +618,7 @@ public class FloatWinService extends Service {
                 addTimesView.setText("" + click_times);
             }
         });
-        mMidFloatLayout.addView(delTimesView);
+        mDownFloatLayout.addView(delTimesView);
 
         //
 
@@ -587,7 +640,7 @@ public class FloatWinService extends Service {
             }
         });
 
-        mMidFloatLayout.addView(addIntervalView);
+        mDownFloatLayout.addView(addIntervalView);
 
         delIntervalView = new Button(this);
         delIntervalView.setText("" + click_interval);
@@ -608,17 +661,17 @@ public class FloatWinService extends Service {
                 addIntervalView.setText("" + click_interval);
             }
         });
-        mMidFloatLayout.addView(delIntervalView);
+        mDownFloatLayout.addView(delIntervalView);//
         Log.e("TAG", "add settings view");
     }
 
     private void delSettingsView() {
         settings_flag = false;
         Log.e("TAG", "del settings view");
-        mMidFloatLayout.removeView(delTimesView);
-        mMidFloatLayout.removeView(addTimesView);
-        mMidFloatLayout.removeView(addIntervalView);
-        mMidFloatLayout.removeView(delIntervalView);
+        mDownFloatLayout.removeView(delTimesView);//
+        mDownFloatLayout.removeView(addTimesView);//
+        mDownFloatLayout.removeView(addIntervalView);//
+        mDownFloatLayout.removeView(delIntervalView);//
     }
 
     private int getTimes() {
@@ -675,6 +728,10 @@ public class FloatWinService extends Service {
         long downTime;
         long eventTime;
         boolean isStart = false;
+
+        public void setTempTimes(int t) {
+            times = t;
+        }
 
         public void stopThread() {
             isStart = false;
