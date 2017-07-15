@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,7 @@
     <com.zj.stock.Coordinates
         android:id="@+id/kline"
         android:layout_width="400dp"
-        android:layout_height="100dp" />
+        android:layout_height="120dp" />
 
     <com.zj.stock.Coordinates
         android:id="@+id/volume"
@@ -195,12 +196,11 @@
         android:id="@+id/btn_transaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btn_start"
-        android:layout_alignBottom="@+id/btn_start"
-        android:layout_alignParentRight="true"
         android:background="@layout/btn_transaction"
         android:contentDescription="@string/pause"
-        android:text="@string/buy" />
+        android:text="@string/buy"
+        android:layout_below="@+id/balance_v"
+        android:layout_alignStart="@+id/low_value" />
 
     <ImageButton
         android:id="@+id/btn_pause"
@@ -222,5 +222,22 @@
         android:layout_below="@+id/btn_pause"
         android:layout_toEndOf="@+id/low"
         android:layout_marginTop="24dp" />
+
+    <ImageButton
+        android:id="@+id/lookCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/star_big_on"
+        android:layout_above="@+id/codeText"
+        android:layout_alignStart="@+id/balance" />
+
+    <TextView
+        android:id="@+id/codeText"
+        android:layout_width="400dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/macd"
+        android:text="TextView"
+        android:layout_toStartOf="@+id/open" />
 
 </RelativeLayout>

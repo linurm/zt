@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -71,6 +72,7 @@ public class STApplication extends Application implements Observable {
 
         }
     };
+    private String mCodeText;
 
     public synchronized boolean IsDisplayDone() {
         return display_done;
@@ -239,6 +241,15 @@ public class STApplication extends Application implements Observable {
         }
     }
 
+    public String getCodeText() {
+
+        return mCodeText;
+    }
+
+    public void setCodeText(String ct) {
+        mCodeText = ct;
+    }
+
     public boolean isServerPause() {
         if (isConn) {
             try {
@@ -265,12 +276,25 @@ public class STApplication extends Application implements Observable {
     }
 
     @Override
-
+    public void onLowMemory() {
+        // 低内存的时候执行
+        Log.d(TAG, "onLowMemory");
+        super.onLowMemory();
+    }
+    @Override
+    public void onTrimMemory(int level) {
+        // 程序在内存清理的时候执行
+        Log.d(TAG, "onTrimMemory");
+        super.onTrimMemory(level);
+    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.d(TAG, "onConfigurationChanged");
+        super.onConfigurationChanged(newConfig);
+    }
+    @Override
     public void onTerminate() {
-
-        super.onTerminate();
-
-
+        Log.e(TAG, "unbind service");
         // mWifiAdmin = null;
         // mAPService = null;
         // Intent intent = new Intent(this, STService.class);
@@ -278,7 +302,15 @@ public class STApplication extends Application implements Observable {
             unbindService(mcoon);
             isConn = false;
         }
+        super.onTerminate();
         // stopService(intent);
+    }
+
+    public void unbindService(){
+        if (isConn == true) {
+            unbindService(mcoon);
+            isConn = false;
+        }
     }
 
     public void start() {

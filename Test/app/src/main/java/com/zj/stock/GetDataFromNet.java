@@ -1,16 +1,49 @@
 package com.zj.stock;
 
 
+import android.util.Log;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class GetDataFromNet {
 
     private static final String TAG = "GetDataFromNet";
 
-    private static final String ST_CODE = "600844";
+    private static String ST_CODE = "";
 
     private String genSTCode() {
+        //                  A       A       A       B       A   B   chuang
+        String[] CODE_PRE = {"600", "601", "603", "900", "00", "20", "30"};
+        Random random = new Random();
+        int a = random.nextInt(6);
+        int b = 0;
+        String c = "";
+        if (a < 4) {
+            b = random.nextInt(1000);
+            if (b < 100 && b >= 10) {
+                c = "0" + b;
+            } else if (b < 10) {
+                c = "00" + b;
+            } else {
+                c = "" + b;
+            }
+        } else {
+            b = random.nextInt(10000);
+            if (b < 1000 && b >= 100) {
+                c = "0" + b;
+            } else if (b < 100 && b >= 10) {
+                c = "00" + b;
+            } else if (b < 10) {
+                c = "000" + b;
+            } else {
+                c = "" + b;
+            }
+        }
+        ST_CODE = CODE_PRE[a] + c;
+        Log.e(TAG, "" + CODE_PRE[a] + c);
+        ST_CODE = "603578";
         return ST_CODE;
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class STService extends Service implements Observer {
 
     private final String TAG = "STService";
-    private final boolean DEBUG = false;
+    private final boolean DEBUG = true;
     private final int kdj_n = 9;
     public STApplication mSTApplication;
     private int DIS_NUM = 0;
@@ -169,7 +169,7 @@ public class STService extends Service implements Observer {
                         }
 
                         recent_sd = sd.get(l + 1);//get
-
+                        mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
                         mSTApplication.SetValue(maxvolume, highValue, lowValue);
                         // mSTApplication.SetKDJValue(kdj_h, kdj_l);
                         mSTApplication.display();
@@ -193,7 +193,10 @@ public class STService extends Service implements Observer {
                             sellStock(recent_sd, 0);// close value
                             break;
                         }
-                        Thread.sleep(1000);
+                        int e = 0;
+                        while ((e++ < 20)&&(isRunning)) {
+                            Thread.sleep(50);
+                        }
 //                        Log.e("TAG", "SS" + android.os.Process.myTid());
                         while (!mSTApplication.IsDisplayDone() || isPause) {
                             Thread.sleep(100);
@@ -237,9 +240,9 @@ public class STService extends Service implements Observer {
         if (mGetDataThread.isAlive()) {
             try {
                 Log.e(TAG, "join");
-                mGetDataThread.interrupt();
+                //mGetDataThread.interrupt();
                 mGetDataThread.join();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -288,14 +291,14 @@ public class STService extends Service implements Observer {
     public void onDestroy() {
         mSTApplication.deleteObserver(this);
         isRunning = false;
-        if (mGetDataThread.isAlive()) {
-            try {
-                mGetDataThread.interrupt();
-                mGetDataThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (mGetDataThread.isAlive()) {
+//            try {
+////                mGetDataThread.interrupt();
+//                mGetDataThread.join();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
         Log.i(TAG, "onDestroy");
     }
 

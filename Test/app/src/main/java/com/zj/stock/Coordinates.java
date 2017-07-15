@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Coordinates extends View {
-    private final String TAG = "Coordinates";
-    private final boolean DEBUG = false;
     public final int mOnew = 18;// w
+    private final String TAG = "Coordinates";
+    private final boolean DEBUG = true;
+    private final int V_PAD = 20;
     private final int mOnem = mOnew / 2;// middle
     private final int mOnepad = 1;// kong
     private final int mOnev = mOnem - mOnepad;
@@ -33,19 +34,22 @@ public class Coordinates extends View {
     private List<RectF> mVRectFsList;
     private List<Paint> mPPaintList;
     private List<PointF[]> mPointFList;
+    private float hParam;
     private float mHParam, mLParam, mParam;
 
     public Coordinates(Context context) {
         super(context, null);
-        init();
+        initColorPaint();
+
+
     }
 
     public Coordinates(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        initColorPaint();
     }
 
-    private void init() {
+    private void initColorPaint() {
         // 锟斤拷锟斤拷锟斤拷锟斤拷
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
@@ -218,6 +222,11 @@ public class Coordinates extends View {
     public void setPValue(float h, float l) {
         mHParam = (float) h;
         mLParam = (float) l;
+        if (h == l) {
+            mLParam = mLParam * (float)0.9;
+            mHParam = mHParam * (float)1.1;
+        }
+        Log.e(TAG, "SET P" + h + ":" + l);
         // mParam = (float) (280) / (mHParam - mLParam);
     }
 
@@ -234,36 +243,44 @@ public class Coordinates extends View {
             mVPaintList.clear();
         if (mVRectFsList != null)
             mVRectFsList.clear();
+        if (DEBUG)
+            Log.e(TAG, "------------ " + getHeight());
+
+        hParam = getHeight();
     }
 
     public void addVolume(StockData kl, int n, float maxvolume) {
-        float x1, x2, y1, y2;
+        float x_left, x_right, y1, y2;
 
         if (kl == null)
             return;
-        x1 = (float) (mOnem * (2 * n + 1) - mOnev);// left
-        x2 = (x1 + 2 * mOnev);// right
+        x_left = (float) (mOnem * (2 * n + 1) - mOnev);// left
+        x_right = (x_left + 2 * mOnev);// right
 
         y1 = kl.volume;
-        y2 = 180 - 180 * y1 / maxvolume;
-        RectF re = new RectF(x1, y2, x2, 180);
+//        if (DEBUG)
+//            Log.e(TAG, "======================= " + DensityUtil.dip2px(getContext(), getHeight()) + " " + getHeight());
+        y2 = hParam - hParam * y1 / maxvolume;
+        RectF re = new RectF(x_left, y2, x_right, hParam);
         if (kl.open > kl.close) {
             addRectF(re, mGreenPaint);
+        } else if (kl.open < kl.close) {
+            addRectF(re, mRedPaint);
         } else {
             addRectF(re, mRedPaint);
         }
     }
 
     public void addKline(StockData kl, int n) {
-        float x1, x2, x3, y1, y2, y3, y4;
+        float x_left, x_right, x_middle, y_high, y_low, y_open, y_close;
 
         if (kl == null)
             return;
-        x1 = (float) (mOnem * (2 * n + 1) - mOnev);// left
-        x2 = (x1 + 2 * mOnev);// right
-        x3 = (x1 + mOnev);// middle
+        x_left = (float) (mOnem * (2 * n + 1) - mOnev);// left
+        x_right = (x_left + 2 * mOnev);// right
+        x_middle = (x_left + mOnev);// middle
 
-        // y1 = 150 - (kl.mhigh - kl.mopen) * 150 * 5 / (2 * kl.mopen);
+        // y_high = 150 - (kl.mhigh - kl.mopen) * 150 * 5 / (2 * kl.mopen);
         // y2 = 150 - (kl.mlow - kl.mopen) * 150 * 5 / (2 * kl.mopen);
         // y3 = 150 - (kl.mopen - kl.mopen) * 150 * 5 / (2 * kl.mopen);
         // y4 = 150 - (kl.mclose - kl.mopen) * 150 * 5 / (2 * kl.mopen);
@@ -271,40 +288,43 @@ public class Coordinates extends View {
             Log.i(TAG, "mParamValue is not set");
             return;
         }
-        mParam = (float) (300 / (mHParam - mLParam));
-        // y1 = 120 - (kl.high / mParamValue - 1) * 120 * 4;// high 1/4=25%
+        mParam = (float) ((hParam) / (mHParam - mLParam));
+        // y_high = 120 - (kl.high / mParamValue - 1) * 120 * 4;// high 1/4=25%
         // y2 = 120 - (kl.low / mParamValue - 1) * 120 * 4;// low
         // y3 = 120 - (kl.open / mParamValue - 1) * 120 * 4;// open
         // y4 = 120 - (kl.close / mParamValue - 1) * 120 * 4;// close
 
-        y1 = 300 - ((kl.high - mLParam) * mParam);// high 1/4=25%
-        y2 = 300 - ((kl.low - mLParam) * mParam);// low
-        y3 = 300 - ((kl.open - mLParam) * mParam);// open
-        y4 = 300 - ((kl.close - mLParam) * mParam);// close
-        // y1=0;
+        y_high = (hParam) - ((kl.high - mLParam) * mParam);// high 1/4=25%
+        y_low = (hParam) - ((kl.low - mLParam) * mParam);// low
+        y_open = hParam - ((kl.open - mLParam) * mParam);// open
+        y_close = hParam - ((kl.close - mLParam) * mParam);// close
+        // y_high=0;
         // y2=300;
 
+        if (y_high == y_low)
+            y_high = y_high + V_PAD;
+
         PointF[] points = new PointF[2];
-        points[0] = new PointF(x3, y1);
-        points[1] = new PointF(x3, y2);
+        points[0] = new PointF(x_middle, y_high);
+        points[1] = new PointF(x_middle, y_low);
         if (DEBUG)
-            Log.e(TAG, "add kline: " + x1 + ":" + x2 + ":" + y1 + ":" + y2
-                    + ":" + mParam);
+            Log.e(TAG, "add kline: [" + x_left + ":" + x_right + "] [" + y_high + ":" + y_low
+                    + "] " + mHParam + ":" + mLParam);
 
         if (kl.open > kl.close) {
-            RectF re = new RectF(x1, y3, x2, y4);
+            RectF re = new RectF(x_left, y_open, x_right, y_close);
             addRectF(re, mGreenPaint);
             addLine(points, mGreenPaint);
         } else if (kl.open < kl.close) {
-            RectF re = new RectF(x1, y4, x2, y3);
+            RectF re = new RectF(x_left, y_close, x_right, y_open);
             addRectF(re, mRedPaint);
             addLine(points, mRedPaint);
         } else if (kl.open == kl.close) {
-            RectF re = new RectF(x1, y4, x2, y3);
+            RectF re = new RectF(x_left, y_close + V_PAD, x_right, y_open);
             addRectF(re, mRedPaint);
             PointF[] points2 = new PointF[2];
-            points2[0] = new PointF(x1, y3);
-            points2[1] = new PointF(x2, y3);
+            points2[0] = new PointF(x_left, y_open);
+            points2[1] = new PointF(x_right, y_open);
             addLine(points, mRedPaint);
         }
     }
@@ -318,14 +338,14 @@ public class Coordinates extends View {
         x1 = (float) (mOnem * (2 * n - 1));// middle
         x2 = (float) (mOnem * (2 * n + 1));// middle next
 
-        mParam = (180 / (mHParam - mLParam));
+        mParam = (hParam / (mHParam - mLParam));
 
-        y1 = 180 - (kl1.k * mParam);// close
-        y2 = 180 - (kl2.k * mParam);// close
-        y3 = 180 - (kl1.d * mParam);// close
-        y4 = 180 - (kl2.d * mParam);// close
-        y5 = 180 - (kl1.j * mParam);// close
-        y6 = 180 - (kl2.j * mParam);// close
+        y1 = hParam - (kl1.k * mParam);// close
+        y2 = hParam - (kl2.k * mParam);// close
+        y3 = hParam - (kl1.d * mParam);// close
+        y4 = hParam - (kl2.d * mParam);// close
+        y5 = hParam - (kl1.j * mParam);// close
+        y6 = hParam - (kl2.j * mParam);// close
 
         PointF[] pointsk = new PointF[2];
         pointsk[0] = new PointF(x1, y1);
@@ -361,12 +381,12 @@ public class Coordinates extends View {
 
         // mParam = (float) (180 / (mHParam - mLParam));
 
-        y1 = 90 - 150 * kl1.dif;// close
-        y2 = 90 - 150 * (kl2.dif);// close
-        y3 = 90 - 150 * (kl1.dea);// close
-        y4 = 90 - 150 * (kl2.dea);// close
+        y1 = hParam / 2 - 5 * hParam / 6 * kl1.dif;// close
+        y2 = hParam / 2 - 5 * hParam / 6 * (kl2.dif);// close
+        y3 = hParam / 2 - 5 * hParam / 6 * (kl1.dea);// close
+        y4 = hParam / 2 - 5 * hParam / 6 * (kl2.dea);// close
         // y5 = 90 - (kl1.j * mParam);// close
-        y6 = 90 - 150 * (kl2.bar);// close
+        y6 = hParam / 2 - 5 * hParam / 6 * (kl2.bar);// close
 
         PointF[] pointsdif = new PointF[2];
         pointsdif[0] = new PointF(x1, y1);
@@ -389,11 +409,11 @@ public class Coordinates extends View {
         addLine(pointsdea, mYellowPaint);
 
         RectF re;
-        if (y6 > 90) {
-            re = new RectF(x3, 90, x4, y6);
+        if (y6 > hParam / 2) {
+            re = new RectF(x3, hParam / 2, x4, y6);
             addRectF(re, mGreenPaint);
         } else {
-            re = new RectF(x3, y6, x4, 90);
+            re = new RectF(x3, y6, x4, hParam / 2);
             addRectF(re, mRedPaint);
         }
 

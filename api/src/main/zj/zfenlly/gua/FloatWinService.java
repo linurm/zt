@@ -10,6 +10,7 @@ import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -56,6 +57,7 @@ public class FloatWinService extends Service {
     private Button refreshView;
     private Button settingsView;
     private Button wifiControlView;
+    private Button timeSettingView;
     private Button addTimesView;
     private Button delTimesView;
     private Button addIntervalView;
@@ -78,8 +80,8 @@ public class FloatWinService extends Service {
             }
         }
     };
-    private Button start18ClickView;
-    private Button start6ClickView;
+    private Button start19ClickView;
+    private Button start7ClickView;
     private Button start3ClickView;
     private boolean add_flag = false;
     private boolean settings_flag = false;
@@ -274,10 +276,10 @@ public class FloatWinService extends Service {
         isOnExpandView = false;
         Log.e(TAG, "delExpandView");
         mMidFloatLayout.removeView(startClickView);
-        mMidFloatLayout.removeView(start18ClickView);
-        mMidFloatLayout.removeView(start6ClickView);
+        mMidFloatLayout.removeView(start19ClickView);
+        mMidFloatLayout.removeView(start7ClickView);
         mMidFloatLayout.removeView(start3ClickView);
-
+        mMidFloatLayout.removeView(timeSettingView);
         mMidFloatLayout.removeView(wifiControlView);
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {
             mMidFloatLayout.removeView(before1hour);
@@ -317,6 +319,30 @@ public class FloatWinService extends Service {
                 }
             }
         });
+
+        timeSettingView = new Button(this);
+        timeSettingView.setText("Time");
+        timeSettingView.setLayoutParams(p);
+        timeSettingView.setBackgroundResource(Rfile.button_shape);
+        timeSettingView.setTextColor(getResources().getColor(Rfile.green));
+        timeSettingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS );
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+
+                delExpandView();
+                if (settings_flag)
+                    delSettingsView();
+                if (add_flag) {
+                    Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
+                    delCView();
+                }
+            }
+        });
+
+
         settingsView.setLayoutParams(p);
 //        settingsView.setBackgroundResource(Rfile.button_shape);
 //        settingsView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
@@ -365,7 +391,7 @@ public class FloatWinService extends Service {
         startClickView.setText("N");
         startClickView.setLayoutParams(p);
         startClickView.setBackgroundResource(Rfile.button_shape);
-        startClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+        startClickView.setTextColor(getResources().getColor(Rfile.green));
         startClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -378,12 +404,12 @@ public class FloatWinService extends Service {
             }
         });
 
-        start18ClickView = new Button(this);
-        start18ClickView.setText("18");
-        start18ClickView.setLayoutParams(p);
-        start18ClickView.setBackgroundResource(Rfile.button_shape);
-        start18ClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-        start18ClickView.setOnClickListener(new View.OnClickListener() {
+        start19ClickView = new Button(this);
+        start19ClickView.setText("19");
+        start19ClickView.setLayoutParams(p);
+        start19ClickView.setBackgroundResource(Rfile.button_shape);
+        start19ClickView.setTextColor(getResources().getColor(Rfile.green));
+        start19ClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (add_flag) {
@@ -395,12 +421,12 @@ public class FloatWinService extends Service {
             }
         });
 
-        start6ClickView = new Button(this);
-        start6ClickView.setText("6");
-        start6ClickView.setLayoutParams(p);
-        start6ClickView.setBackgroundResource(Rfile.button_shape);
-        start6ClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
-        start6ClickView.setOnClickListener(new View.OnClickListener() {
+        start7ClickView = new Button(this);
+        start7ClickView.setText("7");
+        start7ClickView.setLayoutParams(p);
+        start7ClickView.setBackgroundResource(Rfile.button_shape);
+        start7ClickView.setTextColor(getResources().getColor(Rfile.green));
+        start7ClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (add_flag) {
@@ -416,7 +442,7 @@ public class FloatWinService extends Service {
         start3ClickView.setText("3");
         start3ClickView.setLayoutParams(p);
         start3ClickView.setBackgroundResource(Rfile.button_shape);
-        start3ClickView.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+        start3ClickView.setTextColor(getResources().getColor(Rfile.green));
         start3ClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -504,10 +530,11 @@ public class FloatWinService extends Service {
 
 
         mMidFloatLayout.addView(wifiControlView);
+        mMidFloatLayout.addView(timeSettingView);
         mDownFloatLayout.addView(settingsView);//
         mMidFloatLayout.addView(startClickView);//
-        mMidFloatLayout.addView(start18ClickView);//
-        mMidFloatLayout.addView(start6ClickView);//
+        mMidFloatLayout.addView(start19ClickView);//
+        mMidFloatLayout.addView(start7ClickView);//
         mMidFloatLayout.addView(start3ClickView);//
 
         if (android.os.Build.MODEL.equals(CPU_TYPE)) {

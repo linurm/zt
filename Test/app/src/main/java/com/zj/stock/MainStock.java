@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -37,6 +38,8 @@ public class MainStock extends Activity implements Observer {
     Coordinates mDVolume;
     Coordinates mDKDJ;
     Coordinates mDMACD;
+    TextView mCodeText;
+    private boolean isLookCode = false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -44,6 +47,8 @@ public class MainStock extends Activity implements Observer {
                 case HANDLE_UPDATE_TEXTVIEW: {
                     StockData sd = null;
                     sd = (StockData) msg.obj;
+                    if (isLookCode)
+                        mCodeText.setText(mSTApplication.getCodeText());
                     mHTextView.setText(sd.high + "");
                     mOTextView.setText(sd.open + "");
                     mLTextView.setText(sd.low + "");
@@ -67,6 +72,7 @@ public class MainStock extends Activity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main_stock);
 
         mSTApplication = (STApplication) getApplication();
@@ -84,9 +90,7 @@ public class MainStock extends Activity implements Observer {
         mBalance = (TextView) findViewById(R.id.balance_v);
 
         mDKline = (Coordinates) findViewById(R.id.kline);
-
         mDVolume = (Coordinates) findViewById(R.id.volume);
-
 
 
         mDKDJ = (Coordinates) findViewById(R.id.kdj);
@@ -145,6 +149,26 @@ public class MainStock extends Activity implements Observer {
                 }
             }
         });
+
+        final ImageButton lookCode = (ImageButton) findViewById(R.id.lookCode);
+        mCodeText = (TextView) findViewById(R.id.codeText);
+        lookCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isLookCode) {
+                    isLookCode = false;
+                    mCodeText.setText("");
+                } else {
+                    isLookCode = true;
+                }
+//                if (mCodeText.getText() != "") {
+//                    mCodeText.setText("");
+//                } else {
+//                    mCodeText.setText(mSTApplication.getCodeText());
+//                }
+            }
+        });
         final ImageButton changebtn = (ImageButton) findViewById(R.id.btn_change);
 
         changebtn.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +218,7 @@ public class MainStock extends Activity implements Observer {
     protected void onDestroy() {
         super.onDestroy();
         // this.unregisterReceiver(wifiReceiver);
+        mSTApplication.unbindService();
         mSTApplication.deleteObserver(this);
     }
 
@@ -220,6 +245,8 @@ public class MainStock extends Activity implements Observer {
             KDJData kdj = null;
             KDJData pre_kdj = null;
             MACDData macd = null, pre_macd = null;
+
+
             // int k_len;
             int len = list.size();
             sd1 = list.get(len - 1);// right one
@@ -229,8 +256,10 @@ public class MainStock extends Activity implements Observer {
             float mv = mSTApplication.GetMaxVolume();
             // Log.e(TAG, "h" + mSTApplication.GetHighValue() + "l"
             // + mSTApplication.GetLowValue());
+
             mDKline.setPValue(mSTApplication.GetHighValue(),
                     mSTApplication.GetLowValue());
+
             mDKline.addKline(sd1, len - 1);//add right kline
 
             pre_sd = sd1;
