@@ -46,7 +46,7 @@ public class FloatWinService extends Service {
     WindowManager.LayoutParams wmParams2;
     WindowManager mWindowManager;
     MZFloatView v;
-    NotifySound ns = new NotifySound();
+    static NotifySound ns = new NotifySound();
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
@@ -366,6 +366,17 @@ public class FloatWinService extends Service {
             @Override
             public void onClick(View view) {
                 setRefresh();
+                if (isOnExpandView == false) {
+                    addExpandView();
+                } else {
+                    delExpandView();
+                    if (settings_flag)
+                        delSettingsView();
+                    if (add_flag) {
+                        Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
+                        delCView();
+                    }
+                }
                 Toast.makeText(FloatWinService.this, "refresh", Toast.LENGTH_SHORT).show();
             }
         });
@@ -841,5 +852,8 @@ public class FloatWinService extends Service {
             mHandler.sendMessage(mHandler.obtainMessage(
                     SET_VIEW_START, null));
         }
+    }
+    public static void playSound(){
+        ns.play(2);
     }
 }
