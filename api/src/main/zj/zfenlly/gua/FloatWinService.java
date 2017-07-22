@@ -109,7 +109,7 @@ public class FloatWinService extends Service {
         mWifiAdmin = new WifiAdmin(this);
         ns.init(this);
         createView(this);
-        ct = new ClickThread();
+//        ct = new ClickThread();
     }
 
     @Override
@@ -557,6 +557,33 @@ public class FloatWinService extends Service {
         }
     }
 
+    private WindowManager.LayoutParams mzParams(){
+        WindowManager.LayoutParams wmParamsmz = new WindowManager.LayoutParams();
+        wmParamsmz.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
+        wmParamsmz.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
+        // 设置Window flag
+        wmParamsmz.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        /*
+         * 注意，flag的值可以为：
+		 * 下面的flags属性的效果形同“锁定”。
+		 * 悬浮窗不可触摸，不接受任何事件,同时不影响后面的事件响应。
+		 * LayoutParams.FLAG_NOT_TOUCH_MODAL 不影响后面的事件
+		 * LayoutParams.FLAG_NOT_FOCUSABLE  不可聚焦
+		 * LayoutParams.FLAG_NOT_TOUCHABLE 不可触摸
+		 */
+        // 调整悬浮窗口至左上角，便于调整坐标
+        wmParamsmz.gravity = Gravity.LEFT | Gravity.TOP;
+        // 以屏幕左上角为原点，设置x、y初始值
+        wmParamsmz.x = 0;
+        wmParamsmz.y = 0;
+        // 设置悬浮窗口长宽数据
+        wmParamsmz.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsmz.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        return wmParamsmz;
+    }
+
     private void addCView() {
         add_flag = true;
         wmParams2 = new WindowManager.LayoutParams();
@@ -587,7 +614,7 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mFloatLayout2.setLayoutParams(mFloatLayoutLP);
         mFloatLayout2.setOrientation(LinearLayout.VERTICAL);
-        CoordinateView = new MZFloatView(getApplicationContext(), mFloatLayout2, mWindowManager, wmParams);
+        CoordinateView = new MZFloatView(getApplicationContext(), mFloatLayout2, mWindowManager, mzParams());
         //CoordinateView.setBackgroundResource(R.drawable.button_shape);
         CoordinateView.setImageResource(Rfile.mz);
         mFloatLayout2.addView(CoordinateView);
