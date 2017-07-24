@@ -4,4 +4,11 @@
     <dimen name="activity_horizontal_margin">2dp</dimen>
     <dimen name="activity_vertical_margin">2dp</dimen>
 
+    
+    <!-- 分割线高度 -->
+    <dimen name="line_height">1dp</dimen>
+    <dimen name="margin_">10dp</dimen>
+    <dimen name="pading_">5dp</dimen>
+    <dimen name="btn_size">22sp</dimen>
+    <dimen name="txt_size">18sp</dimen>
 </resources>

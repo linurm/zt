@@ -11,7 +11,9 @@ import com.zj.stock.R;
 public final class Rfile {
 
     public static int content_view = R.layout.activity_main;
-
+    public static int button = R.id.button;
+    //voice iat
+    public static int iat_button = R.id.btn_iat;
     public static void yes() {
         String a;
         a = "a";

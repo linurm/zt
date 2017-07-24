@@ -30,8 +30,8 @@ import android.util.Log;
 import org.greenrobot.eventbus.EventBus;
 
 /**
- * Central class for app that want to use event based error dialogs.<br/>
- * <br/>
+ * Central class for app that want to use event based error dialogs.
+ *
  * How to use:
  * <ol>
  * <li>Set the {@link #factory} to configure dialogs for your app, typically in {@link Application#onCreate()}</li>

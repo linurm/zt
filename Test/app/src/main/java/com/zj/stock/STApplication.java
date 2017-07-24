@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import com.iflytek.cloud.SpeechUtility;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -202,6 +204,14 @@ public class STApplication extends Application implements Observable {
         if (mObservers.indexOf(obs) < 0) {
             mObservers.add(obs);
         }
+        if (obs instanceof MainStock) {
+            userData = UserDataPereference.getUserData(this);
+            Intent intent = new Intent(this, STService.class);
+            bindService(intent, mcoon, Context.BIND_AUTO_CREATE);// zz
+            // mAPService =
+            //startService(intent);
+            notifyObservers(ST_SERVICE_START);
+        }
     }
 
     public boolean isServerRun() {
@@ -266,13 +276,15 @@ public class STApplication extends Application implements Observable {
     @Override
     public void onCreate() {
         // mWifiAdmin = new WifiAdmin(this);
+        //voice iat
+        SpeechUtility.createUtility(this, "appid=" + getString(R.string.app_id));
         super.onCreate();
-        userData = UserDataPereference.getUserData(this);
-        Intent intent = new Intent(this, STService.class);
-        bindService(intent, mcoon, Context.BIND_AUTO_CREATE);// zz
-        // mAPService =
-        //startService(intent);
-        notifyObservers(ST_SERVICE_START);
+//        userData = UserDataPereference.getUserData(this);
+//        Intent intent = new Intent(this, STService.class);
+//        bindService(intent, mcoon, Context.BIND_AUTO_CREATE);// zz
+//        // mAPService =
+//        //startService(intent);
+//        notifyObservers(ST_SERVICE_START);
     }
 
     @Override
@@ -281,17 +293,20 @@ public class STApplication extends Application implements Observable {
         Log.d(TAG, "onLowMemory");
         super.onLowMemory();
     }
+
     @Override
     public void onTrimMemory(int level) {
         // 程序在内存清理的时候执行
         Log.d(TAG, "onTrimMemory");
         super.onTrimMemory(level);
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         Log.d(TAG, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
+
     @Override
     public void onTerminate() {
         Log.e(TAG, "unbind service");
@@ -300,16 +315,16 @@ public class STApplication extends Application implements Observable {
         // Intent intent = new Intent(this, STService.class);
         if (isConn == true) {
             unbindService(mcoon);
-            isConn = false;
+//            isConn = false;
         }
         super.onTerminate();
         // stopService(intent);
     }
 
-    public void unbindService(){
+    public void unbindService() {
         if (isConn == true) {
             unbindService(mcoon);
-            isConn = false;
+//            isConn = false;
         }
     }
 

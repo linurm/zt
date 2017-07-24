@@ -27,6 +27,8 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 include_directories($JNI_H_INCLUDE)
+include_directories($NDK/platforms/android-26/arch-arm/usr/include
+)
 find_library( # Sets the name of the path variable.
               log-lib
               # Specifies the name of the NDK library that

@@ -36,6 +36,7 @@
  */
 
 #include <stddef.h>
+#include <sys/ptrace.h>
 #include <sys/exec_elf.h>
 // Returns the address of the page containing address 'x'.
 #define PAGE_START(x)  ((x) & PAGE_MASK)
