@@ -1,7 +1,6 @@
 package zj.zfenlly.gua;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -11,7 +10,7 @@ import android.widget.LinearLayout;
 
 public class MZFloatView extends FloatView {
 
-    public int x1, y1;
+    public int x1 = 1360, y1 = 996;
 
     public MZFloatView(Context context, LinearLayout mLinearLayout, WindowManager mWindowManager, WindowManager.LayoutParams wmParams) {
         super(context, mLinearLayout, mWindowManager, wmParams);

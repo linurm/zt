@@ -70,9 +70,11 @@
             android:name="zj.zfenlly.wifi.WifiDeviceConfig"
             android:label="@string/device_config"></activity>
 
-        <activity  android:name="zj.zfenlly.wifidevice.home.MyFileManager"
+        <activity
+            android:name="zj.zfenlly.wifidevice.home.MyFileManager"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Dialog"/>
+            android:theme="@android:style/Theme.Dialog" />
+
         <service
             android:name="zj.zfenlly.wifidevice.service.MainService"
             android:enabled="true"></service>
@@ -93,7 +95,11 @@
         <activity
             android:name="zj.zfenlly.gua.SelectModeActivity"
             android:label="@string/wifi_manual"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="zj.zfenlly.gua.vpn" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -110,12 +116,12 @@
         </activity>
         <activity android:name="zj.zfenlly.http.DownloadListActivity" />
         <!--<activity-->
-            <!--android:name="zj.zfenlly.stock.StockFragment"-->
-            <!--android:label="@string/device_config"></activity>-->
+        <!--android:name="zj.zfenlly.stock.StockFragment"-->
+        <!--android:label="@string/device_config"></activity>-->
         <!--<activity-->
-            <!--android:name="zj.zfenlly.stock2.Stock2Fragment"-->
-            <!--android:screenOrientation="landscape"-->
-            <!--android:label="@string/device_config"></activity>-->
+        <!--android:name="zj.zfenlly.stock2.Stock2Fragment"-->
+        <!--android:screenOrientation="landscape"-->
+        <!--android:label="@string/device_config"></activity>-->
 
 
         <activity

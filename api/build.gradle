@@ -21,7 +21,7 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.1'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -33,6 +33,12 @@ android {
             ldLibs "log", "z", "m", "dl"
             cFlags "-DZH"
             abiFilters "armeabi-v7a"
+        }
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-19','-DANDROID_DEPRECATED_HEADERS=1',
+                        '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=gnustl_static'
+            }
         }
         signingConfig signingConfigs.android
     }
@@ -50,7 +56,7 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "CMakeLists.txt"
+            path "src/main/jni/CMakeLists.txt"
         }
     }
     productFlavors {

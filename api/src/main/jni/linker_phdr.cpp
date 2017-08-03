@@ -27,10 +27,9 @@
  */
 
 #include "linker_phdr.h"
-#include <sys/types.h>
 #include <unistd.h>
 #include <sys/mman.h>
-
+#include <errno.h>
 #include <android/log.h>
 
 #define TAG    "JNI" // 这个是自定义的LOG的标识

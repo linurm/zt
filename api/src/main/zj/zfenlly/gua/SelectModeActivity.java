@@ -72,20 +72,16 @@ public class SelectModeActivity extends Activity {
     public Button startApp_btn;
     @ViewInject(R.id.autostart)
     public CheckBox autostart;
+    @ViewInject(R.id.vpnstart)
+    public CheckBox vpnstart;
 
     String[] sa = null;
     String[] packagelist = null;
     String[] activityname = null;
-
     private boolean mAutoStart = false;
+    private boolean mVpnStart = false;
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        onTheCreate(savedInstanceState);
-    }
 
 //    private void setAirplaneMode(Context context, int flags) {
 //        Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
@@ -98,6 +94,13 @@ public class SelectModeActivity extends Activity {
 //                Settings.Global.AIRPLANE_MODE_ON, 0);
 //        return (isAirplaneMode == 1) ? true : false;
 //    }
+    private boolean startVpn = false;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        onTheCreate(savedInstanceState);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -129,17 +132,23 @@ public class SelectModeActivity extends Activity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        //Log.e(TAG, intent.);
-        if (intent != null) {
-            autoMode = intent.getBooleanExtra("auto", false);
-            if (autoMode) {
-                Log.e(TAG, "onstart auto mode");
-            } else {
-                Log.e(TAG, "onstart not auto mode");
+        Log.e("xTAG", "onstart" + intent.toString());
+        if (mVpnStart == true) {
+            if (!intent.getAction().equals(Intent.ACTION_VIEW)) {
+                //start vpn
             }
         } else {
-            autoMode = false;
-            Log.e(TAG, "onstart manual mode");
+            if (intent != null) {
+                autoMode = intent.getBooleanExtra("auto", false);
+                if (autoMode) {
+                    Log.e(TAG, "onstart auto mode");
+                } else {
+                    Log.e(TAG, "onstart not auto mode");
+                }
+            } else {
+                autoMode = false;
+                Log.e(TAG, "onstart manual mode");
+            }
         }
         updateView();
         Log.e(TAG, "onStart wifi activity");
@@ -167,6 +176,14 @@ public class SelectModeActivity extends Activity {
 
             net3goff.setVisibility(View.INVISIBLE);
         }
+        if (getVpnStart().equals("true")) {
+            vpnstart.setChecked(true);
+            mVpnStart = true;
+        } else {
+            vpnstart.setChecked(false);
+            mVpnStart = false;
+        }
+
         //mAutoStart = autostart.isChecked();
         if (getGuaAutoStart().equals("true")) {
             mAutoStart = true;
@@ -221,6 +238,8 @@ public class SelectModeActivity extends Activity {
     protected void onResume() {
         super.onResume();
 //        OtherAPP.setActivity(this);
+        Intent intent = getIntent();
+        Log.e("xTAG", "onresume" + intent.toString());
         try {
             if (getStartAppPkg() == null) {
                 return;
@@ -235,7 +254,20 @@ public class SelectModeActivity extends Activity {
         }
 
         if (mAutoStart) {
-            openWifiAndStartAPP();
+            if (mVpnStart) {
+                if (startVpn) {
+                    openWifiAndStartAPP();
+                    Log.e(TAG, "openWifiAndStartAPP");
+                    startVpn = false;
+                } else {
+                    openWifiAndStartVpn();
+                    Log.e(TAG, "openWifiAndStartVpn");
+                    startVpn = true;
+                }
+            } else {
+                openWifiAndStartAPP();
+                Log.e(TAG, "openWifiAndStartAPP");
+            }
         }
         Log.e(TAG, "onResume");
     }
@@ -245,6 +277,14 @@ public class SelectModeActivity extends Activity {
             OtherAPP.setWillStartAPP(this);
         } else {
             OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
+        }
+    }
+
+    public void openWifiAndStartVpn() {
+        if (mWifiAdmin.openWifi()) {
+            OtherAPP.setWillStartVpn(this);
+        } else {
+            OtherAPP.startActivity3(this, Vpn.vpnPkg, Vpn.vpnAct);
         }
     }
 
@@ -441,6 +481,14 @@ public class SelectModeActivity extends Activity {
         setGuaAutoStart(mAutoStart);
     }
 
+    @OnCompoundButtonCheckedChange(R.id.vpnstart)
+    public void vpnStart(CompoundButton buttonView,
+                         boolean isChecked) {
+        mVpnStart = isChecked;
+        Log.e(TAG, "set VPN check: " + (isChecked ? "true" : "false"));
+        setVpnStart(mVpnStart);
+    }
+
     String getStartAppPkg() {
         SharedPreferences mySharedPreferences = getSharedPreferences("gua",
                 Activity.MODE_PRIVATE);
@@ -466,6 +514,21 @@ public class SelectModeActivity extends Activity {
                 Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putString("act", n);
+        editor.commit();
+    }
+
+    String getVpnStart() {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        return mySharedPreferences.getString("vpnstart", "false");
+    }
+
+    void setVpnStart(boolean autostart) {
+        SharedPreferences mySharedPreferences = getSharedPreferences("gua",
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString("vpnstart", autostart ? "true" : "false");
+        editor.putString("reverse", "nouse");
         editor.commit();
     }
 
@@ -508,8 +571,6 @@ public class SelectModeActivity extends Activity {
         } else {
             stopFloatWinAndSet();
         }
-
-
 
 
     }

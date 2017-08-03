@@ -3,7 +3,7 @@
     package="com.zj.stock">
 
     <uses-permission android:name="android.permission.VIBRATE" />
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -50,8 +50,24 @@
         <service android:name="com.zj.stock.STService" />
         <!--voice iat-->
         <activity android:name="com.iflytek.voicedemo.IatDemo" />
-        <activity android:name="com.iflytek.speech.setting.IatSettings" >
-        </activity>
+        <activity android:name="com.iflytek.speech.setting.IatSettings"></activity>
+        <!--voice tts-->
+        <activity
+            android:name="com.iflytek.voicedemo.TtsDemo"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale"
+            android:screenOrientation="portrait"></activity>
+        <!--voice asr-->
+        <activity
+            android:name="com.iflytek.voicedemo.AsrDemo"
+            android:screenOrientation="portrait" />
+        <!--voice understand-->
+        <activity
+            android:name="com.iflytek.voicedemo.UnderstanderDemo"
+            android:screenOrientation="portrait" />
+
+
+        <service android:name="com.adjust.win.FloatWinService" />
+
         <meta-data
             android:name="IFLYTEK_APPKEY"
             android:value="'56654492'" />

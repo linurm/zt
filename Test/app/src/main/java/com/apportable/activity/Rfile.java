@@ -14,6 +14,17 @@ public final class Rfile {
     public static int button = R.id.button;
     //voice iat
     public static int iat_button = R.id.btn_iat;
+    //voice tts
+    public static int tts_button = R.id.btn_tts;
+    //voice asr
+    public static int asr_button = R.id.btn_asr;
+    //    voice understand
+    public static int und_button = R.id.btn_und;
+
+    public static int win_button = R.id.btn_win_start;
+
+//    public static int light_seekbar = R.id.seekBar_light;
+
     public static void yes() {
         String a;
         a = "a";

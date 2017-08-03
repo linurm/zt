@@ -9,11 +9,17 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
+import com.adjust.win.FloatWindowView;
 import com.iflytek.sunflower.FlowerCollector;
+import com.iflytek.voicedemo.AsrDemo;
 import com.iflytek.voicedemo.IatDemo;
-import com.zj.stock.R;
+import com.iflytek.voicedemo.TtsDemo;
+import com.iflytek.voicedemo.UnderstanderDemo;
+import com.zj.stock.STApplication;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -41,14 +47,19 @@ public class VerdeActivity extends Activity {
         }
     }
 
-    public static void Log(File a) {
+    public static void zLog(String a) {
+        Log.e("ZTAG", "" + a);
+    }
+
+    public static void zLog(File a) {
         Log.e("ZTAG", a.getAbsolutePath());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
+        mContext = VerdeActivity.this;
+        ((STApplication) getApplication()).setActivity(this);
 //        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 //                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 //                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -59,12 +70,14 @@ public class VerdeActivity extends Activity {
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 //                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ns.init(this);
-        a = 0;
-        Log.e("ZTAG", "Z LOOK");
+//        a = 0;
+//        Log.e("ZJTAG", "Z LOOK" + this);
+//        Log.e("ZJTAG", "Z LOOK" + getApplication());
+//        Log.e("ZJTAG", "Z LOOK" + getApplicationContext());
         setContentView(Rfile.content_view);
 
         //voice iat
-        Button iat = (Button)findViewById(Rfile.iat_button);
+        Button iat = (Button) findViewById(Rfile.iat_button);
         iat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,15 +87,104 @@ public class VerdeActivity extends Activity {
                 }
             }
         });
-
+        //voice tts
+        Button tts = (Button) findViewById(Rfile.tts_button);
+        tts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, TtsDemo.class);
+                if (intent != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+        //voice asr
+        Button asr = (Button) findViewById(Rfile.asr_button);
+        asr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, AsrDemo.class);
+                if (intent != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+//        voice understand
+        Button und = (Button) findViewById(Rfile.und_button);
+        und.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, UnderstanderDemo.class);
+                if (intent != null) {
+                    startActivity(intent);
+                }
+            }
+        });
         Button btn = (Button) findViewById(Rfile.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent("com.tchip.changeBarHideStatus");
-                sendBroadcast(i);
+//                Intent i = new Intent("com.tchip.changeBarHideStatus");
+//                Intent i = new Intent("zj.zfenlly.gua.vpn");
+//                sendBroadcast(i);
+
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+
+                String packageName = "zj.zfenlly.tools";
+                String className = "zj.zfenlly.gua.SelectModeActivity";
+                intent.setClassName(packageName, className);
+
+//                Bundle bundle = new Bundle();
+//                bundle.putString("msg", "this message is from project B ");
+//                intent.putExtras(bundle);
+//
+//                intent.putExtra("pid", android.os.Process.myPid());
+
+                startActivity(intent);
             }
         });
+        final FloatWindowView wv = new FloatWindowView();
+        wv.init(VerdeActivity.this);
+        Button win_btn = (Button) findViewById(Rfile.win_button);
+        win_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (wv.isSeekBarOnView == false) {
+//                    wv.startSeekBar(219, 636, 350, 40);
+                    wv.startSeekBar(236, 636, 320, 40);
+                } else {
+                    wv.stopSeekBar();
+                }
+            }
+        });
+
+        wv.startSeekBar(236, 636, 320, 40);
+//        SeekBar sb = (SeekBar) findViewById(Rfile.light_seekbar);
+//        try {
+//            float f = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255f;
+//            int l = (int) (f * 100);
+////            Log.e("ZTAG",""+l);
+//            sb.setProgress(l);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+//                adjustBackgroundLight(i);
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
         playSound();
         testreflect();
         vibrateInit();
@@ -91,9 +193,25 @@ public class VerdeActivity extends Activity {
         Log.e("TEST", "---" + uuid());
     }
 
+    public void doSeek(int i) {
+        adjustBackgroundLight(i);
+    }
+
+    public void adjustBackgroundLight(int i) {
+        Window window = getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        if (i == -1) {
+            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+        } else {
+            lp.screenBrightness = (i <= 0 ? 1 : i) / 255f;
+        }
+        Log.e("ZTAG", " " + lp.screenBrightness);
+        window.setAttributes(lp);
+    }
+
     private void test() {
         File a = new File("abc.txt");
-        Log(a);
+        zLog(a);
     }
 
     @Override
@@ -220,7 +338,7 @@ public class VerdeActivity extends Activity {
 
     public void testreflect() {
         try {
-            Class<?> threadClazz = Class.forName("com.test.testzj.Rfile");
+            Class<?> threadClazz = Class.forName("com.apportable.activity.Rfile");
             Method getTipMethod1 = threadClazz.getDeclaredMethod("yes");
             getTipMethod1.invoke(null);
         } catch (Exception e) {

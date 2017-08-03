@@ -12,7 +12,12 @@ public class OtherAPP {
 
     static void setWillStartAPP(Activity act) {
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
-        mWifiStatusLoader.setIsStartAPP(act);
+        mWifiStatusLoader.setIsStartAPP();
+    }
+
+    static void setWillStartVpn(Activity act) {
+        final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
+        mWifiStatusLoader.setStartVpn(true);
     }
 
     static void setWillStopAPP(Activity act) {

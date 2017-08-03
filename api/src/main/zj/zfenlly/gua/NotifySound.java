@@ -5,7 +5,6 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 
-
 /**
  * Created by Administrator on 2017/6/17.
  */
@@ -17,12 +16,6 @@ public class NotifySound {
     public static NotifySound soundPlayUtils;
     // 上下文
     static Context mContext;
-//    int i;
-//    private SoundPool soundPool = new SoundPool(10, AudioManager.STREAM_SYSTEM, 5);
-//    public NotifySound() {
-//
-//
-//    }
 
     /**
      * 初始化
@@ -33,27 +26,15 @@ public class NotifySound {
         if (soundPlayUtils == null) {
             soundPlayUtils = new NotifySound();
         }
-
         // 初始化声音
         mContext = context;
-
         mSoundPlayer.load(mContext, Rfile.beep, 1);// 1
         mSoundPlayer.load(mContext, Rfile.nfcsuccess, 1);// 2
-
         return soundPlayUtils;
     }
-
 
     public static void play(int soundID) {
         mSoundPlayer.play(soundID, 1, 1, 0, 0, 1);
     }
-//
-//    public void NotifyEnd(Context mContext) {
-//
-//        Log.e("55", "55555555555555");
-//        i = soundPool.load(mContext, R.raw.beep, 1);
-//        soundPool.play(i, 1, 1, 0, 0, 1);
-//    }
-
 
 }

@@ -1,5 +1,6 @@
 package com.zj.stock;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
@@ -37,10 +38,10 @@ public class STApplication extends Application implements Observable {
     public String SSIDNAME;
     public ISTServiceAIDLInterface mService = null;
     public int port = 9111;
+    Activity mActivity = null;
     private List<Observer> mObservers = new ArrayList<Observer>();
     private boolean isConn = false;
     private List<StockData> mSTData = new ArrayList<StockData>();
-
     // private ComponentName mAPService;
     private LinkedList mKDJlist = new LinkedList();
     // private List<KDJData> mKDJData = new ArrayList<KDJData>();
@@ -75,6 +76,14 @@ public class STApplication extends Application implements Observable {
         }
     };
     private String mCodeText;
+
+    public Activity getActivity() {
+        return mActivity;
+    }
+
+    public void setActivity(Activity activity) {
+        mActivity = activity;
+    }
 
     public synchronized boolean IsDisplayDone() {
         return display_done;

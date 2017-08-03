@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.4.1)
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds it for you.
 # Gradle automatically packages shared libraries with your APK.
-
+#set(ANDROID_NDK_REVISION 21)
 add_library( # Sets the name of the library.
              JniCamera
 
@@ -18,17 +18,16 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              # Associated headers in the same location as their source
              # file are automatically included.
-             src/main/jni/zj_zfenlly_camera_CameraJni.cpp
-             src/main/jni/linker_phdr.cpp)
+             zj_zfenlly_camera_CameraJni.cpp
+             linker_phdr.cpp)
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because system libraries are included in the search path by
 # default, you only need to specify the name of the public NDK library
 # you want to add. CMake verifies that the library exists before
 # completing its build.
-include_directories($JNI_H_INCLUDE)
-include_directories($NDK/platforms/android-26/arch-arm/usr/include
-)
+#include_directories($JNI_H_INCLUDE)
+include_directories(ENV{ANDROID_NDK_ROOT}/platforms/android-19/arch-arm/usr/include)
 find_library( # Sets the name of the path variable.
               log-lib
               # Specifies the name of the NDK library that
@@ -46,4 +45,4 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib} )
 
-include_directories(src/main/jni)
+#include_directories(src/main/jni)

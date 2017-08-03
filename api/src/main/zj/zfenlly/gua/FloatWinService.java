@@ -1,19 +1,14 @@
 package zj.zfenlly.gua;
 
-import android.app.Activity;
-import android.app.Instrumentation;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -24,6 +19,7 @@ import android.widget.Toast;
 import zj.zfenlly.wifi.WifiAdmin;
 
 import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
+import static zj.zfenlly.gua.TimeSetting.getTimes;
 
 
 /**
@@ -31,11 +27,11 @@ import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
  */
 public class FloatWinService extends Service {
 
+    public static final int SET_VIEW_START = 1;
+    public static final int SET_VIEW_STOP = 2;
     private static final String TAG = "FloatWinService";
     private static final int ButtonHeight = 66;
-    private static final int SET_VIEW_START = 1;
-    private static final int SET_VIEW_STOP = 2;
-
+    static NotifySound ns = new NotifySound();
     Context mContext;
     LinearLayout mFloatLayout;
     LinearLayout mFloatLayout2;
@@ -46,7 +42,6 @@ public class FloatWinService extends Service {
     WindowManager.LayoutParams wmParams2;
     WindowManager mWindowManager;
     MZFloatView v;
-    static NotifySound ns = new NotifySound();
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
@@ -70,6 +65,7 @@ public class FloatWinService extends Service {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SET_VIEW_START:
+                    ns.play(2);
                     startClickView.setText("s");
                     break;
                 case SET_VIEW_STOP:
@@ -80,7 +76,7 @@ public class FloatWinService extends Service {
             }
         }
     };
-    private Button start19ClickView;
+    private Button start18ClickView;
     private Button start7ClickView;
     private Button start3ClickView;
     private boolean add_flag = false;
@@ -101,6 +97,9 @@ public class FloatWinService extends Service {
         return (int) (pxValue / scale + 0.5f);
     }
 
+    public static void playSound() {
+        ns.play(2);
+    }
 
     @Override
     public void onCreate() {
@@ -276,7 +275,7 @@ public class FloatWinService extends Service {
         isOnExpandView = false;
         Log.e(TAG, "delExpandView");
         mMidFloatLayout.removeView(startClickView);
-        mMidFloatLayout.removeView(start19ClickView);
+        mMidFloatLayout.removeView(start18ClickView);
         mMidFloatLayout.removeView(start7ClickView);
         mMidFloatLayout.removeView(start3ClickView);
         mMidFloatLayout.removeView(timeSettingView);
@@ -328,7 +327,7 @@ public class FloatWinService extends Service {
         timeSettingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS );
+                Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
 
@@ -415,12 +414,12 @@ public class FloatWinService extends Service {
             }
         });
 
-        start19ClickView = new Button(this);
-        start19ClickView.setText("19");
-        start19ClickView.setLayoutParams(p);
-        start19ClickView.setBackgroundResource(Rfile.button_shape);
-        start19ClickView.setTextColor(getResources().getColor(Rfile.green));
-        start19ClickView.setOnClickListener(new View.OnClickListener() {
+        start18ClickView = new Button(this);
+        start18ClickView.setText("18");
+        start18ClickView.setLayoutParams(p);
+        start18ClickView.setBackgroundResource(Rfile.button_shape);
+        start18ClickView.setTextColor(getResources().getColor(Rfile.green));
+        start18ClickView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (add_flag) {
@@ -544,7 +543,7 @@ public class FloatWinService extends Service {
         mMidFloatLayout.addView(timeSettingView);
         mDownFloatLayout.addView(settingsView);//
         mMidFloatLayout.addView(startClickView);//
-        mMidFloatLayout.addView(start19ClickView);//
+        mMidFloatLayout.addView(start18ClickView);//
         mMidFloatLayout.addView(start7ClickView);//
         mMidFloatLayout.addView(start3ClickView);//
 
@@ -560,7 +559,7 @@ public class FloatWinService extends Service {
             ct.stopThread();
             ct = null;
         } else {
-            ct = new ClickThread();
+            ct = new ClickThread(mContext, mHandler, CoordinateView, TimeSetting.getTimes(mContext), TimeSetting.getInterval(mContext) * 100);
             if (t != 0) {
                 ct.setTempTimes(t);
             }
@@ -568,7 +567,7 @@ public class FloatWinService extends Service {
         }
     }
 
-    private WindowManager.LayoutParams mzParams(){
+    private WindowManager.LayoutParams mzParams() {
         WindowManager.LayoutParams wmParamsmz = new WindowManager.LayoutParams();
         wmParamsmz.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
         wmParamsmz.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
@@ -645,7 +644,7 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         addTimesView = new Button(this);
-        click_times = getTimes();
+        click_times = getTimes(mContext);
         addTimesView.setText("" + click_times);
         addTimesView.setHeight(dip2px(mContext, ButtonHeight));
         addTimesView.setWidth(dip2px(mContext, ButtonHeight));
@@ -656,7 +655,7 @@ public class FloatWinService extends Service {
             @Override
             public void onClick(View view) {
                 click_times += 1;
-                setTimes(click_times);
+                TimeSetting.setTimes(mContext, click_times);
                 delTimesView.setText("" + click_times);
                 addTimesView.setText("" + click_times);
             }
@@ -678,7 +677,7 @@ public class FloatWinService extends Service {
                     return;
                 }
                 click_times -= 1;
-                setTimes(click_times);
+                TimeSetting.setTimes(mContext, click_times);
                 delTimesView.setText("" + click_times);
                 addTimesView.setText("" + click_times);
             }
@@ -688,7 +687,7 @@ public class FloatWinService extends Service {
         //
 
         addIntervalView = new Button(this);
-        click_interval = getInterval();
+        click_interval = TimeSetting.getInterval(mContext);
         addIntervalView.setText("" + click_interval);
         addIntervalView.setHeight(dip2px(mContext, ButtonHeight));
         addIntervalView.setWidth(dip2px(mContext, ButtonHeight));
@@ -699,7 +698,7 @@ public class FloatWinService extends Service {
             @Override
             public void onClick(View view) {
                 click_interval += 1;
-                setInterval(click_interval);
+                TimeSetting.setInterval(mContext, click_interval);
                 delIntervalView.setText("" + click_interval);
                 addIntervalView.setText("" + click_interval);
             }
@@ -721,7 +720,7 @@ public class FloatWinService extends Service {
                     return;
                 }
                 click_interval -= 1;
-                setInterval(click_interval);
+                TimeSetting.setInterval(mContext, click_interval);
                 delIntervalView.setText("" + click_interval);
                 addIntervalView.setText("" + click_interval);
             }
@@ -739,33 +738,6 @@ public class FloatWinService extends Service {
         mDownFloatLayout.removeView(delIntervalView);//
     }
 
-    private int getTimes() {
-        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
-                Activity.MODE_PRIVATE);
-        return mySharedPreferences.getInt("click_times", 0);
-    }
-
-    private void setTimes(int t) {
-        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
-                Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putInt("click_times", t);
-        editor.commit();
-    }
-
-    private int getInterval() {
-        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
-                Activity.MODE_PRIVATE);
-        return mySharedPreferences.getInt("click_interval", 0);
-    }
-
-    private void setInterval(int t) {
-        SharedPreferences mySharedPreferences = getSharedPreferences("auto_click",
-                Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putInt("click_interval", t);
-        editor.commit();
-    }
 
     @Override
     public void onDestroy() {
@@ -783,77 +755,88 @@ public class FloatWinService extends Service {
         }
     }
 
-
-    class ClickThread extends Thread {
-
-        //        int x, y;
-        int times = getTimes();
-        int interval = getInterval() * 100;
-        Instrumentation mInst = new Instrumentation();
-        long downTime;
-        long eventTime;
-        boolean isStart = false;
-
-        public void setTempTimes(int t) {
-            times = t;
-        }
-
-        public void stopThread() {
-            isStart = false;
-            if (isAlive()) {
-                interrupt();
-            }
-        }
-
-        @Override
-        public void run() {
-            isStart = true;
-            mHandler.sendMessage(mHandler.obtainMessage(
-                    SET_VIEW_STOP, null));
-            while (times-- > 0 && isStart) {
-
-                try {
-                    downTime = SystemClock.uptimeMillis();
-                    eventTime = SystemClock.uptimeMillis();
-                    MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, CoordinateView.x1, CoordinateView.y1, 0);
-                    mInst.sendPointerSync(me1);
-                } catch (Exception e) {
-                }
-                synchronized (this) {
-                    try {
-                        wait(200);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                if (isStart == false) break;
-                try {
-                    downTime = SystemClock.uptimeMillis();
-                    eventTime = SystemClock.uptimeMillis();
-                    MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, CoordinateView.x1, CoordinateView.y1, 0);
-                    mInst.sendPointerSync(me2);
-                    Log.e("instrument", "send pointersync " + CoordinateView.x1 + ":" + CoordinateView.y1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                synchronized (this) {
-                    try {
-                        wait(interval); //1秒
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                if (isStart == false) break;
-            }
-            isStart = false;
-            ns.play(2);
-            mHandler.sendMessage(mHandler.obtainMessage(
-                    SET_VIEW_START, null));
-        }
-    }
-    public static void playSound(){
-        ns.play(2);
-    }
+//    class ClickThread extends Thread {
+//
+//        //        int x, y;
+//        int times = getTimes();
+//        int interval = getInterval() * 100;
+//        Instrumentation mInst = new Instrumentation();
+//        long downTime;
+//        long eventTime;
+//        boolean isStart = false;
+//
+//        public void setTempTimes(int t) {
+//            times = t;
+//        }
+//
+//        public void stopThread() {
+//            isStart = false;
+//            if (isAlive()) {
+//                interrupt();
+//            }
+//        }
+//
+//        @Override
+//        public void run() {
+//            isStart = true;
+//            mHandler.sendMessage(mHandler.obtainMessage(
+//                    SET_VIEW_STOP, null));
+//            while (times-- > 0 && isStart) {
+//
+//                try {
+//                    downTime = SystemClock.uptimeMillis();
+//                    eventTime = SystemClock.uptimeMillis();
+//                    int x_zb = 1360;
+//                    int y_zb = 996;
+//
+//                    if (CoordinateView != null) {
+//                        x_zb = CoordinateView.x1;
+//                        y_zb = CoordinateView.y1;
+//                    }
+//                    MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x_zb, y_zb, 0);
+//                    mInst.sendPointerSync(me1);
+//                } catch (Exception e) {
+//                }
+//                synchronized (this) {
+//                    try {
+//                        wait(200);
+//                    } catch (InterruptedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                }
+//                if (isStart == false) break;
+//                try {
+//                    downTime = SystemClock.uptimeMillis();
+//                    eventTime = SystemClock.uptimeMillis();
+//
+//                    int x_zb = 1360;
+//                    int y_zb = 996;
+//
+//                    if (CoordinateView != null) {
+//                        x_zb = CoordinateView.x1;
+//                        y_zb = CoordinateView.y1;
+//                    }
+//                    MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x_zb, y_zb, 0);
+//                    mInst.sendPointerSync(me2);
+//                    Log.e("instrument", "send pointersync " + x_zb + ":" + y_zb);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                synchronized (this) {
+//                    try {
+//                        wait(interval); //1秒
+//                    } catch (InterruptedException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//                }
+//                if (isStart == false) break;
+//            }
+//            isStart = false;
+//            ns.play(2);
+//            mHandler.sendMessage(mHandler.obtainMessage(
+//                    SET_VIEW_START, null));
+//        }
+//    }
 }

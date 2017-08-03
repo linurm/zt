@@ -50,6 +50,13 @@
             android:layout_gravity="center_horizontal"
             android:checked="false"
             android:text="auto start" />
+        <CheckBox
+            android:id="@+id/vpnstart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:text="vpn  start" />
     </LinearLayout>
 
 

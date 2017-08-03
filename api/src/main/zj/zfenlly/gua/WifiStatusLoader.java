@@ -1,6 +1,6 @@
 package zj.zfenlly.gua;
 
-import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,11 @@ import android.os.Bundle;
  */
 public class WifiStatusLoader {
     private static WifiStatusLoader sInstance;
+
     private Context mContext;
     private FloatView mFloatView;
     private boolean isStartApp = false;
+    private boolean isStartVpn = false;
 
     private WifiStatusLoader(Context context) {
         mContext = context;
@@ -26,11 +28,19 @@ public class WifiStatusLoader {
         return sInstance;
     }
 
+    public boolean isStartVpn() {
+        return isStartVpn;
+    }
+
+    public void setStartVpn(boolean startVpn) {
+        isStartVpn = startVpn;
+    }
+
     public void setRecentsPanel(FloatView fv) {
         mFloatView = fv;
     }
 
-    public void setIsStartAPP(Activity act) {
+    public void setIsStartAPP() {
         isStartApp = true;
 
     }
@@ -56,15 +66,30 @@ public class WifiStatusLoader {
     }
 
     public void StartAPP() {
-
-        if (isStartApp) {
-            isStartApp = false;
-            startO(0, "0");
+        if (isStartVpn) {
+            isStartVpn = false;
+            startVpn();
+        } else {
+            if (isStartApp) {
+                isStartApp = false;
+                startO(0, "0");
+            }
         }
     }
 
     public void startAPP(int id, String v) {
         startO(id, v);
+    }
+
+    public void startVpn() {
+
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(Vpn.vpnPkg, Vpn.vpnAct));
+        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+
+        mContext.startActivity(intent);
+
+//        OtherAPP.startActivity3(mContext, Vpn.vpnPkg, Vpn.vpnAct);
     }
 
     public void startO(int id, String v) {
