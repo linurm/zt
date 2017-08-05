@@ -74,7 +74,7 @@ public class SelectModeActivity extends Activity {
     public CheckBox autostart;
     @ViewInject(R.id.vpnstart)
     public CheckBox vpnstart;
-
+    public int startMode = 0;
     String[] sa = null;
     String[] packagelist = null;
     String[] activityname = null;
@@ -82,8 +82,7 @@ public class SelectModeActivity extends Activity {
     private boolean mVpnStart = false;
     private WifiAdmin mWifiAdmin = null;
     private boolean autoMode = false;
-
-//    private void setAirplaneMode(Context context, int flags) {
+    //    private void setAirplaneMode(Context context, int flags) {
 //        Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
 //        startActivityForResult(intent, flags);
 //    }
@@ -100,6 +99,7 @@ public class SelectModeActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onTheCreate(savedInstanceState);
+        //TestClick();
     }
 
     @Override
@@ -132,7 +132,7 @@ public class SelectModeActivity extends Activity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        Log.e("xTAG", "onstart" + intent.toString());
+        Log.e("xTAG", "onstart:" + intent.toString());
         if (mVpnStart == true) {
             if (!intent.getAction().equals(Intent.ACTION_VIEW)) {
                 //start vpn
@@ -234,12 +234,14 @@ public class SelectModeActivity extends Activity {
         editor.commit();
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
 //        OtherAPP.setActivity(this);
-        Intent intent = getIntent();
-        Log.e("xTAG", "onresume" + intent.toString());
+
+
         try {
             if (getStartAppPkg() == null) {
                 return;
@@ -597,5 +599,9 @@ public class SelectModeActivity extends Activity {
     private void stopFloatWin() {
         Intent intent = new Intent(this, FloatWinService.class);
         stopService(intent);
+    }
+
+    public void TestClick() {
+        new ClickThread(this, 612, 747).start();
     }
 }

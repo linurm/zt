@@ -41,7 +41,7 @@ public class FloatWinService extends Service {
     WindowManager.LayoutParams wmParams;
     WindowManager.LayoutParams wmParams2;
     WindowManager mWindowManager;
-    MZFloatView v;
+    //    TargetFloatView v;
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private TextView afterhalfhour;
@@ -81,7 +81,7 @@ public class FloatWinService extends Service {
     private Button start3ClickView;
     private boolean add_flag = false;
     private boolean settings_flag = false;
-    private MZFloatView CoordinateView;
+    private TargetFloatView mTargetFloatView;
     private int click_times;
     private int click_interval;
     private ClickThread ct = null;
@@ -559,13 +559,16 @@ public class FloatWinService extends Service {
             ct.stopThread();
             ct = null;
         } else {
-            ct = new ClickThread(mContext, mHandler, CoordinateView, TimeSetting.getTimes(mContext), TimeSetting.getInterval(mContext) * 100);
+            Coordinate cd = new Coordinate(mTargetFloatView.x, mTargetFloatView.y);
+            ct = new ClickThread(mContext, mHandler, cd, TimeSetting.getTimes(mContext), TimeSetting.getInterval(mContext) * 100);
             if (t != 0) {
                 ct.setTempTimes(t);
             }
             ct.start();
         }
     }
+
+
 
     private WindowManager.LayoutParams mzParams() {
         WindowManager.LayoutParams wmParamsmz = new WindowManager.LayoutParams();
@@ -624,10 +627,10 @@ public class FloatWinService extends Service {
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         mFloatLayout2.setLayoutParams(mFloatLayoutLP);
         mFloatLayout2.setOrientation(LinearLayout.VERTICAL);
-        CoordinateView = new MZFloatView(getApplicationContext(), mFloatLayout2, mWindowManager, mzParams());
-        //CoordinateView.setBackgroundResource(R.drawable.button_shape);
-        CoordinateView.setImageResource(Rfile.mz);
-        mFloatLayout2.addView(CoordinateView);
+        mTargetFloatView = new TargetFloatView(getApplicationContext(), mFloatLayout2, mWindowManager, mzParams());
+        //mTargetFloatView.setBackgroundResource(R.drawable.button_shape);
+        mTargetFloatView.setImageResource(Rfile.mz);
+        mFloatLayout2.addView(mTargetFloatView);
         mWindowManager.addView(mFloatLayout2, wmParams2);
     }
 
@@ -789,9 +792,9 @@ public class FloatWinService extends Service {
 //                    int x_zb = 1360;
 //                    int y_zb = 996;
 //
-//                    if (CoordinateView != null) {
-//                        x_zb = CoordinateView.x1;
-//                        y_zb = CoordinateView.y1;
+//                    if (mTargetFloatView != null) {
+//                        x_zb = mTargetFloatView.x1;
+//                        y_zb = mTargetFloatView.y1;
 //                    }
 //                    MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x_zb, y_zb, 0);
 //                    mInst.sendPointerSync(me1);
@@ -813,9 +816,9 @@ public class FloatWinService extends Service {
 //                    int x_zb = 1360;
 //                    int y_zb = 996;
 //
-//                    if (CoordinateView != null) {
-//                        x_zb = CoordinateView.x1;
-//                        y_zb = CoordinateView.y1;
+//                    if (mTargetFloatView != null) {
+//                        x_zb = mTargetFloatView.x1;
+//                        y_zb = mTargetFloatView.y1;
 //                    }
 //                    MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x_zb, y_zb, 0);
 //                    mInst.sendPointerSync(me2);

@@ -21,15 +21,25 @@ public class ClickThread extends Thread {
     long downTime;
     long eventTime;
     boolean isStart = false;
+    int x_zb;
+    int y_zb;
     private Context mContext;
-    private MZFloatView mCoordinateView;
+    private Coordinate mCoordinateView;
 
-    public ClickThread(Context context, Handler handler, MZFloatView coordinateView,int t,int inter) {
+    public ClickThread(Context context, Handler handler, Coordinate coordinateView, int t, int inter) {
         mContext = context;
         mHandler = handler;
         times = t;//TimeSetting.getTimes(mContext);
         interval = inter;//TimeSetting.getInterval(mContext) * 100;
         mCoordinateView = coordinateView;
+    }
+
+    public ClickThread(Context context, int x, int y) {
+        mContext = context;
+        mHandler = null;
+        times = 2;//TimeSetting.getTimes(mContext);
+        interval = 100;//TimeSetting.getInterval(mContext) * 100;
+        mCoordinateView = new Coordinate(x, y);
     }
 
 
@@ -55,12 +65,11 @@ public class ClickThread extends Thread {
             try {
                 downTime = SystemClock.uptimeMillis();
                 eventTime = SystemClock.uptimeMillis();
-                int x_zb = 1360;
-                int y_zb = 996;
+
 
                 if (mCoordinateView != null) {
-                    x_zb = mCoordinateView.x1;
-                    y_zb = mCoordinateView.y1;
+                    x_zb = mCoordinateView.x;
+                    y_zb = mCoordinateView.y;
                 }
                 MotionEvent me1 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x_zb, y_zb, 0);
                 mInst.sendPointerSync(me1);
@@ -79,12 +88,10 @@ public class ClickThread extends Thread {
                 downTime = SystemClock.uptimeMillis();
                 eventTime = SystemClock.uptimeMillis();
 
-                int x_zb = 1360;
-                int y_zb = 996;
 
                 if (mCoordinateView != null) {
-                    x_zb = mCoordinateView.x1;
-                    y_zb = mCoordinateView.y1;
+                    x_zb = mCoordinateView.x;
+                    y_zb = mCoordinateView.y;
                 }
                 MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x_zb, y_zb, 0);
                 mInst.sendPointerSync(me2);

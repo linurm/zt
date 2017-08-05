@@ -2,6 +2,7 @@ package com.zj.stock;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,16 @@ public class STApplication extends Application implements Observable {
     public ISTServiceAIDLInterface mService = null;
     public int port = 9111;
     Activity mActivity = null;
+
+    public Service getWinService() {
+        return mWinService;
+    }
+
+    public void setWinService(Service mWinService) {
+        this.mWinService = mWinService;
+    }
+
+    Service mWinService = null;
     private List<Observer> mObservers = new ArrayList<Observer>();
     private boolean isConn = false;
     private List<StockData> mSTData = new ArrayList<StockData>();
@@ -84,6 +95,8 @@ public class STApplication extends Application implements Observable {
     public void setActivity(Activity activity) {
         mActivity = activity;
     }
+
+
 
     public synchronized boolean IsDisplayDone() {
         return display_done;

@@ -8,11 +8,12 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.apportable.activity.VerdeActivity;
 import com.zj.stock.R;
@@ -26,14 +27,19 @@ import com.zj.stock.STApplication;
 public class FloatWinService extends Service {
     private static final String TAG = "FloatWinService";
     int left = 0;
+    int progress = 0;
+    int number = 0;
     int top = 0;
     int width = 0;
     int height = 0;
     Context mContext;
+    WindowManager.LayoutParams wmParamsl;
     WindowManager.LayoutParams wmParams;
+    TextView tv;
     WindowManager mWindowManager;
-    //    LinearLayout mFloatLayout;
-//    LinearLayout mUpFloatLayout;
+    LinearLayout mFloatLayout;
+    boolean isRemove = false;
+    //    LinearLayout mUpFloatLayout;
     //    CameraPreviewSurfaceView mCameraPreviewSurfaceView = null;
 //    View winView;
     private SeekBar floatView = null;
@@ -57,13 +63,25 @@ public class FloatWinService extends Service {
         return null;
     }
 
+    public void removeView() {
+        if (isRemove) {
+            return;
+        }
+        isRemove = true;
+        Log.e("ZTAG", "removeView");
+        mWindowManager.removeView(mFloatLayout);
+        mFloatLayout.removeView(floatView);
+        if (number == 1) {
+            mFloatLayout.removeView(tv);
+        }
+
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-//        mUpFloatLayout.removeView(floatView);
-//        mFloatLayout.removeView(mUpFloatLayout);
-//        mWindowManager.removeView(mFloatLayout);
-        mWindowManager.removeView(floatView);
+        Log.e("ZTAG", "onDestroy");
+        removeView();
 
     }
 
@@ -96,9 +114,12 @@ public class FloatWinService extends Service {
             top = bundle.getInt("top", 0);
             width = bundle.getInt("width", 0);
             height = bundle.getInt("height", 0);
+            progress = bundle.getInt("progress", 0);
+            number = bundle.getInt("number", 0);
             Log.e("ZTAG", "onstartcommand: " + left + ":" + top + ":" + width + ":" + height);
         }
         initView(getApplicationContext());
+        ((STApplication) getApplication()).setWinService(this);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -106,6 +127,19 @@ public class FloatWinService extends Service {
 // 获取WindowManager
         mWindowManager = (WindowManager) getApplicationContext().getSystemService(getApplicationContext().WINDOW_SERVICE);
         // 设置LayoutParams(全局变量）相关参数
+        wmParamsl = new WindowManager.LayoutParams();
+        wmParamsl.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
+        wmParamsl.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
+        // 设置Window flag
+        wmParamsl.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        wmParamsl.gravity = Gravity.LEFT | Gravity.TOP;
+        wmParamsl.x = left;
+        wmParamsl.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsl.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParamsl.x = left;
+        wmParamsl.y = top;
+
         wmParams = new WindowManager.LayoutParams();
         wmParams.type = WindowManager.LayoutParams.TYPE_PHONE; // 设置window type
         wmParams.format = PixelFormat.RGBA_8888; // 设置图片格式，效果为背景透明
@@ -126,14 +160,14 @@ public class FloatWinService extends Service {
         wmParams.height = height;//WindowManager.LayoutParams.WRAP_CONTENT;
         wmParams.x = left;
         wmParams.y = top;
-//        mFloatLayout = new LinearLayout(context);
-//        LinearLayout.LayoutParams mFloatLayoutLP = new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.WRAP_CONTENT,
-//                LinearLayout.LayoutParams.WRAP_CONTENT);
+        mFloatLayout = new LinearLayout(context);
+        LinearLayout.LayoutParams mFloatLayoutLP = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
 //        mFloatLayoutLP.leftMargin = left;//mFloatLayoutLP.gravity=Gravity.LEFT | Gravity.TOP;
 //        mFloatLayoutLP.topMargin = top;
-//        mFloatLayout.setLayoutParams(mFloatLayoutLP);
-//        mFloatLayout.setOrientation(LinearLayout.VERTICAL);
+        mFloatLayout.setLayoutParams(mFloatLayoutLP);
+        mFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
         mContext = context;
         Log.e("ZJTAG", "Z LOOK" + context);
 //        mUpFloatLayout = new LinearLayout(context);
@@ -152,16 +186,21 @@ public class FloatWinService extends Service {
 //        floatView.setMinimumHeight(20);
 //        floatView.setMinimumWidth(20);
 //        floatView.setLayoutParams(mFloatLayoutLP);
-        try {
-            float f = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255f;
-            int l = (int) (f * 100);
-            floatView.setProgress(l);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            float f = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255f;
+//            int l = (int) (f * 100);
+//            .setProgress(l);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        floatView.setProgress(progress);
+
         floatView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                if (number == 1) {
+                    tv.setText("" + i);
+                }
                 ((VerdeActivity) ((STApplication) getApplication()).getActivity()).doSeek(i);
             }
 
@@ -178,7 +217,34 @@ public class FloatWinService extends Service {
 //        floatView.setBackgroundResource(R.drawable.share_via_barcode);
 //
 //        mUpFloatLayout.addView(floatView);
-//        mFloatLayout.addView(mUpFloatLayout);
-        mWindowManager.addView(floatView, wmParams);
+        if (number == 1) {
+            tv = new TextView(getApplication());
+            tv.setText("" + progress);
+            tv.setTextSize(30);
+            mFloatLayout.addView(floatView, wmParams);
+            mFloatLayout.addView(tv);
+        } else {
+            mFloatLayout.addView(floatView, wmParams);
+        }
+        isRemove = false;
+
+        wmParamsl.windowAnimations = R.style.anim_view;
+
+//        = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
+//                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 1.0f);
+//
+//        wmParamsl.windowAnimations.setDuration(500);//设置动画持续时间
+//        Animation animationUp = AnimationUtils.loadAnimation(mContext, R.anim.grow_from_middle);
+//        mFloatLayout.startAnimation(animation);
+//        animation.startNow();
+        mWindowManager.addView(mFloatLayout, wmParamsl);
+//        try {
+//            Thread.sleep(800);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        mWindowManager.removeView(mFloatLayout);
     }
+
+
 }

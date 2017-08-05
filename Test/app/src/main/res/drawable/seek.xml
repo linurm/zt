@@ -4,13 +4,9 @@
 
     <gradient
         android:angle="270"
-        android:endColor="#11ce33"
-        android:startColor="#009ACD" />
-    <padding
-        android:left="2dp"
-        android:top="2dp"
-        android:right="2dp"
-        android:bottom="2dp"/><!-- 各方向的间隔 -->
+        android:endColor="#4ec3f3"
+        android:startColor="#4ec3f3" />
+
     <size
         android:height="30dp"
         android:width="30dp" />

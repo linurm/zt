@@ -28,7 +28,7 @@ public class VerdeActivity extends Activity {
     public static int a;
     static NotifySound ns = new NotifySound();
     private static Vibrator vibrator;
-
+    public int startMode = 0;
     Context mContext = null;
 
     public static void doVibrate() {
@@ -127,24 +127,11 @@ public class VerdeActivity extends Activity {
 //                Intent i = new Intent("com.tchip.changeBarHideStatus");
 //                Intent i = new Intent("zj.zfenlly.gua.vpn");
 //                sendBroadcast(i);
+                startGuaApp();
 
-
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-
-                String packageName = "zj.zfenlly.tools";
-                String className = "zj.zfenlly.gua.SelectModeActivity";
-                intent.setClassName(packageName, className);
-
-//                Bundle bundle = new Bundle();
-//                bundle.putString("msg", "this message is from project B ");
-//                intent.putExtras(bundle);
-//
-//                intent.putExtra("pid", android.os.Process.myPid());
-
-                startActivity(intent);
             }
         });
-        final FloatWindowView wv = new FloatWindowView();
+        final FloatWindowView wv = new FloatWindowView(mContext);
         wv.init(VerdeActivity.this);
         Button win_btn = (Button) findViewById(Rfile.win_button);
         win_btn.setOnClickListener(new View.OnClickListener() {
@@ -152,14 +139,14 @@ public class VerdeActivity extends Activity {
             public void onClick(View view) {
                 if (wv.isSeekBarOnView == false) {
 //                    wv.startSeekBar(219, 636, 350, 40);
-                    wv.startSeekBar(236, 636, 320, 40);
+                    wv.startSeekBar(236, 636, 320, 40, 100, 1);
                 } else {
                     wv.stopSeekBar();
                 }
             }
         });
 
-        wv.startSeekBar(236, 636, 320, 40);
+        wv.startSeekBar(236, 636, 320, 40, 100, 1);
 //        SeekBar sb = (SeekBar) findViewById(Rfile.light_seekbar);
 //        try {
 //            float f = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS) / 255f;
@@ -190,7 +177,30 @@ public class VerdeActivity extends Activity {
         vibrateInit();
         //doVibrate();
         test();
-        Log.e("TEST", "---" + uuid());
+        Log.e("ZTAG", "---" + uuid());
+    }
+
+    public void getStartMode() {
+        Intent intent = getIntent();
+        String a = intent.getAction();
+        if (a.equals(Intent.ACTION_VIEW)) {
+            //start vpn
+//            Log.e("ZTAG", "onResume:" + intent.toString());
+            startMode = 1;
+        } else if (a.equals(Intent.ACTION_MAIN)) {
+//            Log.e("ZTAG", "onResume1:" + intent.toString());
+            startMode = 2;
+        }
+    }
+
+    public void startGuaApp() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String packageName = "zj.zfenlly.tools";
+        String className = "zj.zfenlly.gua.SelectModeActivity";
+        intent.setClassName(packageName, className);
+        Log.e("ZTAG", "" + startMode);
+        if (startMode == 1)
+            startActivity(intent);
     }
 
     public void doSeek(int i) {
@@ -253,6 +263,8 @@ public class VerdeActivity extends Activity {
         // 07-18 15:40:38.540 15348-15348/? E/ZTAG: natrium
         //
 //        Log.e("ZTAG", Build.VERSION.RELEASE);
+
+        getStartMode();
     }
 
     @Override

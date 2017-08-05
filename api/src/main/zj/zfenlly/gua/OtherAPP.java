@@ -27,7 +27,9 @@ public class OtherAPP {
 
 
     public static void startActivity3(Context mContext, String pkg, String act) {
-        mContext.startActivity(new Intent().setComponent(new ComponentName(pkg, act)));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setClassName(pkg, act);
+        mContext.startActivity(intent);
     }
 
 
