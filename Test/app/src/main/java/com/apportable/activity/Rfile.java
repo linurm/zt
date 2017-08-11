@@ -22,7 +22,9 @@ public final class Rfile {
     public static int und_button = R.id.btn_und;
 
     public static int win_button = R.id.btn_win_start;
-
+    public static int phone = R.id.phone;
+    public static int edit_Text = R.id.editText;
+    public static int key_code = R.id.code_key;
 //    public static int light_seekbar = R.id.seekBar_light;
 
     public static void yes() {

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.adjust.win.FloatWindowView;
 import com.iflytek.sunflower.FlowerCollector;
@@ -55,6 +57,16 @@ public class VerdeActivity extends Activity {
         Log.e("ZTAG", a.getAbsolutePath());
     }
 
+    public static byte[] long2Bytes(long num) {
+        byte[] byteNum = new byte[4];
+        int v = (int) (num);
+        for (int ix = 0; ix < 4; ++ix) {
+            int offset = (ix) * 8;
+            byteNum[ix] = (byte) ((v >> offset) & 0xff);
+        }
+        return byteNum;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +87,7 @@ public class VerdeActivity extends Activity {
 //        Log.e("ZJTAG", "Z LOOK" + getApplication());
 //        Log.e("ZJTAG", "Z LOOK" + getApplicationContext());
         setContentView(Rfile.content_view);
-
+        final EditText et = (EditText) findViewById(Rfile.edit_Text);
         //voice iat
         Button iat = (Button) findViewById(Rfile.iat_button);
         iat.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +132,7 @@ public class VerdeActivity extends Activity {
                 }
             }
         });
+        final TextView key_code = (TextView) findViewById(Rfile.key_code);
         Button btn = (Button) findViewById(Rfile.button);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +140,9 @@ public class VerdeActivity extends Activity {
 //                Intent i = new Intent("com.tchip.changeBarHideStatus");
 //                Intent i = new Intent("zj.zfenlly.gua.vpn");
 //                sendBroadcast(i);
-                startGuaApp();
+                ;//startGuaApp();
+                String s = startRegister(et.getText().toString());
+                key_code.setText(s);
 
             }
         });
@@ -177,7 +192,164 @@ public class VerdeActivity extends Activity {
         vibrateInit();
         //doVibrate();
         test();
-        Log.e("ZTAG", "---" + uuid());
+
+        //Log.e("ZTAG", "---" + uuid());
+    }
+
+    public String startRegister(String mSR) {
+        String v11 = mSR;
+        int i = 0, j = 0, k = 0, l = 0;
+        int z;
+        byte[] s = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        byte[] s2 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        byte[] aa1 = {0x2b, 0x2f, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39,
+                0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a,
+                0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a
+        };
+        byte[] aa2 = {0x3e, 0x3f, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d,
+                0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
+                0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33
+        };
+        byte[] a2 = new byte[27];
+        int v5 = 0;
+        int index = 0;
+        int[] v12 = {0, 0, 0, 0, 0};
+        int[] v13 = {0, 0, 0, 0, 0};
+        int v3 = v11.length();
+        int found = 0;
+        long v7;
+        long lastv = 0;
+        if ((v11.length()) > 20)
+            return "";
+        do {
+            index = v5 % v3;
+            Log.e("ZTAG", "c " + v11.charAt(index));
+            v7 = v11.charAt(index) * (v5 + 20160126) * v3;
+            v7 = ((((lastv >> 8) & 0X00FFFFFF) + (v7)));
+
+            byte[] lb = long2Bytes(v7);
+            s[v5] = (lb[0]);
+            s[v5 + 1] = lb[1];
+            s[v5 + 2] = lb[2];
+            s[v5 + 3] = lb[3];
+            lastv = v7;
+
+            v5++;
+        } while (v5 != 16);
+
+        v5 = 0;
+        do {
+            int x = (int) s[v5 * 4] & 0xff;
+            x += ((int) (s[v5 * 4 + 1]) << 8) & 0xff00;
+            x += ((int) (s[v5 * 4 + 2]) << 16) & 0xff0000;
+            x += ((int) (s[v5 * 4 + 3]) << 24) & 0xff000000;
+            v12[v5] = x / 10;
+            v5++;
+        } while (v5 != 5);
+
+        v13[4] = v12[0] + v12[1];
+        v13[2] = v13[4] + v12[0];
+        v13[3] = v12[2] + v12[3];
+        v13[0] = 2 * v12[2] + v12[3];
+        v13[1] = 3 * v12[2] - v12[4];//<=
+
+        byte[] a1 = new byte[21];
+
+        for (i = 0; i < 20; i++) {
+            a1[i] = (byte) (v13[i / 4] >> (i % 4) * 8);
+        }
+        a1[20] = 0;
+        Log.e("ZTAG", "[18]: " + a1[18] + "[19]: " + a1[19]);
+        for (i = 0; i < 64; i++) {
+            for (j = 0; j < 64; j++) {
+
+                for (k = 0; k < 64; k++) {
+                    byte xx = (byte) ((aa2[i] << 2) & 0xfc);
+                    xx = (byte) ((((aa2[j] >> 4) & 0x0f) | xx) & 0xff);
+                    if (xx == (a1[18])) {
+                        byte yy = (byte) ((((aa2[k] >> 2) & 0x3f) | ((aa2[j] << 4) & 0xf0)) & 0xff);
+                        if (yy == a1[19]) {
+                            Log.e("ZTAG", " i= " + aa1[i] + " j= " + aa1[j] + " k= " + aa1[k]);
+                            a2[24] = aa1[i];
+                            a2[25] = aa1[j];
+                            a2[26] = aa1[k];
+                        }
+                    }
+                }
+            }
+        }
+        for (z = 0; z < 6; z++) {
+            found = 0;
+            for (i = 0; i < 64; i++) {
+                for (j = 0; j < 64; j++) {
+                    if ((((aa2[j] >> 4) & 0x0f | ((aa2[i] << 2) & 0xfc) & 0xff) == (a1[3 * z] & 0xff))) {
+                        for (k = 0; k < 64; k++) {
+                            if (((((aa2[k] >> 2) & 0x3f) | ((aa2[j] << 4) & 0xf0) & 0xff) == (a1[3 * z + 1] & 0xff))) {
+                                for (l = 0; l < 64; l++) {
+                                    if (((((aa2[k] << 6) & 0xc0) | aa2[l]) & 0xff) == (a1[3 * z + 2] & 0xff)) {
+//                                        Log.e("ZTAG", "i= " + aa2[i] + " j= " + aa2[j] + " k= " + aa2[k] + " m= " + aa2[l]);
+                                        Log.e("ZTAG", "value i= " + aa1[i] + " j= " + aa1[j] + " k= " + aa1[k] + " m= " + aa1[l]);
+                                        a2[4 * z] = aa1[i];
+                                        a2[4 * z + 1] = aa1[j];
+                                        a2[4 * z + 2] = aa1[k];
+                                        a2[4 * z + 3] = aa1[l];
+                                        found = 1;
+                                        break;
+                                    }
+                                }
+
+                            }
+                            if (found == 1)
+                                break;
+                        }
+
+                    }
+                    if (found == 1)
+                        break;
+                }
+                if (found == 1)
+                    break;
+            }
+        }
+
+
+//        String m = "";
+//        try {
+//            m = new String(s, "UTF-8");
+//        } catch (Exception e) {
+//
+//        }
+        Log.e("ZTAG", "key " + new String(a2));
+        return new String(a2);
+    }
+
+    public String encodeHex(long integer) {
+        StringBuffer buf = new StringBuffer(0);
+        if ((integer & 0xff000000) < 0x10000000) {
+            buf.append("0");
+        }
+        Log.e("ZTAG", "1 " + buf);
+        buf.append(Long.toString((integer /*& 0xff000000 >> 24*/), 16));
+        Log.e("ZTAG", "2 " + buf);
+//        if (((long) integer & 0xff) < 0x10) {
+//            buf.append("0");
+//        }
+//        Log.e("ZTAG", "3 " + buf);
+//        buf.append(Long.toString((integer & 0xff0000 >> 16), 16));
+//        Log.e("ZTAG", "4 " + buf);
+//        if (((long) integer & 0xff) < 0x10) {
+//            buf.append("0");
+//        }
+//        Log.e("ZTAG", "5 " + buf);
+//        buf.append(Long.toString((integer & 0xff00 >> 8), 16));
+//        Log.e("ZTAG", "6 " + buf);
+//        if (((long) integer & 0xff) < 0x10) {
+//            buf.append("0");
+//        }
+//        Log.e("ZTAG", "7 " + buf);
+//        buf.append(Long.toString(integer & 0xff, 16));
+//        Log.e("ZTAG", "8 " + buf);
+        return buf.toString();
     }
 
     public void getStartMode() {
@@ -263,8 +435,10 @@ public class VerdeActivity extends Activity {
         // 07-18 15:40:38.540 15348-15348/? E/ZTAG: natrium
         //
 //        Log.e("ZTAG", Build.VERSION.RELEASE);
-
-        getStartMode();
+//        startRegister("asfvjurr3578");
+//        startRegister("asdfghjkl");
+//        startRegister("abcdefghijkl");
+        //getStartMode();
     }
 
     @Override

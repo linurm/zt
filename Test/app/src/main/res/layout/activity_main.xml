@@ -19,6 +19,7 @@
         android:ems="10"
         android:hint="@string/textPassword"
         android:inputType="textPassword" />
+
     <EditText
         android:id="@+id/phone"
         android:layout_width="wrap_content"
@@ -40,7 +41,7 @@
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:digits="0,1,2,3,4,5,6,7,8,9,QWERTYUIOPASDFGHJKLZXCVBNM,qwertzuiopasdfghjklyxcvbnm,_,-"
         android:hint="@string/text"
         android:inputType="textPersonName" />
 
@@ -56,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="语音听写" />
-<!--voice tts-->
+    <!--voice tts-->
     <Button
         android:id="@+id/btn_tts"
         android:layout_width="match_parent"
@@ -68,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="语法识别" />
-<!--voice understand-->
+    <!--voice understand-->
     <Button
         android:id="@+id/btn_und"
         android:layout_width="match_parent"
@@ -82,15 +83,16 @@
         android:text="Button" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/code_key"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:layout_weight="0.42" />
+        android:layout_weight="0.42"
+        android:textIsSelectable="true"
+        android:text="TextView" />
 
     <!--<SeekBar-->
-        <!--android:id="@+id/seekBar_light"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="0.31" />-->
+    <!--android:id="@+id/seekBar_light"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="0.31" />-->
 </LinearLayout>
