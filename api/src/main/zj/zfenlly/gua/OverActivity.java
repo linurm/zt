@@ -27,26 +27,42 @@ public class OverActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
 
-        String v = bundle.getString("value");
+        int v = bundle.getInt("value");
 
-        int t = 0;
-        if (v.equals("b10")) {
-            t = -(10 * 60);
-        } else if (v.equals("a10")) {
-            t = 10 * 60;
-        } else if (v.equals("a30")) {
-            t = 30 * 60 - DEC_SEC;
-        } else if (v.equals("a60")) {
-            t = (60 * 60 - DEC_SEC * 2);
-        } else if (v.equals("d60")) {
-            t = -(60 * 60 - DEC_SEC * 2);
-        } else if (v.equals("a0")) {
-            t = 0;
-            return;
-        } else {
-            return;
+
+        switch (v) {
+            case -30:
+                LoadInjectLib.decHalfHour("");
+                break;
+            case 30:
+                LoadInjectLib.addHalfHour("");
+                break;
+            case -60:
+                LoadInjectLib.decHour("");
+                break;
+            case 60:
+                LoadInjectLib.addHour("");
+                break;
+            default:
+                break;
         }
-        setTime(t);
+//        if (v.equals("b10")) {
+//            t = -(10 * 60);
+//        } else if (v.equals("a10")) {
+//            t = 10 * 60;
+//        } else if (v.equals("a30")) {
+//            t = 30 * 60 - DEC_SEC;
+//        } else if (v.equals("a60")) {
+//            t = (60 * 60 - DEC_SEC * 2);
+//        } else if (v.equals("d60")) {
+//            t = -(60 * 60 - DEC_SEC * 2);
+//        } else if (v.equals("a0")) {
+//            t = 0;
+//            return;
+//        } else {
+//            return;
+//        }
+        //setTime(t);
         //setTimeAfter10Minites(t);
 
     }

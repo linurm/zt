@@ -72,12 +72,12 @@ public class WifiStatusLoader {
         } else {
             if (isStartApp) {
                 isStartApp = false;
-                startO(0, "0");
+                startO(0, 0);
             }
         }
     }
 
-    public void startAPP(int id, String v) {
+    public void startAPP(int id, int v) {
         startO(id, v);
     }
 
@@ -92,11 +92,11 @@ public class WifiStatusLoader {
 //        OtherAPP.startActivity3(mContext, Vpn.vpnPkg, Vpn.vpnAct);
     }
 
-    public void startO(int id, String v) {
+    public void startO(int id, int v) {
         Intent intent = new Intent(mContext, OverActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("key", id);
-        bundle.putString("value", v);
+        bundle.putInt("value", v);
         intent.putExtras(bundle);
         intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);

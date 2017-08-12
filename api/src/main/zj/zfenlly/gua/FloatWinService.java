@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import zj.zfenlly.wifi.WifiAdmin;
@@ -44,9 +43,9 @@ public class FloatWinService extends Service {
     //    TargetFloatView v;
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
-    private TextView afterhalfhour;
-    private TextView after10minites;
-    private TextView before10minites;
+    private Button afterhalfhour;
+    private Button after10minites;
+    private Button before10minites;
     private Button after1hour;
     private Button before1hour;
     private Button refreshView;
@@ -105,6 +104,9 @@ public class FloatWinService extends Service {
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
+
+        LoadInjectLib.init();
+
         mWifiAdmin = new WifiAdmin(this);
         ns.init(this);
         createView(this);
@@ -122,19 +124,19 @@ public class FloatWinService extends Service {
     }
 
     void setTimeBefore10Minites() {
-        WifiStatusLoader.getInstance(mContext).startAPP(0, "b10");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, -10);
     }
 
     void setTimeAfter10Minites() {
-        WifiStatusLoader.getInstance(mContext).startAPP(0, "a10");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, 10);
     }
 
     void setTimeAfter30Minites() {
-        WifiStatusLoader.getInstance(mContext).startAPP(0, "a30");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, 30);
     }
 
     void setTimeAfter1Hour() {
-        WifiStatusLoader.getInstance(mContext).startAPP(0, "a60");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, 60);
     }
 
     void setRefresh() {
@@ -188,11 +190,17 @@ public class FloatWinService extends Service {
             }
         }.start();*/
 
-        WifiStatusLoader.getInstance(mContext).startAPP(0, "a0");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, 0);
     }
 
     void setTimeBefore1Hour() {
-        WifiStatusLoader.getInstance(mContext).startAPP(0, "d60");
+        WifiStatusLoader.getInstance(mContext).startAPP(0, -60);
+    }
+
+    boolean isViewOn() {
+        boolean isOn = false;
+        isOn = true;android.os.Build.MODEL.equals(CPU_TYPE);
+        return isOn;
     }
 
     private void createView(Context context) {
@@ -221,7 +229,7 @@ public class FloatWinService extends Service {
         mFloatLayout.setLayoutParams(mFloatLayoutLP);
         mFloatLayout.setOrientation(LinearLayout.VERTICAL);
         mContext = context;
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+        if (isViewOn()) {
             mUpFloatLayout = new LinearLayout(context);
             mUpFloatLayout.setLayoutParams(mFloatLayoutLP);
             mUpFloatLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -280,12 +288,12 @@ public class FloatWinService extends Service {
         mMidFloatLayout.removeView(start3ClickView);
         mMidFloatLayout.removeView(timeSettingView);
         mMidFloatLayout.removeView(wifiControlView);
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
-            mMidFloatLayout.removeView(before1hour);
-            mMidFloatLayout.removeView(after1hour);
+        if (isViewOn()) {
+            mUpFloatLayout.removeView(before1hour);
+            mUpFloatLayout.removeView(after1hour);
         }
         mDownFloatLayout.removeAllViews();
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+        if (isViewOn()) {
             mUpFloatLayout.removeAllViews();
             mFloatLayout.removeView(mUpFloatLayout);
         }
@@ -464,12 +472,12 @@ public class FloatWinService extends Service {
                 StartClick(3);
             }
         });
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+        if (isViewOn()) {
             after1hour = new Button(this);
-            after1hour.setText("+ hour");
+            after1hour.setText("+ h");
             after1hour.setLayoutParams(p);
             after1hour.setBackgroundResource(Rfile.button_shape);
-            after1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            after1hour.setTextColor(getResources().getColor(Rfile.green));
             after1hour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -478,10 +486,10 @@ public class FloatWinService extends Service {
                 }
             });
             before1hour = new Button(this);
-            before1hour.setText("- hour");
+            before1hour.setText("- h");
             before1hour.setLayoutParams(p);
             before1hour.setBackgroundResource(Rfile.button_shape);
-            before1hour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            before1hour.setTextColor(getResources().getColor(Rfile.green));
             before1hour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -489,11 +497,11 @@ public class FloatWinService extends Service {
                     Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
                 }
             });
-            afterhalfhour = new TextView(this);
+            afterhalfhour = new Button(this);
             afterhalfhour.setText("+ 30m");
             afterhalfhour.setLayoutParams(p);
             afterhalfhour.setBackgroundResource(Rfile.button_shape);
-            afterhalfhour.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            afterhalfhour.setTextColor(getResources().getColor(Rfile.green));
             afterhalfhour.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -502,11 +510,11 @@ public class FloatWinService extends Service {
                 }
             });
 
-            before10minites = new TextView(this);
+            before10minites = new Button(this);
             before10minites.setText("- 10m");
             before10minites.setLayoutParams(p);
             before10minites.setBackgroundResource(Rfile.button_shape);
-            before10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            before10minites.setTextColor(getResources().getColor(Rfile.green));
             before10minites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -515,11 +523,11 @@ public class FloatWinService extends Service {
                 }
             });
 
-            after10minites = new TextView(this);
+            after10minites = new Button(this);
             after10minites.setText("+ 10m");
             after10minites.setLayoutParams(p);
             after10minites.setBackgroundResource(Rfile.button_shape);
-            after10minites.setTextColor(getResources().getColor(Rfile.abs__bright_foreground_disabled_holo_light));
+            after10minites.setTextColor(getResources().getColor(Rfile.green));
             after10minites.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -531,9 +539,9 @@ public class FloatWinService extends Service {
             mUpFloatLayout.addView(after10minites);
             mUpFloatLayout.addView(afterhalfhour);
 
-            mMidFloatLayout.addView(before1hour);
+            mUpFloatLayout.addView(before1hour);
 
-            mMidFloatLayout.addView(after1hour);
+            mUpFloatLayout.addView(after1hour);
         }
         mDownFloatLayout.addView(refreshView);
         mDownFloatLayout.addView(addCoordinateView);
@@ -547,7 +555,7 @@ public class FloatWinService extends Service {
         mMidFloatLayout.addView(start7ClickView);//
         mMidFloatLayout.addView(start3ClickView);//
 
-        if (android.os.Build.MODEL.equals(CPU_TYPE)) {
+        if (isViewOn()) {
             mFloatLayout.addView(mUpFloatLayout);
         }
         mFloatLayout.addView(mDownFloatLayout);
@@ -567,7 +575,6 @@ public class FloatWinService extends Service {
             ct.start();
         }
     }
-
 
 
     private WindowManager.LayoutParams mzParams() {
