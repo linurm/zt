@@ -93,7 +93,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="zj.zfenlly.gua.SelectModeActivity"
+            android:name="zj.zfenlly.gua.activity.SelectModeActivity"
             android:label="@string/wifi_manual"
             android:launchMode="singleTask"
             android:screenOrientation="landscape">
@@ -106,7 +106,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="zj.zfenlly.gua.WifiAutoActivity"
+            android:name="zj.zfenlly.gua.activity.WifiAutoActivity"
             android:label="@string/wifi_auto"
             android:screenOrientation="landscape">
             <!--<intent-filter>-->

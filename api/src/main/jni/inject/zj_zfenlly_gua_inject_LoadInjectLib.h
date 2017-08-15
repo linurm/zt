@@ -14,7 +14,7 @@ extern "C"
 {
 #endif
 JNIEXPORT int JNICALL Java_zj_zfenlly_gua_LoadInjectLib_injectLib
-        (JNIEnv *, jobject, jstring, jstring, jstring);
+        (JNIEnv *, jobject, jstring);
 JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_addHalfHour
         (JNIEnv *, jobject, jstring);
 JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_decHalfHour

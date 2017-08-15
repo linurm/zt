@@ -38,7 +38,7 @@ import com.lidroid.xutils.view.annotation.event.OnItemClick;
 import java.util.HashMap;
 import java.util.List;
 
-import zj.zfenlly.gua.SelectModeActivity;
+import zj.zfenlly.gua.activity.SelectModeActivity;
 import zj.zfenlly.main.BaseFragment;
 import zj.zfenlly.main.MainApplication;
 import zj.zfenlly.other.Observable;

@@ -12,11 +12,26 @@ extern "C"
 {
 #endif
 
-typedef int (*test_fun)(int clock_id, timespec *tp);
+extern int miniteFlag;
 
-extern test_fun old_test;
-extern int halfHourFlag;
-int clock_gettime_hook(int clock_id, timespec *tp);
+typedef struct hook_entry {
+    const char *func_name;
+    void *fn;
+    void ** old_fn;
+} Hook_Entry;
+
+typedef struct hook_funs{
+    int len;
+    Hook_Entry **fun_entry;
+}Hook_Funs;
+
+typedef struct hook_lib{
+    const char *lib_name;
+    Hook_Funs *funs_entry;
+}Hook_Lib;
+
+extern Hook_Lib *hook_libs[2];
+
 
 
 #ifdef __cplusplus

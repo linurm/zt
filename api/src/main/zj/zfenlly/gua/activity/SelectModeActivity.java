@@ -1,4 +1,4 @@
-package zj.zfenlly.gua;
+package zj.zfenlly.gua.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,6 +33,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import zj.zfenlly.gua.ClickThread;
+import zj.zfenlly.gua.FloatWinService;
+import zj.zfenlly.gua.OtherAPP;
+import zj.zfenlly.gua.Vpn;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 

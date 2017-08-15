@@ -195,7 +195,7 @@ void getElfInfoBySegmentView(ElfInfo &info, const ElfHandle *handle) {
              dynamic->p_memsz, size, (unsigned int)info.dyn, info.dynsz);
     //======0x1cbb0 304 304 0xa3101bb0 38
     for (int i = 0; i < info.dynsz; i++, dyn++) {
-        DL_DEBUG("----  0x%x:    0x%x", (unsigned int)dyn, dyn->d_tag);
+//        DL_DEBUG("----  0x%x:    0x%x", (unsigned int)dyn, dyn->d_tag);
         switch (dyn->d_tag) {
             case DT_SYMTAB:
                 info.sym = reinterpret_cast<Elf32_Sym *>(info.elf_base + dyn->d_un.d_ptr);

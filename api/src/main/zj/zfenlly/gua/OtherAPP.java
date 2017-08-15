@@ -10,17 +10,17 @@ import android.content.Intent;
  */
 public class OtherAPP {
 
-    static void setWillStartAPP(Activity act) {
+    public static void setWillStartAPP(Activity act) {
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
         mWifiStatusLoader.setIsStartAPP();
     }
 
-    static void setWillStartVpn(Activity act) {
+    public static void setWillStartVpn(Activity act) {
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
         mWifiStatusLoader.setStartVpn(true);
     }
 
-    static void setWillStopAPP(Activity act) {
+    public static void setWillStopAPP(Activity act) {
         final WifiStatusLoader mWifiStatusLoader = WifiStatusLoader.getInstance(act.getApplicationContext());
         mWifiStatusLoader.setIsStopAPP();
     }

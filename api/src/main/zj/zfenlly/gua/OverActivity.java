@@ -29,23 +29,24 @@ public class OverActivity extends Activity {
 
         int v = bundle.getInt("value");
 
-
-        switch (v) {
-            case -30:
-                LoadInjectLib.decHalfHour("");
-                break;
-            case 30:
-                LoadInjectLib.addHalfHour("");
-                break;
-            case -60:
-                LoadInjectLib.decHour("");
-                break;
-            case 60:
-                LoadInjectLib.addHour("");
-                break;
-            default:
-                break;
-        }
+        LoadInjectLib.setTime(v);
+        SystemTime.setTime(v);
+//        switch (v) {
+//            case -30:
+//                LoadInjectLib.decHalfHour("");
+//                break;
+//            case 30:
+//                LoadInjectLib.addHalfHour("");
+//                break;
+//            case -60:
+//                LoadInjectLib.decHour("");
+//                break;
+//            case 60:
+//                LoadInjectLib.addHour("");
+//                break;
+//            default:
+//                break;
+//        }
 //        if (v.equals("b10")) {
 //            t = -(10 * 60);
 //        } else if (v.equals("a10")) {
