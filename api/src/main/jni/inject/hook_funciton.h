@@ -6,13 +6,13 @@
 #define LOADLIB_HOOK_FUNCITON_H
 
 #include <sys/time.h>
-
+#include <time.h>
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-extern int miniteFlag;
+extern volatile  int miniteFlag;
 
 typedef struct hook_entry {
     const char *func_name;
@@ -32,7 +32,7 @@ typedef struct hook_lib{
 
 extern Hook_Lib *hook_libs[2];
 
-
+time_t time_hook(time_t *timer);
 
 #ifdef __cplusplus
 }

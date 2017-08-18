@@ -4,7 +4,7 @@
 #include "hook_funciton.h"
 
 
-int miniteFlag = 0;
+volatile int miniteFlag = 0;
 
 typedef int (*clock_gettime_fun)(int clock_id, timespec *tp);
 
@@ -13,6 +13,18 @@ clock_gettime_fun old_clock_gettime = NULL;
 typedef int (*gettimeofday_fun)(struct timeval *tv, struct timezone *tz);
 
 gettimeofday_fun old_gettimeofday = NULL;
+
+typedef time_t (*time_fun)(time_t *timer);
+
+time_fun old_time = NULL;
+
+time_t time_hook(time_t *timer) {
+
+    time_t t = old_time(timer);
+    t += miniteFlag * 60;
+//    DL_DEBUG("clock_gettime_hook   %d", t);
+    return t;
+}
 
 int clock_gettime_hook(int clock_id, timespec *tp) {
     timespec t;
@@ -52,12 +64,15 @@ Hook_Entry hook_entry11 = {"clock_gettime",
 Hook_Entry hook_entry12 = {"gettimeofday",
                            (void *) gettimeofday_hook,
                            (void **) &old_gettimeofday};
-
+Hook_Entry hook_entry13 = {"time",
+                           (void *) time_hook,
+                           (void **) &old_time};
 Hook_Entry *hook_entries1[] = {&hook_entry11,
-                               &hook_entry12};
+                               &hook_entry12,
+                               &hook_entry13};
 
 Hook_Funs hook_fun1 = {
-        2,
+        3,
         hook_entries1
 };
 Hook_Lib hook_lib1 = {

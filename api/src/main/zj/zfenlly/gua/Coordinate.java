@@ -13,4 +13,8 @@ public class Coordinate {
         this.x = x;
         this.y = y;
     }
+    public Coordinate() {
+        this.x = 1360;
+        this.y = 996;
+    }
 }

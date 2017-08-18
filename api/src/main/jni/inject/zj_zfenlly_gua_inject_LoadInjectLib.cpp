@@ -63,6 +63,8 @@ AddInfo *get_module_base(pid_t pid, const char *module_name) {
 
     fp = fopen(filename, "r");
 
+//    time_hook(NULL);
+
     if (fp != NULL) {
         while (fgets(line, sizeof(line), fp)) {
             if (strstr(line, module_name)) {
@@ -258,39 +260,10 @@ static int replaceFunc(void *addr, void *replace_func, void **old_func) {
 #define R_ARM_GLOB_DAT 0x15
 #define R_ARM_JUMP_SLOT 0x16
 
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_setTime
+JNIEXPORT void JNICALL Java_zj_zfenlly_gua_LoadInjectLib_setTime
         (JNIEnv *, jobject, int time) {
-    DL_DEBUG("Java_zj_zfenlly_gua_LoadInjectLib_setTime\n");
     miniteFlag += time;
-    return NULL;
-}
 
-JNIEXPORT jstring JNICALL
-Java_zj_zfenlly_gua_LoadInjectLib_addHalfHour(JNIEnv *env, jobject obj, jstring j_str) {
-    miniteFlag += 1;
-    DL_DEBUG("Java_zj_zfenlly_gua_LoadInjectLib_addHalfHour\n");
-    return NULL;
-}
-
-JNIEXPORT jstring JNICALL
-Java_zj_zfenlly_gua_LoadInjectLib_decHalfHour(JNIEnv *env, jobject obj, jstring j_str) {
-    miniteFlag -= 1;
-    DL_DEBUG("Java_zj_zfenlly_gua_LoadInjectLib_decHalfHour\n");
-    return NULL;
-}
-
-JNIEXPORT jstring JNICALL
-Java_zj_zfenlly_gua_LoadInjectLib_addHour(JNIEnv *env, jobject obj, jstring j_str) {
-    miniteFlag += 2;
-    DL_DEBUG("Java_zj_zfenlly_gua_LoadInjectLib_addHour\n");
-    return NULL;
-}
-
-JNIEXPORT jstring JNICALL
-Java_zj_zfenlly_gua_LoadInjectLib_decHour(JNIEnv *env, jobject obj, jstring j_str) {
-    miniteFlag -= 2;
-    DL_DEBUG("Java_zj_zfenlly_gua_LoadInjectLib_decHour\n");
-    return NULL;
 }
 
 JNIEXPORT int JNICALL

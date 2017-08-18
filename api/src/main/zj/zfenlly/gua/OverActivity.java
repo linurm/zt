@@ -25,12 +25,7 @@ public class OverActivity extends Activity {
 
         setContentView(Rfile.over_main);
 
-        Bundle bundle = getIntent().getExtras();
 
-        int v = bundle.getInt("value");
-
-        LoadInjectLib.setTime(v);
-        SystemTime.setTime(v);
 //        switch (v) {
 //            case -30:
 //                LoadInjectLib.decHalfHour("");
@@ -71,9 +66,18 @@ public class OverActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        int v = 0;
         //if (id != 0)
-        OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
-        finish();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            v = bundle.getInt("value");
+            if (v != 0) {
+                ;
+            }
+        }
+
+        OtherAPP.startActivity4(this, getStartAppPkg(), getStartAppAct(), v);
+
     }
 
     String getStartAppPkg() {

@@ -15,15 +15,8 @@ extern "C"
 #endif
 JNIEXPORT int JNICALL Java_zj_zfenlly_gua_LoadInjectLib_injectLib
         (JNIEnv *, jobject, jstring);
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_addHalfHour
-        (JNIEnv *, jobject, jstring);
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_decHalfHour
-        (JNIEnv *, jobject, jstring);
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_addHour
-        (JNIEnv *, jobject, jstring);
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_decHour
-        (JNIEnv *, jobject, jstring);
-JNIEXPORT jstring JNICALL Java_zj_zfenlly_gua_LoadInjectLib_setTime
+
+JNIEXPORT void JNICALL Java_zj_zfenlly_gua_LoadInjectLib_setTime
         (JNIEnv *, jobject, int);
 
 #define printWordHex(addr) \

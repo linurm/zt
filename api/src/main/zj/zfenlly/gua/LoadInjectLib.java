@@ -21,13 +21,6 @@ public final class LoadInjectLib {
 
     public static native int injectLib(String pkgName);
 
-    public static native String addHalfHour(String name);
 
-    public static native String decHalfHour(String name);
-
-    public static native String addHour(String name);
-
-    public static native String decHour(String name);
-
-    public static native String setTime(int minite);
+    public static native void setTime(int minite);
 }

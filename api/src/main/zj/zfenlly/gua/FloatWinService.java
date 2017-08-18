@@ -199,7 +199,8 @@ public class FloatWinService extends Service {
 
     boolean isViewOn() {
         boolean isOn = false;
-        isOn = true;android.os.Build.MODEL.equals(CPU_TYPE);
+        isOn = true;
+        android.os.Build.MODEL.equals(CPU_TYPE);
         return isOn;
     }
 
@@ -300,6 +301,18 @@ public class FloatWinService extends Service {
         mFloatLayout.removeView(mDownFloatLayout);
     }
 
+    private void delView() {
+        if (isOnExpandView) {
+            delExpandView();
+            if (settings_flag)
+                delSettingsView();
+            if (add_flag) {
+                Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
+                delCView();
+            }
+        }
+    }
+
     private void addExpandView() {
         isOnExpandView = true;
         Log.e(TAG, "addExpandView");
@@ -339,13 +352,7 @@ public class FloatWinService extends Service {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
 
-                delExpandView();
-                if (settings_flag)
-                    delSettingsView();
-                if (add_flag) {
-                    Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
-                    delCView();
-                }
+                delView();
             }
         });
 
@@ -376,13 +383,7 @@ public class FloatWinService extends Service {
                 if (isOnExpandView == false) {
                     addExpandView();
                 } else {
-                    delExpandView();
-                    if (settings_flag)
-                        delSettingsView();
-                    if (add_flag) {
-                        Toast.makeText(FloatWinService.this, "[ - ]", Toast.LENGTH_SHORT).show();
-                        delCView();
-                    }
+                    delView();
                 }
                 Toast.makeText(FloatWinService.this, "refresh", Toast.LENGTH_SHORT).show();
             }
@@ -482,6 +483,7 @@ public class FloatWinService extends Service {
                 @Override
                 public void onClick(View view) {
                     setTimeAfter1Hour();
+                    delView();
                     Toast.makeText(FloatWinService.this, "+1 hour", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -494,6 +496,7 @@ public class FloatWinService extends Service {
                 @Override
                 public void onClick(View view) {
                     setTimeBefore1Hour();
+                    delView();
                     Toast.makeText(FloatWinService.this, "-1 hour", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -506,6 +509,7 @@ public class FloatWinService extends Service {
                 @Override
                 public void onClick(View view) {
                     setTimeAfter30Minites();
+                    delView();
                     Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -519,6 +523,7 @@ public class FloatWinService extends Service {
                 @Override
                 public void onClick(View view) {
                     setTimeBefore10Minites();
+                    delView();
                     Toast.makeText(FloatWinService.this, "-10m", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -532,6 +537,7 @@ public class FloatWinService extends Service {
                 @Override
                 public void onClick(View view) {
                     setTimeAfter10Minites();
+                    delView();
                     Toast.makeText(FloatWinService.this, "+10m", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -562,12 +568,16 @@ public class FloatWinService extends Service {
     }
 
     private void StartClick(int t) {
-
         if (ct != null && ct.isStart) {
             ct.stopThread();
             ct = null;
         } else {
-            Coordinate cd = new Coordinate(mTargetFloatView.x, mTargetFloatView.y);
+            Coordinate cd = null;
+            if (mTargetFloatView != null) {
+                cd = new Coordinate(mTargetFloatView.x, mTargetFloatView.y);
+            } else {
+                cd = new Coordinate();
+            }
             ct = new ClickThread(mContext, mHandler, cd, TimeSetting.getTimes(mContext), TimeSetting.getInterval(mContext) * 100);
             if (t != 0) {
                 ct.setTempTimes(t);
