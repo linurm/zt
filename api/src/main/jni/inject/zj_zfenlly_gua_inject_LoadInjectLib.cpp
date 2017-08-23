@@ -283,21 +283,21 @@ Java_zj_zfenlly_gua_LoadInjectLib_injectLib(JNIEnv *env, jobject obj, jstring j_
     target_pid = find_pid_of(c_pkg_name);
 
 
-    size_t length = (sizeof(hook_libs) / sizeof(hook_libs[0]));
+    size_t length = hook_libs.len;
 
     DL_DEBUG("find  \"%d\" %d  entry %d  lib %d", target_pid, length, sizeof(Hook_Entry),
              sizeof(Hook_Lib));
     for (int j = 0; j < length; j++) {
-        len = hook_libs[j]->funs_entry->len;
+        len = hook_libs.lib_entry[j]->funs_entry->len;
         for (i = 0; i < len; i++) {
-            DL_DEBUG("find============  \"%s\"   %s %p %p", hook_libs[j]->lib_name,
-                     hook_libs[j]->funs_entry->fun_entry[i]->func_name,
-                     hook_libs[j]->funs_entry->fun_entry[i]->fn,
-                     hook_libs[j]->funs_entry->fun_entry[i]->old_fn);
-            res = injectLibFunc(target_pid, hook_libs[j]->lib_name,
-                                hook_libs[j]->funs_entry->fun_entry[i]->func_name,
-                                hook_libs[j]->funs_entry->fun_entry[i]->fn,
-                                hook_libs[j]->funs_entry->fun_entry[i]->old_fn);
+            DL_DEBUG("hook     \"%s\"   %s %p %p", hook_libs.lib_entry[j]->lib_name,
+                     hook_libs.lib_entry[j]->funs_entry->fun_entry[i]->func_name,
+                     hook_libs.lib_entry[j]->funs_entry->fun_entry[i]->fn,
+                     hook_libs.lib_entry[j]->funs_entry->fun_entry[i]->old_fn);
+            res = injectLibFunc(target_pid, hook_libs.lib_entry[j]->lib_name,
+                                hook_libs.lib_entry[j]->funs_entry->fun_entry[i]->func_name,
+                                hook_libs.lib_entry[j]->funs_entry->fun_entry[i]->fn,
+                                hook_libs.lib_entry[j]->funs_entry->fun_entry[i]->old_fn);
             if (res != 0) {
                 break;
             }

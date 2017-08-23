@@ -95,7 +95,7 @@
         <activity
             android:name="zj.zfenlly.gua.activity.SelectModeActivity"
             android:label="@string/wifi_manual"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="zj.zfenlly.gua.vpn" />

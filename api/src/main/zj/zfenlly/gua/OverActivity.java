@@ -75,9 +75,7 @@ public class OverActivity extends Activity {
                 ;
             }
         }
-
         OtherAPP.startActivity4(this, getStartAppPkg(), getStartAppAct(), v);
-
     }
 
     String getStartAppPkg() {

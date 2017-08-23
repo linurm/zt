@@ -1,11 +1,13 @@
 package com.apportable.activity;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +32,7 @@ public class VerdeActivity extends Activity {
     public static int a;
     static NotifySound ns = new NotifySound();
     private static Vibrator vibrator;
-    public int startMode = 0;
+
     Context mContext = null;
 
     public static void doVibrate() {
@@ -352,28 +354,9 @@ public class VerdeActivity extends Activity {
         return buf.toString();
     }
 
-    public void getStartMode() {
-        Intent intent = getIntent();
-        String a = intent.getAction();
-        if (a.equals(Intent.ACTION_VIEW)) {
-            //start vpn
-//            Log.e("ZTAG", "onResume:" + intent.toString());
-            startMode = 1;
-        } else if (a.equals(Intent.ACTION_MAIN)) {
-//            Log.e("ZTAG", "onResume1:" + intent.toString());
-            startMode = 2;
-        }
-    }
 
-    public void startGuaApp() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String packageName = "zj.zfenlly.tools";
-        String className = "zj.zfenlly.gua.SelectModeActivity";
-        intent.setClassName(packageName, className);
-        Log.e("ZTAG", "" + startMode);
-        if (startMode == 1)
-            startActivity(intent);
-    }
+
+
 
     public void doSeek(int i) {
         adjustBackgroundLight(i);

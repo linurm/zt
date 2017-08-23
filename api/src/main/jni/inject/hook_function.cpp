@@ -67,12 +67,12 @@ Hook_Entry hook_entry12 = {"gettimeofday",
 Hook_Entry hook_entry13 = {"time",
                            (void *) time_hook,
                            (void **) &old_time};
-Hook_Entry *hook_entries1[] = {&hook_entry11,
+Hook_Entry *hook_entries1[] = {/*&hook_entry11,*/
                                &hook_entry12,
                                &hook_entry13};
 
 Hook_Funs hook_fun1 = {
-        3,
+        2,//
         hook_entries1
 };
 Hook_Lib hook_lib1 = {
@@ -97,7 +97,12 @@ Hook_Lib hook_lib2 = {"libs3eOpenAl.so",
 };
 
 //////////////////////////////////////////
-Hook_Lib *hook_libs[2] = {
+Hook_Lib *hook_entries[] = {
         &hook_lib1,
         &hook_lib2
+};
+
+Hook_Libs hook_libs={
+        2,
+        hook_entries
 };

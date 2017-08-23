@@ -36,7 +36,6 @@ import java.util.List;
 import zj.zfenlly.gua.ClickThread;
 import zj.zfenlly.gua.FloatWinService;
 import zj.zfenlly.gua.OtherAPP;
-import zj.zfenlly.gua.Vpn;
 import zj.zfenlly.tools.R;
 import zj.zfenlly.wifi.WifiAdmin;
 
@@ -49,7 +48,7 @@ import static zj.zfenlly.gua.SystemInfo.CPU_TYPE;
 public class SelectModeActivity extends Activity {
     private static final int FLAG_START_ACTIVITY = 0x2;
     private static final int FLAG_EXIT = 0x1;
-    private final String TAG = "SelectModeActivity";
+    private final String TAG = "ZTAG";
     @ViewInject(R.id.floatwin)
     public CheckBox floatWin;
     @ViewInject(R.id.mTV)
@@ -97,13 +96,14 @@ public class SelectModeActivity extends Activity {
 //                Settings.Global.AIRPLANE_MODE_ON, 0);
 //        return (isAirplaneMode == 1) ? true : false;
 //    }
-    private boolean startVpn = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onTheCreate(savedInstanceState);
         //TestClick();
+        Log.e(TAG, "ZTAAG onCreate: " + this);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class SelectModeActivity extends Activity {
         setContentView(R.layout.nettest);
         mWifiAdmin = new WifiAdmin(this);
         ViewUtils.inject(this);
-        Log.e(TAG, "onCreate wifi activity");
+        updateView();
         //finish();
     }
 
@@ -136,7 +136,7 @@ public class SelectModeActivity extends Activity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-        Log.e("xTAG", "onstart:" + intent.toString());
+        Log.e(TAG, "onStart:" + intent.toString());
         if (mVpnStart == true) {
             if (!intent.getAction().equals(Intent.ACTION_VIEW)) {
                 //start vpn
@@ -154,8 +154,8 @@ public class SelectModeActivity extends Activity {
                 Log.e(TAG, "onstart manual mode");
             }
         }
-        updateView();
-        Log.e(TAG, "onStart wifi activity");
+
+        Log.e(TAG, "onStart");
     }
 
     private void updateView() {
@@ -239,13 +239,10 @@ public class SelectModeActivity extends Activity {
     }
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
 //        OtherAPP.setActivity(this);
-
-
         try {
             if (getStartAppPkg() == null) {
                 return;
@@ -261,21 +258,20 @@ public class SelectModeActivity extends Activity {
 
         if (mAutoStart) {
             if (mVpnStart) {
-                if (startVpn) {
-                    openWifiAndStartAPP();
-                    Log.e(TAG, "openWifiAndStartAPP");
-                    startVpn = false;
+                if (getIntent().getAction().toString().equals(Intent.ACTION_VIEW)) {
+                    if (Vpn.startVpn) {
+                        openWifiAndStartAPP();
+                    } else {
+                        openWifiAndStartVpn();
+                    }
                 } else {
                     openWifiAndStartVpn();
-                    Log.e(TAG, "openWifiAndStartVpn");
-                    startVpn = true;
                 }
             } else {
                 openWifiAndStartAPP();
-                Log.e(TAG, "openWifiAndStartAPP");
             }
         }
-        Log.e(TAG, "onResume");
+        Log.e(TAG, "onResume: " + getIntent().getAction().toString());
     }
 
     public void openWifiAndStartAPP() {
@@ -284,6 +280,8 @@ public class SelectModeActivity extends Activity {
         } else {
             OtherAPP.startActivity3(this, getStartAppPkg(), getStartAppAct());
         }
+        Vpn.startVpn = false;
+        Log.e(TAG, "openWifiAndStartAPP");
     }
 
     public void openWifiAndStartVpn() {
@@ -292,6 +290,8 @@ public class SelectModeActivity extends Activity {
         } else {
             OtherAPP.startActivity3(this, Vpn.vpnPkg, Vpn.vpnAct);
         }
+        Vpn.startVpn = true;
+        Log.e(TAG, "openWifiAndStartVpn");
     }
 
     @Override
@@ -303,14 +303,14 @@ public class SelectModeActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e(TAG, "onStop wifi activity");
+        Log.e(TAG, "onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         OtherAPP.setWillStopAPP(this);
-        Log.e(TAG, "onDestroy wifi activity");
+        Log.e(TAG, "ZTAAG onDestroy: " + this);
     }
 
     private void toggleMobileData(Context context, boolean enabled) {
@@ -605,7 +605,5 @@ public class SelectModeActivity extends Activity {
         stopService(intent);
     }
 
-    public void TestClick() {
-        new ClickThread(this, 612, 747).start();
-    }
+
 }

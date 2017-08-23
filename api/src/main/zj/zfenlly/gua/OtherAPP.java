@@ -40,9 +40,9 @@ public class OtherAPP {
 
     public static void startActivity4(final Activity mContext, final String pkg, final String act, final int v) {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
                 if (v != 0) {
                     LoadInjectLib.setTime(v);
                     SystemTime.setTime(v);
@@ -51,8 +51,8 @@ public class OtherAPP {
                 intent.setClassName(pkg, act);
                 mContext.startActivity(intent);
                 mContext.finish();
-            }
-        }, 3000);
+//            }
+//        }, 3000);
     }
 
 }

@@ -30,7 +30,12 @@ typedef struct hook_lib{
     Hook_Funs *funs_entry;
 }Hook_Lib;
 
-extern Hook_Lib *hook_libs[2];
+typedef struct hook_libs{
+    int len;
+    Hook_Lib **lib_entry;
+}Hook_Libs;
+
+extern Hook_Libs hook_libs;
 
 time_t time_hook(time_t *timer);
 

@@ -44,6 +44,7 @@ public class FloatWinService extends Service {
     private FloatView floatView = null;
     private WifiAdmin mWifiAdmin = null;
     private Button afterhalfhour;
+    private Button beforehalfhour;
     private Button after10minites;
     private Button before10minites;
     private Button after1hour;
@@ -133,6 +134,10 @@ public class FloatWinService extends Service {
 
     void setTimeAfter30Minites() {
         WifiStatusLoader.getInstance(mContext).startAPP(0, 30);
+    }
+
+    void setTimeBefore30Minites() {
+        WifiStatusLoader.getInstance(mContext).startAPP(0, -30);
     }
 
     void setTimeAfter1Hour() {
@@ -513,6 +518,20 @@ public class FloatWinService extends Service {
                     Toast.makeText(FloatWinService.this, "+30m", Toast.LENGTH_SHORT).show();
                 }
             });
+            beforehalfhour = new Button(this);
+            beforehalfhour.setText("- 30m");
+            beforehalfhour.setLayoutParams(p);
+            beforehalfhour.setBackgroundResource(Rfile.button_shape);
+            beforehalfhour.setTextColor(getResources().getColor(Rfile.green));
+            beforehalfhour.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setTimeBefore30Minites();
+                    delView();
+                    Toast.makeText(FloatWinService.this, "-30m", Toast.LENGTH_SHORT).show();
+                }
+            });
+
 
             before10minites = new Button(this);
             before10minites.setText("- 10m");
@@ -544,6 +563,7 @@ public class FloatWinService extends Service {
             mUpFloatLayout.addView(before10minites);
             mUpFloatLayout.addView(after10minites);
             mUpFloatLayout.addView(afterhalfhour);
+            mUpFloatLayout.addView(beforehalfhour);
 
             mUpFloatLayout.addView(before1hour);
 
