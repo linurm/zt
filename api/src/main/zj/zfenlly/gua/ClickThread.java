@@ -95,10 +95,15 @@ public class ClickThread extends Thread {
                 }
                 MotionEvent me2 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, x_zb, y_zb, 0);
                 mInst.sendPointerSync(me2);
-                Log.e("instrument", "send pointersync " + x_zb + ":" + y_zb);
+                Log.e("ZTAG", "send pointersync " + x_zb + ":" + y_zb);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+//            int vv = 1;
+//            LoadInjectLib.addOneMinite(vv);
+//            SystemTime.addOneMinite(vv);
+
             synchronized (this) {
                 try {
                     wait(interval); //1秒

@@ -8,6 +8,7 @@ buildscript {
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
     }
 }
+
 //apply plugin: 'com.android.model.application'
 apply plugin: 'android'
 apply plugin: 'org.greenrobot.greendao' // apply plugin
@@ -19,6 +20,15 @@ android {
             storeFile file('F:/apk/android.jks')
             storePassword '123456'
         }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+        options.addStringOption('charSet', 'UTF-8')
     }
     compileSdkVersion 26
     buildToolsVersion '26.0.1'

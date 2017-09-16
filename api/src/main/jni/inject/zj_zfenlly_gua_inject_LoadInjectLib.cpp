@@ -63,8 +63,6 @@ AddInfo *get_module_base(pid_t pid, const char *module_name) {
 
     fp = fopen(filename, "r");
 
-//    time_hook(NULL);
-
     if (fp != NULL) {
         while (fgets(line, sizeof(line), fp)) {
             if (strstr(line, module_name)) {
@@ -263,7 +261,6 @@ static int replaceFunc(void *addr, void *replace_func, void **old_func) {
 JNIEXPORT void JNICALL Java_zj_zfenlly_gua_LoadInjectLib_setTime
         (JNIEnv *, jobject, int time) {
     miniteFlag += time;
-
 }
 
 JNIEXPORT int JNICALL

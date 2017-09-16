@@ -297,12 +297,10 @@ public class MainApplication extends Application implements Observable {
 
     public void sendUDP() {
         new Thread(new Client()).start();
-
     }
 
     public void sendMulticast(String ip) {
 
-        // Log.i(TAG, "AllowMulticast");
         AllowMulticast();
         String finds = "FIND:" + ip + ";" + port;
         byte[] sendData = finds.getBytes();

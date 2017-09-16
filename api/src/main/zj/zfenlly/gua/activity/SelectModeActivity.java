@@ -585,7 +585,6 @@ public class SelectModeActivity extends Activity {
     private void startFloatWin() {
         Intent intent = new Intent(this, FloatWinService.class);
         startService(intent);
-
     }
 
     private void startFloatWinAndSet() {

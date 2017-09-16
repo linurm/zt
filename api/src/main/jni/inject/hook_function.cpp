@@ -6,6 +6,8 @@
 
 volatile int miniteFlag = 0;
 
+
+
 typedef int (*clock_gettime_fun)(int clock_id, timespec *tp);
 
 clock_gettime_fun old_clock_gettime = NULL;
@@ -29,13 +31,10 @@ time_t time_hook(time_t *timer) {
 int clock_gettime_hook(int clock_id, timespec *tp) {
     timespec t;
     int flag;
-//    static int n = 0;
-//    static time_t m;
-
 
     flag = old_clock_gettime(clock_id, &t);
     tp->tv_nsec = t.tv_nsec;
-    tp->tv_sec = t.tv_sec + (miniteFlag * 60/* - 5*/);
+    tp->tv_sec = t.tv_sec + (miniteFlag * 60);
 //    if (m != tp->tv_sec) {
 //        m = tp->tv_sec;
 //        if (n++ > 3) {
@@ -68,8 +67,8 @@ Hook_Entry hook_entry13 = {"time",
                            (void *) time_hook,
                            (void **) &old_time};
 Hook_Entry *hook_entries1[] = {/*&hook_entry11,*/
-                               &hook_entry12,
-                               &hook_entry13};
+        &hook_entry12,
+        &hook_entry13};
 
 Hook_Funs hook_fun1 = {
         2,//
@@ -102,7 +101,7 @@ Hook_Lib *hook_entries[] = {
         &hook_lib2
 };
 
-Hook_Libs hook_libs={
+Hook_Libs hook_libs = {
         2,
         hook_entries
 };

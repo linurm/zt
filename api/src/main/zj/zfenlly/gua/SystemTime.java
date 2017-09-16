@@ -9,10 +9,16 @@ import android.os.SystemClock;
 public class SystemTime {
 
     public static int minites = 0;
+//    public static int oneMinite = 0;
 
-    public static void setTime(int v){
+    public static void setTime(int v) {
         minites += v;
     }
+
+//    public static void addOneMinite(int v) {
+//        oneMinite += v;
+//    }
+
 
     public static long elapsedRealtime() {
         return SystemClock.elapsedRealtime() + minites * 60 * 1000;

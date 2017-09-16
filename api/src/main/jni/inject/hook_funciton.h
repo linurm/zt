@@ -13,7 +13,6 @@ extern "C"
 #endif
 
 extern volatile  int miniteFlag;
-
 typedef struct hook_entry {
     const char *func_name;
     void *fn;

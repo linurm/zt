@@ -85,7 +85,6 @@ public class OverActivity extends Activity {
     }
 
     public String getLunchActivity() {
-
         PackageManager pm = getPackageManager();
         Intent it = pm.getLaunchIntentForPackage(getPackageName());
         String className = it.getComponent().getClassName();

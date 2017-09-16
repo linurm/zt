@@ -133,10 +133,7 @@ public class MonitorService extends Service {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-
             }
         }
     }
-
-
 }
