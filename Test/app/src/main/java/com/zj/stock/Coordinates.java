@@ -250,7 +250,7 @@ public class Coordinates extends View {
     }
 
     public void addVolume(StockData kl, int n, float maxvolume) {
-        float x_left, x_right, y1, y2;
+        float x_left, x_right, y1, r_y1;
 
         if (kl == null)
             return;
@@ -260,8 +260,9 @@ public class Coordinates extends View {
         y1 = kl.volume;
 //        if (DEBUG)
 //            Log.e(TAG, "======================= " + DensityUtil.dip2px(getContext(), getHeight()) + " " + getHeight());
-        y2 = hParam - hParam * y1 / maxvolume;
-        RectF re = new RectF(x_left, y2, x_right, hParam);
+        //
+        r_y1 = hParam - hParam * y1 / maxvolume;
+        RectF re = new RectF(x_left, r_y1, x_right, hParam);
         if (kl.open > kl.close) {
             addRectF(re, mGreenPaint);
         } else if (kl.open < kl.close) {
@@ -325,7 +326,7 @@ public class Coordinates extends View {
             PointF[] points2 = new PointF[2];
             points2[0] = new PointF(x_left, y_open);
             points2[1] = new PointF(x_right, y_open);
-            addLine(points, mRedPaint);
+            addLine(points2, mRedPaint);
         }
     }
 
@@ -368,16 +369,16 @@ public class Coordinates extends View {
     }
 
     public void addMACD(MACDData kl1, MACDData kl2, int n) {
-        float x1, x2, x3, x4, y1, y2, y3, y4, y5, y6;
+        float middle, nextmiddle, left, right, y1, y2, y3, y4, y5, y6;
 
         if (kl1 == null || kl2 == null)
             return;
 
-        x1 = (float) (mOnem * (2 * n - 1));// middle
-        x2 = (x1 + mOnem * 2);// middle next
+        middle = (float) (mOnem * (2 * n - 1));// middle
+        nextmiddle = (middle + mOnem * 2);// middle next
 
-        x3 = (x2 - mOnev);// left
-        x4 = (x3 + 2 * mOnev);// right
+        left = (nextmiddle - mOnev);// left
+        right = (left + 2 * mOnev);// right
 
         // mParam = (float) (180 / (mHParam - mLParam));
 
@@ -389,12 +390,12 @@ public class Coordinates extends View {
         y6 = hParam / 2 - 5 * hParam / 6 * (kl2.bar);// close
 
         PointF[] pointsdif = new PointF[2];
-        pointsdif[0] = new PointF(x1, y1);
-        pointsdif[1] = new PointF(x2, y2);
+        pointsdif[0] = new PointF(middle, y1);
+        pointsdif[1] = new PointF(nextmiddle, y2);
 
         PointF[] pointsdea = new PointF[2];
-        pointsdea[0] = new PointF(x1, y3);
-        pointsdea[1] = new PointF(x2, y4);
+        pointsdea[0] = new PointF(middle, y3);
+        pointsdea[1] = new PointF(nextmiddle, y4);
 
         // PointF[] pointsj = new PointF[2];
         // pointsj[0] = new PointF(x1, y5);
@@ -403,17 +404,17 @@ public class Coordinates extends View {
         // Log.e(TAG, "add kdj: " + x1 + " : " + y1 + "     " + x2 + " : "
         // + y2);
         if (DEBUG)
-            Log.e(TAG, "add macd:  " + x1 + " : " + y1 + "     " + x2 + " : "
+            Log.e(TAG, "add macd:  " + middle + " : " + y1 + "     " + nextmiddle + " : "
                     + y2 + " bar: " + y6);
         addLine(pointsdif, mGreenPaint);
         addLine(pointsdea, mYellowPaint);
 
         RectF re;
         if (y6 > hParam / 2) {
-            re = new RectF(x3, hParam / 2, x4, y6);
+            re = new RectF(left, hParam / 2, right, y6);
             addRectF(re, mGreenPaint);
         } else {
-            re = new RectF(x3, y6, x4, hParam / 2);
+            re = new RectF(left, y6, right, hParam / 2);
             addRectF(re, mRedPaint);
         }
 

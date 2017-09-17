@@ -12,7 +12,7 @@
     <com.zj.stock.Coordinates
         android:id="@+id/kline"
         android:layout_width="400dp"
-        android:layout_height="120dp" />
+        android:layout_height="150dp" />
 
     <com.zj.stock.Coordinates
         android:id="@+id/volume"
