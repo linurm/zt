@@ -245,6 +245,8 @@ public class MainStock extends Activity implements Observer {
             KDJData kdj = null;
             KDJData pre_kdj = null;
             MACDData macd = null, pre_macd = null;
+//            float macd_l = 100; float macd_h = 0;
+
 
 
             // int k_len;
@@ -281,6 +283,12 @@ public class MainStock extends Activity implements Observer {
                 if (DEBUG)
                     Log.e(TAG, (macd_len - 1) + " macd_len: " + " :" + len + " :"
                             + macd.dea + " :" + macd.dif + " :" + macd.bar);
+//                macd_h = (macd_h > macd.dea ? macd_h : macd.dea);
+//                macd_h = (macd_h > macd.dif ? macd_h : macd.dif);
+//                macd_h = (macd_h > macd.bar ? macd_h : macd.bar);
+//                macd_l = (macd_l < macd.dea ? macd_l : macd.dea);
+//                macd_l = (macd_l < macd.dif ? macd_l : macd.dif);
+//                macd_l = (macd_l < macd.bar ? macd_l : macd.bar);
                 mDMACD.addMACD(pre_macd, macd, len - 1);
             }
             if (kdj_len > 0) {
@@ -290,7 +298,7 @@ public class MainStock extends Activity implements Observer {
                 // mKDJs.removeLast();
                 if (kdj_len == 1) {// left
                     // Log.e(TAG, "qqq: kkk");
-                    pre_kdj = new KDJData(50, 50, 50, 50);
+                    pre_kdj = new KDJData();
                 } else {
                     pre_kdj = (KDJData) mKDJs.get(kdj_len - 2);// 2
                 }
@@ -326,7 +334,7 @@ public class MainStock extends Activity implements Observer {
                     kdj = pre_kdj;
                     if (kdj_len == 2) {// left
                         // Log.e(TAG, "qqq: kkk");
-                        pre_kdj = new KDJData(50, 50, 50, 50);
+                        pre_kdj = new KDJData();
                     } else {
                         pre_kdj = (KDJData) mKDJs.get(kdj_len - 3);// 1
                     }
@@ -368,7 +376,7 @@ public class MainStock extends Activity implements Observer {
                         kdj = pre_kdj;
                         // mKDJs.removeLast();
                         if ((i == 0) && (kdj_len == len)) {// left
-                            pre_kdj = new KDJData(50, 50, 50, 50);
+                            pre_kdj = new KDJData();
                         } else {
                             pre_kdj = (KDJData) mKDJs.get(j - 1);// 0
                         }

@@ -376,7 +376,7 @@ public class Coordinates extends View {
             return;
         if (DEBUG) {
             Log.e(TAG, "addMACD:" + n + " macd :" + kl2.toString());
-            Log.e(TAG, "addMACD " + n + " pmacd:" + kl1.toString());
+//            Log.e(TAG, "addMACD " + (n - 1) + " pmacd:" + kl1.toString());
         }
         middle = (float) (mOnem * (2 * n - 1));// middle
         nextmiddle = (middle + mOnem * 2);// middle next
@@ -385,9 +385,9 @@ public class Coordinates extends View {
         right = (left + 2 * mOnev);// right
 
         if ((mLParam < 0) && (mHParam < -mLParam)) {
-            mParam = (float) (hParam / -mLParam)/2;
+            mParam = (float) (hParam / -mLParam) / 2;
         } else {
-            mParam = (float) (hParam / mHParam)/2;
+            mParam = (float) (hParam / mHParam) / 2;
         }
 
         y1 = hParam / 2 - mParam * kl1.dif;// close

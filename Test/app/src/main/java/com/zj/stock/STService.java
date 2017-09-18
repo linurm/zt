@@ -67,6 +67,12 @@ public class STService extends Service implements Observer {
             List<StockData> sd = null;
             float k, kp, rsv, pre_k = 50, d, j, pre_d = 50;
             float ema12, ema26, dif = 0, dea = 0, bar = 0, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
+            MACDData pre_macd = null;
+            MACDData now_macd = null;
+            KDJData now_kdj = null;
+            KDJData pre_kdj = null;
+            float macd_h = 0;
+            float macd_l = 100;
             int total_num = 0;
             do {
                 try {
@@ -84,18 +90,21 @@ public class STService extends Service implements Observer {
                     // kp = 50;// (2 / 3) * 50 + (1 / 3) * rsv;
                     mSTApplication.clearKDJ();
                     mSTApplication.clearMACD();
-                    Log.e(TAG, "clear total_num: " + total_num);
+                    Log.e(TAG, "addMACD clear total_num: " + total_num);
+
+
                     // from last to first
                     for (int i = total_num - 1; i >= 0; i--) {
                         mSTApplication.clearFinds();
                         float maxvolume = 0;
-                        float macd_h = 0;
-                        float macd_l = 100;
+
                         float lowValue = 1000, highValue = 0;
+                        macd_h = 0;
+                        macd_l = 100;
 
                         int l = 0;
                         // get from i + DIS_NUM - 1 to i
-                        Log.e(TAG, "addMACD total_num: " + i + "/" + total_num);
+                        Log.e(TAG, "addMACD clear: " + i + "/" + total_num);
                         for (l = i + DIS_NUM - 1; l >= i; l--) {
                             Log.e(TAG, "addMACD l:" + l + " /" + i);
                             if (l >= total_num) {//skip{
@@ -104,82 +113,48 @@ public class STService extends Service implements Observer {
                             }
                             Log.e(TAG, "addMACD l:" + l);
                             StockData s = sd.get(l);
+                            if (l == total_num - 1) {
+                                pre_macd = new MACDData(s.close, s.close, 0, 0, 0);
+                                pre_kdj = new KDJData();
+                            }
+
                             if (kdj_n >= l - i) {
                                 kdj_h = (s.high > kdj_h) ? s.high : kdj_h;
-                                kdj_l = (s.low < kdj_l) ? s.low
-                                        : kdj_l <= 0 ? s.low : kdj_l;
+                                kdj_l = (s.low < kdj_l) ? s.low : kdj_l;
                             }
 //                            Log.e(TAG, "new +" + kdj_h + ":" + kdj_l + " kdj_n:" + kdj_n + " l:" + l + " i:" + i);
+                            now_macd = new MACDData(s, pre_macd);
+                            pre_macd = now_macd;
+                            macd_h = (macd_h > now_macd.getMaxValue() ? macd_h : now_macd.getMaxValue());
+                            macd_l = (macd_l < now_macd.getMinValue() ? macd_l : now_macd.getMinValue());
+
+                            // kdj
+                            now_kdj = new KDJData(s, pre_kdj, kdj_h, kdj_l);
+                            pre_kdj = now_kdj;
+
+
                             if (l == i) {
-                                // macd
-                                if (l == total_num - 1) {
-                                    pre_ema12 = s.close;
-                                    pre_ema26 = s.close;
-                                    // Log.e(TAG,"*************************");
-                                }
-                                ema12 = (11 * pre_ema12 + 2 * s.close) / 13;
-                                ema26 = (25 * pre_ema26 + 2 * s.close) / 27;
-                                dif = ema12 - ema26;
-                                if (l == total_num - 1) {
-                                    pre_dea = dif;
-                                }
-                                dea = (4 * pre_dea + 1 * dif) / 5;
-                                bar = 2 * (dif - dea);
-                                pre_ema12 = ema12;
-                                pre_ema26 = ema26;
-                                pre_dea = dea;
-                                //
-                                // kp = pre_k;
-                                // kdj
-                                if (kdj_h != kdj_l) {
-                                    rsv = (float) ((s.close - kdj_l) / (float) (kdj_h - kdj_l)) * 100;
+                                if (i > total_num - 1 - kdj_n) {
+                                    pre_kdj = new KDJData();
+                                    mSTApplication.addKDJ(pre_kdj);
                                 } else {
-                                    rsv = pre_k;
+                                    mSTApplication.addKDJ(now_kdj);
                                 }
-//                                if (l == total_num - 1) {
-//                                    pre_k = 50;
-//                                    pre_d = 50;
-//                                }
-                                k = (float) (2 * pre_k + rsv) / 3;
-                                d = (float) (2 * pre_d + k) / 3;
-                                j = (float) (3 * k - 2 * d);
-                                pre_k = k;
-                                pre_d = d;
-                                //
-                                if (DEBUG)
-                                    Log.e(TAG, "addMACD new dif: " + dif + " dea: " + dea
-                                            + " bar: " + bar);
-                                if (DEBUG)
-                                    ;//Log.e(TAG, "new  k: " + k + " d: " + d + " j: " + j);
-                                macd_h = (macd_h > dif) ? macd_h : dif;
-                                macd_h = (macd_h > dea) ? macd_h : dea;
-                                macd_h = (macd_h > bar) ? macd_h : bar;
-                                macd_l = (macd_l < dif) ? macd_l : dif;
-                                macd_l = (macd_l < dea) ? macd_l : dea;
-                                macd_l = (macd_l < bar) ? macd_l : bar;
-                                KDJData mk = new KDJData(k, d, j, rsv);
-                                MACDData mM = new MACDData(ema12, ema26, dif,
-                                        dea, bar);
+                                // macd
+                                mSTApplication.addMACD(now_macd);
 
                                 if (l + DIS_NUM < total_num - 1) {// -1 for
                                     // first
                                     mSTApplication.removeFirstKDJ();
                                     mSTApplication.removeFirstMACD();
-                                    // Log.e(TAG, "remove first: " + j);
                                 }
-                                mSTApplication.addKDJ(mk);
-                                mSTApplication.addMACD(mM);
-                                // Log.d(TAG, "add kdj: " + mk.k + " : " +
-                                // mk.rsv
-                                // + " " + j);
-                            }
 
+                            }
                             maxvolume = (s.volume > maxvolume) ? s.volume
                                     : maxvolume;
                             highValue = (s.high > highValue) ? s.high
                                     : highValue;
                             lowValue = (s.low < lowValue) ? s.low : lowValue;
-
 
                             mSTApplication.addFind(s);
                         }
@@ -188,7 +163,7 @@ public class STService extends Service implements Observer {
                         mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
                         mSTApplication.SetValue(maxvolume, highValue, lowValue);
                         mSTApplication.setMACDMaxMin(macd_h, macd_l);
-                        // mSTApplication.SetKDJValue(kdj_h, kdj_l);
+                        mSTApplication.SetKDJValue(kdj_h, kdj_l);
                         mSTApplication.display();
 
                         if (UserState == EnumState.BUY) {
@@ -212,7 +187,7 @@ public class STService extends Service implements Observer {
                         }
                         int e = 0;
                         while ((e++ < 20) && (isRunning)) {
-                            Thread.sleep(10);
+                            Thread.sleep(10);//50
                         }
 //                        Log.e("TAG", "SS" + android.os.Process.myTid());
                         while (!mSTApplication.IsDisplayDone() || isPause) {
