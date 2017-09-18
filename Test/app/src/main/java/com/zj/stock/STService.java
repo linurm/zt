@@ -66,7 +66,7 @@ public class STService extends Service implements Observer {
 
             List<StockData> sd = null;
             float k, kp, rsv, pre_k = 50, d, j, pre_d = 50;
-            float ema12, ema26, dif, dea, bar, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
+            float ema12, ema26, dif = 0, dea = 0, bar = 0, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
             int total_num = 0;
             do {
                 try {
@@ -84,27 +84,32 @@ public class STService extends Service implements Observer {
                     // kp = 50;// (2 / 3) * 50 + (1 / 3) * rsv;
                     mSTApplication.clearKDJ();
                     mSTApplication.clearMACD();
-                    Log.e(TAG, "clear: ");
+                    Log.e(TAG, "clear total_num: " + total_num);
                     // from last to first
                     for (int i = total_num - 1; i >= 0; i--) {
                         mSTApplication.clearFinds();
                         float maxvolume = 0;
+                        float macd_h = 0;
+                        float macd_l = 100;
                         float lowValue = 1000, highValue = 0;
 
                         int l = 0;
                         // get from i + DIS_NUM - 1 to i
+                        Log.e(TAG, "addMACD total_num: " + i + "/" + total_num);
                         for (l = i + DIS_NUM - 1; l >= i; l--) {
+                            Log.e(TAG, "addMACD l:" + l + " /" + i);
                             if (l >= total_num) {//skip{
                                 l = total_num;
                                 continue;
                             }
+                            Log.e(TAG, "addMACD l:" + l);
                             StockData s = sd.get(l);
                             if (kdj_n >= l - i) {
                                 kdj_h = (s.high > kdj_h) ? s.high : kdj_h;
                                 kdj_l = (s.low < kdj_l) ? s.low
                                         : kdj_l <= 0 ? s.low : kdj_l;
                             }
-
+//                            Log.e(TAG, "new +" + kdj_h + ":" + kdj_l + " kdj_n:" + kdj_n + " l:" + l + " i:" + i);
                             if (l == i) {
                                 // macd
                                 if (l == total_num - 1) {
@@ -126,11 +131,15 @@ public class STService extends Service implements Observer {
                                 //
                                 // kp = pre_k;
                                 // kdj
-                                rsv = (float) ((s.close - kdj_l) / (float) (kdj_h - kdj_l)) * 100;
-                                if (l == total_num - 1) {
-                                    pre_k = 50;
-                                    pre_d = 50;
+                                if (kdj_h != kdj_l) {
+                                    rsv = (float) ((s.close - kdj_l) / (float) (kdj_h - kdj_l)) * 100;
+                                } else {
+                                    rsv = pre_k;
                                 }
+//                                if (l == total_num - 1) {
+//                                    pre_k = 50;
+//                                    pre_d = 50;
+//                                }
                                 k = (float) (2 * pre_k + rsv) / 3;
                                 d = (float) (2 * pre_d + k) / 3;
                                 j = (float) (3 * k - 2 * d);
@@ -138,11 +147,16 @@ public class STService extends Service implements Observer {
                                 pre_d = d;
                                 //
                                 if (DEBUG)
-                                    Log.d(TAG, " dif: " + dif + " dea: " + dea
+                                    Log.e(TAG, "addMACD new dif: " + dif + " dea: " + dea
                                             + " bar: " + bar);
-                                // if (DEBUG)
-                                Log.d(TAG, " k: " + k + " d: " + d + " j: " + j);
-
+                                if (DEBUG)
+                                    ;//Log.e(TAG, "new  k: " + k + " d: " + d + " j: " + j);
+                                macd_h = (macd_h > dif) ? macd_h : dif;
+                                macd_h = (macd_h > dea) ? macd_h : dea;
+                                macd_h = (macd_h > bar) ? macd_h : bar;
+                                macd_l = (macd_l < dif) ? macd_l : dif;
+                                macd_l = (macd_l < dea) ? macd_l : dea;
+                                macd_l = (macd_l < bar) ? macd_l : bar;
                                 KDJData mk = new KDJData(k, d, j, rsv);
                                 MACDData mM = new MACDData(ema12, ema26, dif,
                                         dea, bar);
@@ -165,12 +179,15 @@ public class STService extends Service implements Observer {
                             highValue = (s.high > highValue) ? s.high
                                     : highValue;
                             lowValue = (s.low < lowValue) ? s.low : lowValue;
+
+
                             mSTApplication.addFind(s);
                         }
-
+                        Log.e(TAG, "addMACD H L: " + macd_h + " :" + macd_l);
                         recent_sd = sd.get(l + 1);//get
                         mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
                         mSTApplication.SetValue(maxvolume, highValue, lowValue);
+                        mSTApplication.setMACDMaxMin(macd_h, macd_l);
                         // mSTApplication.SetKDJValue(kdj_h, kdj_l);
                         mSTApplication.display();
 
@@ -194,8 +211,8 @@ public class STService extends Service implements Observer {
                             break;
                         }
                         int e = 0;
-                        while ((e++ < 20)&&(isRunning)) {
-                            Thread.sleep(50);
+                        while ((e++ < 20) && (isRunning)) {
+                            Thread.sleep(10);
                         }
 //                        Log.e("TAG", "SS" + android.os.Process.myTid());
                         while (!mSTApplication.IsDisplayDone() || isPause) {

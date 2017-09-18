@@ -40,15 +40,6 @@ public class STApplication extends Application implements Observable {
     public ISTServiceAIDLInterface mService = null;
     public int port = 9111;
     Activity mActivity = null;
-
-    public Service getWinService() {
-        return mWinService;
-    }
-
-    public void setWinService(Service mWinService) {
-        this.mWinService = mWinService;
-    }
-
     Service mWinService = null;
     private List<Observer> mObservers = new ArrayList<Observer>();
     private boolean isConn = false;
@@ -59,6 +50,8 @@ public class STApplication extends Application implements Observable {
     private LinkedList mMACDlist = new LinkedList();
     private boolean display_done = true;
     private float maxVolume = 0;
+    private float maxMacd = 0;
+    private float minMacd = 0;
     private float highValue = 0, lowValue = 0;
     private float KDJhigh = 0, KDJlow = 0;
     private int DisNum = 0;
@@ -88,6 +81,14 @@ public class STApplication extends Application implements Observable {
     };
     private String mCodeText;
 
+    public Service getWinService() {
+        return mWinService;
+    }
+
+    public void setWinService(Service mWinService) {
+        this.mWinService = mWinService;
+    }
+
     public Activity getActivity() {
         return mActivity;
     }
@@ -95,7 +96,6 @@ public class STApplication extends Application implements Observable {
     public void setActivity(Activity activity) {
         mActivity = activity;
     }
-
 
 
     public synchronized boolean IsDisplayDone() {
@@ -116,6 +116,12 @@ public class STApplication extends Application implements Observable {
         this.maxVolume = maxVulome;
         this.highValue = highValue;
         this.lowValue = lowValue;
+
+    }
+
+    public synchronized void setMACDMaxMin(float macd_h, float macd_l) {
+        this.maxMacd = macd_h;
+        this.minMacd = macd_l;
     }
 
     public synchronized void SetKDJValue(float highValue, float lowValue) {
@@ -133,6 +139,14 @@ public class STApplication extends Application implements Observable {
 
     public synchronized float GetMaxVolume() {
         return this.maxVolume;
+    }
+
+    public synchronized float GetMaxMacd() {
+        return this.maxMacd;
+    }
+
+    public synchronized float GetMinMacd() {
+        return this.minMacd;
     }
 
     public synchronized float GetHighValue() {

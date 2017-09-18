@@ -223,8 +223,8 @@ public class Coordinates extends View {
         mHParam = (float) h;
         mLParam = (float) l;
         if (h == l) {
-            mLParam = mLParam * (float)0.9;
-            mHParam = mHParam * (float)1.1;
+            mLParam = mLParam * (float) 0.9;
+            mHParam = mHParam * (float) 1.1;
         }
         Log.e(TAG, "SET P" + h + ":" + l);
         // mParam = (float) (280) / (mHParam - mLParam);
@@ -331,13 +331,13 @@ public class Coordinates extends View {
     }
 
     public void addKDJ(KDJData kl1, KDJData kl2, int n) {
-        float x1, x2, y1, y2, y3, y4, y5, y6;
+        float middle, middle_next, y1, y2, y3, y4, y5, y6;
 
         if (kl1 == null || kl2 == null)
             return;
 
-        x1 = (float) (mOnem * (2 * n - 1));// middle
-        x2 = (float) (mOnem * (2 * n + 1));// middle next
+        middle = (float) (mOnem * (2 * n - 1));// middle
+        middle_next = (float) (mOnem * (2 * n + 1));// middle next
 
         mParam = (hParam / (mHParam - mLParam));
 
@@ -349,18 +349,18 @@ public class Coordinates extends View {
         y6 = hParam - (kl2.j * mParam);// close
 
         PointF[] pointsk = new PointF[2];
-        pointsk[0] = new PointF(x1, y1);
-        pointsk[1] = new PointF(x2, y2);
+        pointsk[0] = new PointF(middle, y1);
+        pointsk[1] = new PointF(middle_next, y2);
 
         PointF[] pointsd = new PointF[2];
-        pointsd[0] = new PointF(x1, y3);
-        pointsd[1] = new PointF(x2, y4);
+        pointsd[0] = new PointF(middle, y3);
+        pointsd[1] = new PointF(middle_next, y4);
 
         PointF[] pointsj = new PointF[2];
-        pointsj[0] = new PointF(x1, y5);
-        pointsj[1] = new PointF(x2, y6);
+        pointsj[0] = new PointF(middle, y5);
+        pointsj[1] = new PointF(middle_next, y6);
         if (DEBUG)
-            Log.e(TAG, "add kdj: " + x1 + " : " + y1 + "     " + x2 + " : "
+            Log.e(TAG, "add kdj: " + middle + " : " + y1 + "     " + middle_next + " : "
                     + y2);
 
         addLine(pointsk, mGreenPaint);
@@ -368,26 +368,34 @@ public class Coordinates extends View {
         addLine(pointsj, mPurplePaint);
     }
 
+
     public void addMACD(MACDData kl1, MACDData kl2, int n) {
         float middle, nextmiddle, left, right, y1, y2, y3, y4, y5, y6;
 
         if (kl1 == null || kl2 == null)
             return;
-
+        if (DEBUG) {
+            Log.e(TAG, "addMACD:" + n + " macd :" + kl2.toString());
+            Log.e(TAG, "addMACD " + n + " pmacd:" + kl1.toString());
+        }
         middle = (float) (mOnem * (2 * n - 1));// middle
         nextmiddle = (middle + mOnem * 2);// middle next
 
         left = (nextmiddle - mOnev);// left
         right = (left + 2 * mOnev);// right
 
-        // mParam = (float) (180 / (mHParam - mLParam));
+        if ((mLParam < 0) && (mHParam < -mLParam)) {
+            mParam = (float) (hParam / -mLParam)/2;
+        } else {
+            mParam = (float) (hParam / mHParam)/2;
+        }
 
-        y1 = hParam / 2 - 5 * hParam / 6 * kl1.dif;// close
-        y2 = hParam / 2 - 5 * hParam / 6 * (kl2.dif);// close
-        y3 = hParam / 2 - 5 * hParam / 6 * (kl1.dea);// close
-        y4 = hParam / 2 - 5 * hParam / 6 * (kl2.dea);// close
+        y1 = hParam / 2 - mParam * kl1.dif;// close
+        y2 = hParam / 2 - mParam * (kl2.dif);// close
+        y3 = hParam / 2 - mParam * (kl1.dea);// close
+        y4 = hParam / 2 - mParam * (kl2.dea);// close
         // y5 = 90 - (kl1.j * mParam);// close
-        y6 = hParam / 2 - 5 * hParam / 6 * (kl2.bar);// close
+        y6 = hParam / 2 - mParam * (kl2.bar);// close
 
         PointF[] pointsdif = new PointF[2];
         pointsdif[0] = new PointF(middle, y1);
