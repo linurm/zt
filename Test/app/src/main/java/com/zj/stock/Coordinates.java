@@ -332,7 +332,9 @@ public class Coordinates extends View {
 
     public void addKDJ(KDJData kl1, KDJData kl2, int n) {
         float middle, middle_next, y1, y2, y3, y4, y5, y6;
-
+        if (DEBUG) {
+            Log.e(TAG, "addKDJ:" + n + " kdj :" + kl2.toString());
+        }
         if (kl1 == null || kl2 == null)
             return;
 
@@ -411,9 +413,10 @@ public class Coordinates extends View {
         // if (DEBUG)
         // Log.e(TAG, "add kdj: " + x1 + " : " + y1 + "     " + x2 + " : "
         // + y2);
-        if (DEBUG)
+        if (DEBUG) {
             Log.e(TAG, "add macd:  " + middle + " : " + y1 + "     " + nextmiddle + " : "
                     + y2 + " bar: " + y6);
+        }
         addLine(pointsdif, mGreenPaint);
         addLine(pointsdea, mYellowPaint);
 

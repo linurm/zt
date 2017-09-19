@@ -24,7 +24,7 @@ public class STService extends Service implements Observer {
     private Thread mGetDataThread = null;
     private EnumState UserState = EnumState.IDLE;
     private UserData mUD;
-    private float kdj_h, kdj_l;
+    private float kdj_h = 0, kdj_l = 100;
     private MyServiceBinder mBinder = new MyServiceBinder();
     private Stock2Client mClient = null;
     // private Thread mGetDataThread = new Thread() {
@@ -90,7 +90,7 @@ public class STService extends Service implements Observer {
                     // kp = 50;// (2 / 3) * 50 + (1 / 3) * rsv;
                     mSTApplication.clearKDJ();
                     mSTApplication.clearMACD();
-                    Log.e(TAG, "addMACD clear total_num: " + total_num);
+                    Log.e(TAG, "clear total_num: " + total_num);
 
 
                     // from last to first
@@ -101,28 +101,30 @@ public class STService extends Service implements Observer {
                         float lowValue = 1000, highValue = 0;
                         macd_h = 0;
                         macd_l = 100;
-
+                        kdj_h = 0;
+                        kdj_l = 100;
                         int l = 0;
                         // get from i + DIS_NUM - 1 to i
-                        Log.e(TAG, "addMACD clear: " + i + "/" + total_num);
+                        Log.e(TAG, "clear: " + i + "/" + total_num);
                         for (l = i + DIS_NUM - 1; l >= i; l--) {
-                            Log.e(TAG, "addMACD l:" + l + " /" + i);
+                            Log.e(TAG, "l:" + l + " /" + i);
                             if (l >= total_num) {//skip{
                                 l = total_num;
                                 continue;
                             }
-                            Log.e(TAG, "addMACD l:" + l);
+                            Log.e(TAG, "l:" + l);
                             StockData s = sd.get(l);
                             if (l == total_num - 1) {
                                 pre_macd = new MACDData(s.close, s.close, 0, 0, 0);
                                 pre_kdj = new KDJData();
                             }
 
-                            if (kdj_n >= l - i) {
+                            if (kdj_n > l - i) {
                                 kdj_h = (s.high > kdj_h) ? s.high : kdj_h;
                                 kdj_l = (s.low < kdj_l) ? s.low : kdj_l;
                             }
-//                            Log.e(TAG, "new +" + kdj_h + ":" + kdj_l + " kdj_n:" + kdj_n + " l:" + l + " i:" + i);
+                            Log.e(TAG, "addKDJ new + : " + kdj_h + " " + kdj_l + " l:" + l + " i:" + i);
+                            Log.e(TAG, "addKDJ  : " + pre_kdj.toString());
                             now_macd = new MACDData(s, pre_macd);
                             pre_macd = now_macd;
                             macd_h = (macd_h > now_macd.getMaxValue() ? macd_h : now_macd.getMaxValue());
@@ -130,16 +132,19 @@ public class STService extends Service implements Observer {
 
                             // kdj
                             now_kdj = new KDJData(s, pre_kdj, kdj_h, kdj_l);
-                            pre_kdj = now_kdj;
 
+                            if (l > total_num - 1 - kdj_n) {
+                                pre_kdj = new KDJData();
+                            }else{
+                                pre_kdj = now_kdj;
+                            }
 
                             if (l == i) {
-                                if (i > total_num - 1 - kdj_n) {
-                                    pre_kdj = new KDJData();
+//                                if (i > total_num - 1 - kdj_n) {
                                     mSTApplication.addKDJ(pre_kdj);
-                                } else {
-                                    mSTApplication.addKDJ(now_kdj);
-                                }
+//                                } else {
+//                                    mSTApplication.addKDJ(now_kdj);
+//                                }
                                 // macd
                                 mSTApplication.addMACD(now_macd);
 
@@ -158,7 +163,8 @@ public class STService extends Service implements Observer {
 
                             mSTApplication.addFind(s);
                         }
-                        Log.e(TAG, "addMACD H L: " + macd_h + " :" + macd_l);
+                        if (DEBUG)
+                            Log.e(TAG, "addMACD H L: " + macd_h + " :" + macd_l);
                         recent_sd = sd.get(l + 1);//get
                         mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
                         mSTApplication.SetValue(maxvolume, highValue, lowValue);

@@ -21,7 +21,7 @@ public class MainStock extends Activity implements Observer {
     private static final int HANDLE_UPDATE_TEXTVIEW = 0;
     private static final int HANDLE_UPDATE_GAINS = 1;
     private static final int HANDLE_UPDATE_USERDATA = 2;
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     // private Context mContext = this;
     // private DownloadYahooData dlyd = null;
     // private PaintTheKLine ptk = null;
@@ -247,8 +247,6 @@ public class MainStock extends Activity implements Observer {
             MACDData macd = null, pre_macd = null;
 //            float macd_l = 100; float macd_h = 0;
 
-
-
             // int k_len;
             int len = list.size();
             sd1 = list.get(len - 1);// right one
@@ -264,7 +262,6 @@ public class MainStock extends Activity implements Observer {
 
             mDKline.setPValue(mSTApplication.GetHighValue(),
                     mSTApplication.GetLowValue());
-
             mDKline.addKline(sd1, len - 1);//add right kline
 
             pre_sd = sd1;
@@ -293,7 +290,7 @@ public class MainStock extends Activity implements Observer {
             }
             if (kdj_len > 0) {
                 // mKDJs.getLast();
-                mDKDJ.setPValue(110, -10);
+                mDKDJ.setPValue(110, 1);
                 kdj = (KDJData) mKDJs.get(kdj_len - 1);// 2
                 // mKDJs.removeLast();
                 if (kdj_len == 1) {// left

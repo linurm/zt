@@ -32,7 +32,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -111,6 +113,11 @@ public final class Stock2Client {
         String iCurStart = "19980101";
         String iCurEnd = "20170526";
         String strUrl = new String();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        Date curDate = new Date(System.currentTimeMillis());
+        iCurEnd = formatter.format(curDate).toString();
+        Log.e(TAG, "yyyyMMdd: " + iCurEnd);
         if (istock >= 600000) {
             strUrl = String.format("http://quotes.money.163.com/service/chddata.html?code=0%06d&start=%s&end=%s&fields=TCLOSE;HIGH;LOW;TOPEN;LCLOSE;VOTURNOVER;VATURNOVER", istock, iCurStart, iCurEnd);
         } else {
