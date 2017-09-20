@@ -342,13 +342,14 @@ public class Coordinates extends View {
         middle_next = (float) (mOnem * (2 * n + 1));// middle next
 
         mParam = (hParam / (mHParam - mLParam));
+        float hor = (0 - mLParam) / (mHParam - mLParam);
 
-        y1 = hParam - (kl1.k * mParam);// close
-        y2 = hParam - (kl2.k * mParam);// close
-        y3 = hParam - (kl1.d * mParam);// close
-        y4 = hParam - (kl2.d * mParam);// close
-        y5 = hParam - (kl1.j * mParam);// close
-        y6 = hParam - (kl2.j * mParam);// close
+        y1 = hParam * (1 - hor) - (kl1.k * mParam);// close
+        y2 = hParam * (1 - hor) - (kl2.k * mParam);// close
+        y3 = hParam * (1 - hor) - (kl1.d * mParam);// close
+        y4 = hParam * (1 - hor) - (kl2.d * mParam);// close
+        y5 = hParam * (1 - hor) - (kl1.j * mParam);// close
+        y6 = hParam * (1 - hor) - (kl2.j * mParam);// close
 
         PointF[] pointsk = new PointF[2];
         pointsk[0] = new PointF(middle, y1);
@@ -385,6 +386,8 @@ public class Coordinates extends View {
 
         left = (nextmiddle - mOnev);// left
         right = (left + 2 * mOnev);// right
+
+//        float hor = (0 - mLParam) / (mHParam - mLParam);
 
         if ((mLParam < 0) && (mHParam < -mLParam)) {
             mParam = (float) (hParam / -mLParam) / 2;

@@ -25,6 +25,7 @@ public class STService extends Service implements Observer {
     private EnumState UserState = EnumState.IDLE;
     private UserData mUD;
     private float kdj_h = 0, kdj_l = 100;
+    private float kdj_9h = 0, kdj_9l = 100;
     private MyServiceBinder mBinder = new MyServiceBinder();
     private Stock2Client mClient = null;
     // private Thread mGetDataThread = new Thread() {
@@ -101,8 +102,10 @@ public class STService extends Service implements Observer {
                         float lowValue = 1000, highValue = 0;
                         macd_h = 0;
                         macd_l = 100;
-                        kdj_h = 0;
-                        kdj_l = 100;
+                        kdj_9h = 0;
+                        kdj_9l = 100;
+                        kdj_h = 100;
+                        kdj_l = 0;
                         int l = 0;
                         // get from i + DIS_NUM - 1 to i
                         Log.e(TAG, "clear: " + i + "/" + total_num);
@@ -120,28 +123,29 @@ public class STService extends Service implements Observer {
                             }
 
                             if (kdj_n > l - i) {
-                                kdj_h = (s.high > kdj_h) ? s.high : kdj_h;
-                                kdj_l = (s.low < kdj_l) ? s.low : kdj_l;
+                                kdj_9h = (s.high > kdj_9h) ? s.high : kdj_9h;
+                                kdj_9l = (s.low < kdj_9l) ? s.low : kdj_9l;
                             }
-                            Log.e(TAG, "addKDJ new + : " + kdj_h + " " + kdj_l + " l:" + l + " i:" + i);
-                            Log.e(TAG, "addKDJ  : " + pre_kdj.toString());
+                            Log.e(TAG, "addKDJ new + : " + kdj_9h + " " + kdj_9l + " l:" + l + " i:" + i);
+
                             now_macd = new MACDData(s, pre_macd);
                             pre_macd = now_macd;
-                            macd_h = (macd_h > now_macd.getMaxValue() ? macd_h : now_macd.getMaxValue());
-                            macd_l = (macd_l < now_macd.getMinValue() ? macd_l : now_macd.getMinValue());
+                            macd_h = (macd_h > now_macd.maxV ? macd_h : now_macd.maxV);
+                            macd_l = (macd_l < now_macd.minV ? macd_l : now_macd.minV);
 
+                            Log.e(TAG, "aMACD  " + l + ": " + now_macd.toString());
                             // kdj
-                            now_kdj = new KDJData(s, pre_kdj, kdj_h, kdj_l);
+//                            now_kdj =
 
                             if (l > total_num - 1 - kdj_n) {
                                 pre_kdj = new KDJData();
-                            }else{
-                                pre_kdj = now_kdj;
+                            } else {
+                                pre_kdj = new KDJData(s, pre_kdj, kdj_9h, kdj_9l);
                             }
-
+                            Log.e(TAG, "aKDJ  " + l + ": " + pre_kdj.toString());
                             if (l == i) {
 //                                if (i > total_num - 1 - kdj_n) {
-                                    mSTApplication.addKDJ(pre_kdj);
+                                mSTApplication.addKDJ(pre_kdj);
 //                                } else {
 //                                    mSTApplication.addKDJ(now_kdj);
 //                                }
@@ -161,10 +165,19 @@ public class STService extends Service implements Observer {
                                     : highValue;
                             lowValue = (s.low < lowValue) ? s.low : lowValue;
 
+                            //
+                            kdj_h = (s.high > kdj_h) ? s.high : kdj_h;
+                            kdj_l = (s.low < kdj_l) ? s.low : kdj_l;
+                            kdj_h = (kdj_h > pre_kdj.j) ? kdj_h : pre_kdj.j;
+                            kdj_l = (kdj_l < pre_kdj.j) ? kdj_l : pre_kdj.j;
                             mSTApplication.addFind(s);
                         }
-                        if (DEBUG)
-                            Log.e(TAG, "addMACD H L: " + macd_h + " :" + macd_l);
+                        kdj_h += 10;
+                        kdj_l -= 10;
+                        if (DEBUG) {
+                            Log.e(TAG, "aMACD H L: " + macd_h + " :" + macd_l);
+                            Log.e(TAG, "aKDJ H L: " + kdj_h + " :" + kdj_l);
+                        }
                         recent_sd = sd.get(l + 1);//get
                         mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
                         mSTApplication.SetValue(maxvolume, highValue, lowValue);

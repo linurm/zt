@@ -290,7 +290,8 @@ public class MainStock extends Activity implements Observer {
             }
             if (kdj_len > 0) {
                 // mKDJs.getLast();
-                mDKDJ.setPValue(110, 1);
+//                mDKDJ.setPValue(mSTApplication.GetKDJH(), mSTApplication.GetKDJL());
+                mDKDJ.setPValue(110,-10);
                 kdj = (KDJData) mKDJs.get(kdj_len - 1);// 2
                 // mKDJs.removeLast();
                 if (kdj_len == 1) {// left

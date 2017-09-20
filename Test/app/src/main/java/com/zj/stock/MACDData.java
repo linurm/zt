@@ -6,6 +6,8 @@ public class MACDData {
     public float dif;
     public float dea;
     public float bar;
+    public float maxV;
+    public float minV;
 
     public MACDData(float e12, float e26, float df, float de, float br) {
         ema12 = e12;
@@ -13,6 +15,15 @@ public class MACDData {
         dif = df;
         dea = de;
         bar = br;
+        getMaxMin();
+    }
+
+    public void getMaxMin() {
+        maxV = dif > dea ? dif : dea;
+        maxV = maxV > bar ? maxV : bar;
+
+        minV = dif < dea ? dif : dea;
+        minV = minV < bar ? minV : bar;
     }
 
     public MACDData(StockData m, MACDData p_macd) {
@@ -28,18 +39,7 @@ public class MACDData {
 //        p_macd.ema12 = ema12;
 //        p_macd.ema26 = ema26;
 //        p_macd.dea = dea;
-    }
-
-    public float getMaxValue() {
-        float maxV = dif > dea ? dif : dea;
-        maxV = maxV > bar ? maxV : bar;
-        return maxV;
-    }
-
-    public float getMinValue() {
-        float minV = dif < dea ? dif : dea;
-        minV = minV < bar ? minV : bar;
-        return minV;
+        getMaxMin();
     }
 
 
