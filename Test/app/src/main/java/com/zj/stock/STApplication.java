@@ -47,7 +47,8 @@ public class STApplication extends Application implements Observable {
     // private ComponentName mAPService;
     private LinkedList mKDJlist = new LinkedList();
     // private List<KDJData> mKDJData = new ArrayList<KDJData>();
-    private LinkedList mMACDlist = new LinkedList();
+    private List<MACDData> mMACDlist = new ArrayList<MACDData>();
+
     private boolean display_done = true;
     private float maxVolume = 0;
     private float maxMacd = 0;
@@ -180,7 +181,7 @@ public class STApplication extends Application implements Observable {
     }
 
     @SuppressWarnings("rawtypes")
-    public synchronized LinkedList getMACDLinkedList() {
+    public synchronized List<MACDData> getMACDList() {
         return mMACDlist;
     }
 
@@ -189,21 +190,21 @@ public class STApplication extends Application implements Observable {
         mMACDlist.add(find);
     }
 
-    public synchronized void removeFirstMACD() {
-        mMACDlist.removeFirst();
-        // m
-    }
+//    public synchronized void removeFirstMACD() {
+//        mMACDlist.removeFirst();
+//        // m
+//    }
 
-    public synchronized KDJData getLastMACD() {
-        if (mMACDlist.size() == 1) {
-            return (KDJData) mMACDlist.getFirst();
-        } else if (mMACDlist.size() != 0) {
-            return (KDJData) mMACDlist.getLast();
-        } else {
-            return null;
-        }
-        // m
-    }
+//    public synchronized KDJData getLastMACD() {
+//        if (mMACDlist.size() == 1) {
+//            return (KDJData) mMACDlist.getFirst();
+//        } else if (mMACDlist.size() != 0) {
+//            return (KDJData) mMACDlist.getLast();
+//        } else {
+//            return null;
+//        }
+//        // m
+//    }
 
     public synchronized void clearKDJ() {
         mKDJlist.clear();

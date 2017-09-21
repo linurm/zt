@@ -16,7 +16,7 @@ import java.util.List;
 public class Coordinates extends View {
     public final int mOnew = 18;// w
     private final String TAG = "Coordinates";
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private final int V_PAD = 20;
     private final int mOnem = mOnew / 2;// middle
     private final int mOnepad = 1;// kong
@@ -378,7 +378,7 @@ public class Coordinates extends View {
         if (kl1 == null || kl2 == null)
             return;
         if (DEBUG) {
-            Log.e(TAG, "addMACD:" + n + " macd :" + kl2.toString());
+            Log.e(TAG, "aMACD: " + n + " macd :" + kl2.toString());
 //            Log.e(TAG, "addMACD " + (n - 1) + " pmacd:" + kl1.toString());
         }
         middle = (float) (mOnem * (2 * n - 1));// middle
@@ -394,13 +394,17 @@ public class Coordinates extends View {
         } else {
             mParam = (float) (hParam / mHParam) / 2;
         }
-
-        y1 = hParam / 2 - mParam * kl1.dif;// close
-        y2 = hParam / 2 - mParam * (kl2.dif);// close
-        y3 = hParam / 2 - mParam * (kl1.dea);// close
-        y4 = hParam / 2 - mParam * (kl2.dea);// close
+//        if (DEBUG) {
+//            Log.e(TAG, "aMACD: " + n + " : " + mParam + "/" + hParam);
+//            Log.e(TAG, "aMACD " + n + " mHParam:" + mHParam + " mLParam:" + mLParam);
+//        }
+        float h = hParam / 2;
+        y1 = h - mParam * kl1.dif;// close
+        y2 = h - mParam * (kl2.dif);// close
+        y3 = h - mParam * (kl1.dea);// close
+        y4 = h - mParam * (kl2.dea);// close
         // y5 = 90 - (kl1.j * mParam);// close
-        y6 = hParam / 2 - mParam * (kl2.bar);// close
+        y6 = h - mParam * (kl2.bar);// close
 
         PointF[] pointsdif = new PointF[2];
         pointsdif[0] = new PointF(middle, y1);
@@ -413,13 +417,11 @@ public class Coordinates extends View {
         // PointF[] pointsj = new PointF[2];
         // pointsj[0] = new PointF(x1, y5);
         // pointsj[1] = new PointF(x2, y6);
-        // if (DEBUG)
-        // Log.e(TAG, "add kdj: " + x1 + " : " + y1 + "     " + x2 + " : "
-        // + y2);
-        if (DEBUG) {
-            Log.e(TAG, "add macd:  " + middle + " : " + y1 + "     " + nextmiddle + " : "
-                    + y2 + " bar: " + y6);
-        }
+//        if (DEBUG) {
+//            Log.e(TAG, "aMACD: y" + n + " dif: " + y2 + " dea: " + y4 + " bar: " + y6);
+////            Log.e(TAG, "add macd:  " + middle + " : " + y1 + "     " + nextmiddle + " : "
+////                    + y2 + " bar: " + y6);
+//        }
         addLine(pointsdif, mGreenPaint);
         addLine(pointsdea, mYellowPaint);
 

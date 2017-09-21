@@ -69,6 +69,7 @@ public class STService extends Service implements Observer {
             float k, kp, rsv, pre_k = 50, d, j, pre_d = 50;
             float ema12, ema26, dif = 0, dea = 0, bar = 0, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
             MACDData pre_macd = null;
+            MACDData first_macd = null;
             MACDData now_macd = null;
             KDJData now_kdj = null;
             KDJData pre_kdj = null;
@@ -107,19 +108,25 @@ public class STService extends Service implements Observer {
                         kdj_h = 100;
                         kdj_l = 0;
                         int l = 0;
+                        int first = 0;
                         // get from i + DIS_NUM - 1 to i
-                        Log.e(TAG, "clear: " + i + "/" + total_num);
-                        for (l = i + DIS_NUM - 1; l >= i; l--) {
+                        Log.e(TAG, "cMACD  ++++++++++++++: " + i + "/" + total_num);
+//                        mSTApplication.clearMACD();
+                        for (l = i + DIS_NUM - 1, first = 0; l >= i; l--, first++) {
                             Log.e(TAG, "l:" + l + " /" + i);
                             if (l >= total_num) {//skip{
                                 l = total_num;
                                 continue;
                             }
-                            Log.e(TAG, "l:" + l);
+//                            Log.e(TAG, "bMACD l:" + l);
                             StockData s = sd.get(l);
                             if (l == total_num - 1) {
-                                pre_macd = new MACDData(s.close, s.close, 0, 0, 0);
+                                pre_macd = new MACDData(s.close, s.close, 0, 0, 0, 0);
                                 pre_kdj = new KDJData();
+                            } else {
+                                if (first == 0) {
+                                    pre_macd = first_macd;
+                                }
                             }
 
                             if (kdj_n > l - i) {
@@ -128,12 +135,15 @@ public class STService extends Service implements Observer {
                             }
                             Log.e(TAG, "addKDJ new + : " + kdj_9h + " " + kdj_9l + " l:" + l + " i:" + i);
 
-                            now_macd = new MACDData(s, pre_macd);
+                            now_macd = new MACDData(s, pre_macd, l);
+                            if (first == 0) {
+                                first_macd = now_macd;
+                            }
                             pre_macd = now_macd;
                             macd_h = (macd_h > now_macd.maxV ? macd_h : now_macd.maxV);
                             macd_l = (macd_l < now_macd.minV ? macd_l : now_macd.minV);
 
-                            Log.e(TAG, "aMACD  " + l + ": " + now_macd.toString());
+                            Log.e(TAG, "bMACD  new " + l + ": " + now_macd.toString());
                             // kdj
 //                            now_kdj =
 
@@ -143,19 +153,20 @@ public class STService extends Service implements Observer {
                                 pre_kdj = new KDJData(s, pre_kdj, kdj_9h, kdj_9l);
                             }
                             Log.e(TAG, "aKDJ  " + l + ": " + pre_kdj.toString());
+
                             if (l == i) {
 //                                if (i > total_num - 1 - kdj_n) {
                                 mSTApplication.addKDJ(pre_kdj);
 //                                } else {
 //                                    mSTApplication.addKDJ(now_kdj);
 //                                }
-                                // macd
+// macd
                                 mSTApplication.addMACD(now_macd);
-
+                                Log.e(TAG, "bMACD  add " + l + ": " + now_macd.toString());
                                 if (l + DIS_NUM < total_num - 1) {// -1 for
                                     // first
-                                    mSTApplication.removeFirstKDJ();
-                                    mSTApplication.removeFirstMACD();
+//                                    mSTApplication.removeFirstKDJ();
+//                                    mSTApplication.removeFirstMACD();
                                 }
 
                             }
@@ -175,7 +186,7 @@ public class STService extends Service implements Observer {
                         kdj_h += 10;
                         kdj_l -= 10;
                         if (DEBUG) {
-                            Log.e(TAG, "aMACD H L: " + macd_h + " :" + macd_l);
+                            Log.e(TAG, "bMACD H L: " + macd_h + " :" + macd_l);
                             Log.e(TAG, "aKDJ H L: " + kdj_h + " :" + kdj_l);
                         }
                         recent_sd = sd.get(l + 1);//get
