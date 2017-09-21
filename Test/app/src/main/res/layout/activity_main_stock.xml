@@ -7,33 +7,100 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainStock" >
+    tools:context=".MainStock">
+
+    <TextView
+        android:id="@+id/hv"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="hv" />
+
+    <TextView
+        android:id="@+id/mv"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hv"
+        android:text="mv" />
+
+    <TextView
+        android:id="@+id/lv"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/kline"
+        android:text="lv" />
 
     <com.zj.stock.Coordinates
         android:id="@+id/kline"
         android:layout_width="400dp"
-        android:layout_height="150dp" />
+        android:layout_height="150dp"
+        android:layout_alignTop="@+id/hv"
+        android:layout_toRightOf="@+id/hv" />
+
+    <TextView
+        android:id="@+id/vh"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/volume"
+        android:text="vh" />
+
+    <TextView
+        android:id="@+id/vl"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/volume"
+        android:text="vl" />
 
     <com.zj.stock.Coordinates
         android:id="@+id/volume"
         android:layout_width="400dp"
         android:layout_height="60dp"
         android:layout_below="@+id/kline"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/hv" />
+
+    <TextView
+        android:id="@+id/kh"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/kdj"
+        android:text="kh" />
+
+    <TextView
+        android:id="@+id/kl"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/kdj"
+        android:text="kl" />
 
     <com.zj.stock.Coordinates
         android:id="@+id/kdj"
         android:layout_width="400dp"
         android:layout_height="60dp"
         android:layout_below="@+id/volume"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/hv" />
+
+    <TextView
+        android:id="@+id/mh"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/macd"
+        android:text="mh" />
+
+    <TextView
+        android:id="@+id/ml"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/macd"
+        android:text="ml" />
 
     <com.zj.stock.Coordinates
         android:id="@+id/macd"
         android:layout_width="400dp"
         android:layout_height="60dp"
         android:layout_below="@+id/kdj"
-        android:layout_marginTop="2dp" />
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/hv" />
 
     <TextView
         android:id="@+id/textView1"
@@ -184,52 +251,52 @@
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btn_pause"
         android:layout_alignLeft="@+id/btn_pause"
         android:layout_below="@+id/balance"
+        android:layout_toStartOf="@+id/close_value"
         android:background="@layout/btn_start"
         android:contentDescription="@string/pause"
-        android:text="@string/start"
-        android:layout_toStartOf="@+id/close_value"
-        android:layout_alignEnd="@+id/btn_pause" />
+        android:text="@string/start" />
 
     <ImageButton
         android:id="@+id/btn_transaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/balance_v"
+        android:layout_toEndOf="@+id/low"
         android:background="@layout/btn_transaction"
         android:contentDescription="@string/pause"
-        android:text="@string/buy"
-        android:layout_below="@+id/balance_v"
-        android:layout_alignStart="@+id/low_value" />
+        android:text="@string/buy" />
 
     <ImageButton
         android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/kdj"
+        android:layout_toStartOf="@+id/close_value"
         android:background="@layout/btn_pause"
         android:contentDescription="@string/pause"
-        android:text="@string/pause"
-        android:layout_alignTop="@+id/kdj"
-        android:layout_toStartOf="@+id/close_value" />
+        android:text="@string/pause" />
 
     <ImageButton
         android:id="@+id/btn_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_pause"
+        android:layout_marginTop="24dp"
+        android:layout_toEndOf="@+id/low"
         android:background="@layout/btn_pause"
         android:contentDescription="@string/pause"
-        android:text="@string/pause"
-        android:layout_below="@+id/btn_pause"
-        android:layout_toEndOf="@+id/low"
-        android:layout_marginTop="24dp" />
+        android:text="@string/pause" />
 
     <ImageButton
         android:id="@+id/lookCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/star_big_on"
         android:layout_above="@+id/codeText"
-        android:layout_alignStart="@+id/balance" />
+        android:layout_alignStart="@+id/balance"
+        android:background="@android:drawable/star_big_on" />
 
     <TextView
         android:id="@+id/codeText"
@@ -237,7 +304,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/macd"
-        android:text="TextView"
-        android:layout_toStartOf="@+id/open" />
+        android:layout_toStartOf="@+id/open"
+        android:text="TextView" />
+
 
 </RelativeLayout>

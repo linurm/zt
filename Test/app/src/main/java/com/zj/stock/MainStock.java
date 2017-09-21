@@ -21,6 +21,9 @@ public class MainStock extends Activity implements Observer {
     private static final int HANDLE_UPDATE_TEXTVIEW = 0;
     private static final int HANDLE_UPDATE_GAINS = 1;
     private static final int HANDLE_UPDATE_USERDATA = 2;
+    private static final int HANDLE_UPDATE_MACD_MAXMIN = 3;
+    private static final int HANDLE_UPDATE_VOLUME_MAXMIN = 4;
+    private static final int HANDLE_UPDATE_KLINE_MAXMIN = 5;
     private final boolean DEBUG = true;
     // private Context mContext = this;
     // private DownloadYahooData dlyd = null;
@@ -38,13 +41,23 @@ public class MainStock extends Activity implements Observer {
     Coordinates mDVolume;
     Coordinates mDKDJ;
     Coordinates mDMACD;
+
+    TextView mHv;
+    TextView mLv;
+    TextView mVh;
+    TextView mVl;
+    TextView mKh;
+    TextView mKl;
+    TextView mMh;
+    TextView mMl;
+
     TextView mCodeText;
     private boolean isLookCode = false;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case HANDLE_UPDATE_TEXTVIEW: {
+                case HANDLE_UPDATE_TEXTVIEW:
                     StockData sd = null;
                     sd = (StockData) msg.obj;
                     if (isLookCode)
@@ -53,8 +66,7 @@ public class MainStock extends Activity implements Observer {
                     mOTextView.setText(sd.open + "");
                     mLTextView.setText(sd.low + "");
                     mCTextView.setText(sd.close + "");
-                }
-                break;
+                    break;
                 case HANDLE_UPDATE_GAINS:
                     String s = (String) msg.obj;
                     mTextView.setText(s);
@@ -65,6 +77,22 @@ public class MainStock extends Activity implements Observer {
                     mSTMarket.setText("" + mUD.stock_market);
                     mBalance.setText("" + mUD.balance);
                     break;
+                case HANDLE_UPDATE_MACD_MAXMIN:
+                    VauleMaxMin mmm = (VauleMaxMin) msg.obj;
+                    mMh.setText("" + mmm.max);
+                    mMl.setText("" + mmm.min);
+                    break;
+                case HANDLE_UPDATE_VOLUME_MAXMIN:
+                    VauleMaxMin vmm = (VauleMaxMin) msg.obj;
+                    mVh.setText("" + vmm.max);
+                    mVl.setText("" + vmm.min);
+                    break;
+                case HANDLE_UPDATE_KLINE_MAXMIN:
+                    VauleMaxMin kmm = (VauleMaxMin) msg.obj;
+                    mHv.setText("" + kmm.max);
+                    mLv.setText("" + kmm.min);
+                    break;
+
             }
         }
     };
@@ -92,7 +120,17 @@ public class MainStock extends Activity implements Observer {
         mDKline = (Coordinates) findViewById(R.id.kline);
         mDVolume = (Coordinates) findViewById(R.id.volume);
 
+        mHv = (TextView) findViewById(R.id.hv);
+        mLv = (TextView) findViewById(R.id.lv);
+        mVh = (TextView) findViewById(R.id.vh);
+        mVl = (TextView) findViewById(R.id.vl);
+        mKh = (TextView) findViewById(R.id.kh);
+        mKl = (TextView) findViewById(R.id.kl);
+        mMh = (TextView) findViewById(R.id.mh);
+        mMl = (TextView) findViewById(R.id.ml);
 
+        mKh.setText("110");
+        mKl.setText("-10");
         mDKDJ = (Coordinates) findViewById(R.id.kdj);
         mDMACD = (Coordinates) findViewById(R.id.macd);
         final ImageButton transactionbtn = (ImageButton) findViewById(R.id.btn_transaction);
@@ -228,6 +266,17 @@ public class MainStock extends Activity implements Observer {
         mHandler.sendMessage(message);
     }
 
+    public class VauleMaxMin {
+        public float max;
+        public float min;
+
+        public VauleMaxMin(float max, float min) {
+            this.max = max;
+            this.min = min;
+        }
+
+    }
+
     @SuppressWarnings("null")
     public void updateDisplay() {
         List<StockData> list = mSTApplication.getFinds();//from last
@@ -255,13 +304,25 @@ public class MainStock extends Activity implements Observer {
             // KLine kl1 = new KLine(sd1.open, sd1.high, sd1.low, sd1.close);
             float mv = mSTApplication.GetMaxVolume();
 
+            VauleMaxMin vmm = new VauleMaxMin(mv, 0);
+            Message vmessage = mHandler.obtainMessage(HANDLE_UPDATE_VOLUME_MAXMIN,
+                    vmm);
+            mHandler.sendMessage(vmessage);
+
             float mh = mSTApplication.GetMaxMacd();
             float ml = mSTApplication.GetMinMacd();
             // Log.e(TAG, "h" + mSTApplication.GetHighValue() + "l"
             // + mSTApplication.GetLowValue());
+            float vmh = mSTApplication.GetHighValue();
+            float vml = mSTApplication.GetLowValue();
 
-            mDKline.setPValue(mSTApplication.GetHighValue(),
-                    mSTApplication.GetLowValue());
+            mDKline.setPValue(vmh, vml);
+
+            VauleMaxMin kmm = new VauleMaxMin(vmh, vml);
+            Message kmessage = mHandler.obtainMessage(HANDLE_UPDATE_KLINE_MAXMIN,
+                    kmm);
+            mHandler.sendMessage(kmessage);
+
             mDKline.addKline(sd1, len - 1);//add right kline
 
             pre_sd = sd1;
@@ -272,6 +333,10 @@ public class MainStock extends Activity implements Observer {
             if (macd_len > 0) {//ok
                 ;
                 mDMACD.setPValue(mh, ml);
+                VauleMaxMin mmm = new VauleMaxMin(mh, ml);
+                Message mmessage = mHandler.obtainMessage(HANDLE_UPDATE_MACD_MAXMIN,
+                        mmm);
+                mHandler.sendMessage(mmessage);
                 /*
                 now_macd = (MACDData) mMACDs.get(macd_len - 1);
                 if (macd_len == 1) {
@@ -299,9 +364,9 @@ public class MainStock extends Activity implements Observer {
             }
             mDVolume.addVolume(sd1, len - 1, mv);
 
-            Message message = mHandler.obtainMessage(HANDLE_UPDATE_TEXTVIEW,
+            Message tmessage = mHandler.obtainMessage(HANDLE_UPDATE_TEXTVIEW,
                     sd1);
-            mHandler.sendMessage(message);
+            mHandler.sendMessage(tmessage);
 
             if (len > 1) {//2,3,4,...
                 StockData sd2;
@@ -340,8 +405,8 @@ public class MainStock extends Activity implements Observer {
                 fn = sd1.open;
                 fl = sd2.close;
                 String as = 100 * (fn - fl) / fl + "%";//gain
-                message = mHandler.obtainMessage(HANDLE_UPDATE_GAINS, as);
-                mHandler.sendMessage(message);
+                Message gmessage = mHandler.obtainMessage(HANDLE_UPDATE_GAINS, as);
+                mHandler.sendMessage(gmessage);
 
                 int num = (macd_len > mDKline.dayNum) ? (macd_len - mDKline.dayNum) : 0;
                 for (int i = macd_len - 1; i >= num; i--) {
