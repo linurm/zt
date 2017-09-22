@@ -339,7 +339,12 @@ public class MainStock extends Activity implements Observer {
                 float fn, fl;
                 fn = sd1.open;
                 fl = sd2.close;
-                String as = 100 * (fn - fl) / fl + "%";//gain
+
+
+                float price = 100 * (fn - fl) / fl;
+
+                String as = Utils.f2String(price) + "%";//gain
+
                 message = mHandler.obtainMessage(HANDLE_UPDATE_GAINS, as);
                 mHandler.sendMessage(message);
 
