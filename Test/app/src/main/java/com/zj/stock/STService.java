@@ -189,6 +189,11 @@ public class STService extends Service implements Observer {
                             Log.e(TAG, "bMACD H L: " + macd_h + " :" + macd_l);
                             Log.e(TAG, "aKDJ H L: " + kdj_h + " :" + kdj_l);
                         }
+                        if (-macd_l > macd_h) {
+                            macd_h = -macd_l;
+                        } else {
+                            macd_l = -macd_h;
+                        }
                         recent_sd = sd.get(l + 1);//get
                         mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
                         mSTApplication.SetValue(maxvolume, highValue, lowValue);
