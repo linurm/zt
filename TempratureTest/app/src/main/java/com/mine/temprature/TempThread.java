@@ -31,7 +31,7 @@ public class TempThread extends Thread {
             if (i++ >= 3) {//3s
                 i = 0;
                 if (select_flag) {
-//                    select_flag = false;
+                    select_flag = false;
 //                    Log.e("ZTAG", "temp" );
                     temp = mContext.getCPUtemprature();
                 } else {
