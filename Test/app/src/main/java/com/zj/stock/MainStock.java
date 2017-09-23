@@ -266,6 +266,17 @@ public class MainStock extends Activity implements Observer {
         mHandler.sendMessage(message);
     }
 
+    public class VauleMaxMin {
+        public float max;
+        public float min;
+
+        public VauleMaxMin(float max, float min) {
+            this.max = max;
+            this.min = min;
+        }
+
+    }
+
     @SuppressWarnings("null")
     public void updateDisplay() {
         List<StockData> list = mSTApplication.getFinds();//from last
@@ -293,7 +304,7 @@ public class MainStock extends Activity implements Observer {
             // KLine kl1 = new KLine(sd1.open, sd1.high, sd1.low, sd1.close);
             float mv = mSTApplication.GetMaxVolume();
 
-            VauleMaxMin vmm = new VauleMaxMin(""+mv, "0");
+            VauleMaxMin vmm = new VauleMaxMin(mv, 0);
             Message vmessage = mHandler.obtainMessage(HANDLE_UPDATE_VOLUME_MAXMIN,
                     vmm);
             mHandler.sendMessage(vmessage);
@@ -307,7 +318,7 @@ public class MainStock extends Activity implements Observer {
 
             mDKline.setPValue(vmh, vml);
 
-            VauleMaxMin kmm = new VauleMaxMin(Utils.f2String(vmh), Utils.f2String(vml));
+            VauleMaxMin kmm = new VauleMaxMin(vmh, vml);
             Message kmessage = mHandler.obtainMessage(HANDLE_UPDATE_KLINE_MAXMIN,
                     kmm);
             mHandler.sendMessage(kmessage);
@@ -322,8 +333,7 @@ public class MainStock extends Activity implements Observer {
             if (macd_len > 0) {//ok
                 ;
                 mDMACD.setPValue(mh, ml);
-
-                VauleMaxMin mmm = new VauleMaxMin(Utils.f2String(mh), Utils.f2String(ml));
+                VauleMaxMin mmm = new VauleMaxMin(mh, ml);
                 Message mmessage = mHandler.obtainMessage(HANDLE_UPDATE_MACD_MAXMIN,
                         mmm);
                 mHandler.sendMessage(mmessage);
@@ -493,17 +503,6 @@ public class MainStock extends Activity implements Observer {
         } else if (qualifier.equals(STApplication.ST_GET_LAST)) {
             ;// updateWifiList();
         }
-    }
-
-    public class VauleMaxMin {
-        public String max;
-        public String min;
-
-        public VauleMaxMin(String max, String min) {
-            this.max = max;
-            this.min = min;
-        }
-
     }
 
 }
