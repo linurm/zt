@@ -211,8 +211,9 @@ public final class Stock2Client {
         reader.readLine();//skip first row
         while ((sourceLine = reader.readLine()) != null) {
 //            print("sourceLine: " + sourceLine);
-            //Stock2Info.parseStockData(sourceLine);
-            list.add(Stock2Info.parseStockData(sourceLine));
+            StockData a = Stock2Info.parseStockData(sourceLine);
+            if (a != null)
+                list.add(a);
             //break;
         }
 

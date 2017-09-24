@@ -381,7 +381,7 @@ public class STApplication extends Application implements Observable {
         notifyObservers(ST_SERVICE_STOP);
     }
 
-    public void pause() {
+    public void ReversalPauseState() {
         // mWifiAdmin = new WifiAdmin(this);
         // Intent intent = new Intent(this, APService.class);
         // mAPService =

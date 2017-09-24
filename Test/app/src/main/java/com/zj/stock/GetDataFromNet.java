@@ -43,7 +43,8 @@ public class GetDataFromNet {
         }
         ST_CODE = CODE_PRE[a] + c;
         Log.e(TAG, "" + CODE_PRE[a] + c);
-        ST_CODE = "603578";
+//        ST_CODE = "603578";
+        ST_CODE = "600281";
         return ST_CODE;
     }
 

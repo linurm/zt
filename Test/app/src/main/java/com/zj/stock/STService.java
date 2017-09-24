@@ -107,8 +107,14 @@ public class STService extends Service implements Observer {
                         kdj_9l = 100;
                         kdj_h = 100;
                         kdj_l = 0;
+                        int time_internal = 0;
                         int l = 0;
                         int first = 0;
+                        if (total_num - 1 - i > 9) {
+                            time_internal = 50;
+                        } else {
+                            time_internal = 10;
+                        }
                         // get from i + DIS_NUM - 1 to i
                         Log.e(TAG, "cMACD  ++++++++++++++: " + i + "/" + total_num);
 //                        mSTApplication.clearMACD();
@@ -185,6 +191,13 @@ public class STService extends Service implements Observer {
                         }
                         kdj_h += 10;
                         kdj_l -= 10;
+                        if (-macd_l > macd_h) {
+                            macd_h = -macd_l;
+                        } else {
+                            macd_l = -macd_h;
+                        }
+                        macd_h = (macd_h * (float) 1.1);
+                        macd_l = (macd_l * (float) 1.1);
                         if (DEBUG) {
                             Log.e(TAG, "bMACD H L: " + macd_h + " :" + macd_l);
                             Log.e(TAG, "aKDJ H L: " + kdj_h + " :" + kdj_l);
@@ -217,7 +230,7 @@ public class STService extends Service implements Observer {
                         }
                         int e = 0;
                         while ((e++ < 20) && (isRunning)) {
-                            Thread.sleep(10);//50
+                            Thread.sleep(time_internal);//50
                         }
 //                        Log.e("TAG", "SS" + android.os.Process.myTid());
                         while (!mSTApplication.IsDisplayDone() || isPause) {

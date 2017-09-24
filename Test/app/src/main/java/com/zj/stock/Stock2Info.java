@@ -107,6 +107,9 @@ public class Stock2Info {
         sd.pre_close = Float.valueOf(infoStr[7]);
         sd.volume = Float.valueOf(infoStr[8]);
         sd.adj = Float.valueOf(infoStr[9]);
+        if (sd.low == 0 && sd.high == 0) {
+            return null;
+        }
         //Note note = new Note(null, idString, d, time, null);
         // print("idString: " + idString);
         // print("contentString: " + contentString);

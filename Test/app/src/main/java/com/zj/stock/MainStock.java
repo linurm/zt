@@ -24,7 +24,7 @@ public class MainStock extends Activity implements Observer {
     private static final int HANDLE_UPDATE_MACD_MAXMIN = 3;
     private static final int HANDLE_UPDATE_VOLUME_MAXMIN = 4;
     private static final int HANDLE_UPDATE_KLINE_MAXMIN = 5;
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     // private Context mContext = this;
     // private DownloadYahooData dlyd = null;
     // private PaintTheKLine ptk = null;
@@ -79,12 +79,14 @@ public class MainStock extends Activity implements Observer {
                     break;
                 case HANDLE_UPDATE_MACD_MAXMIN:
                     VauleMaxMin mmm = (VauleMaxMin) msg.obj;
-                    mMh.setText("" + mmm.max);
-                    mMl.setText("" + mmm.min);
+
+                    mMh.setText(Utils.f2String(mmm.max));
+                    mMl.setText(Utils.f2String(mmm.min));
                     break;
                 case HANDLE_UPDATE_VOLUME_MAXMIN:
                     VauleMaxMin vmm = (VauleMaxMin) msg.obj;
-                    mVh.setText("" + vmm.max);
+                    String a = Utils.f2String(vmm.max / 1000000);
+                    mVh.setText(a + "W");
                     mVl.setText("" + vmm.min);
                     break;
                 case HANDLE_UPDATE_KLINE_MAXMIN:
@@ -149,6 +151,24 @@ public class MainStock extends Activity implements Observer {
                 }
             }
         });
+
+
+        final ImageButton pausebtn = (ImageButton) findViewById(R.id.btn_pause);
+        pausebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Log.e(TAG, "stopbtn " + android.os.Process.myTid());
+                if (mSTApplication.isServerPause()) {
+                    mSTApplication.ReversalPauseState();
+                    pausebtn.setImageDrawable(getResources().getDrawable(
+                            R.drawable.button_blue_pause));
+                } else {
+                    mSTApplication.ReversalPauseState();
+                    pausebtn.setImageDrawable(getResources().getDrawable(
+                            R.drawable.button_blue_start));
+                }
+            }
+        });
         final ImageButton startbtn = (ImageButton) findViewById(R.id.btn_start);
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +180,11 @@ public class MainStock extends Activity implements Observer {
                         transactionbtn.setImageDrawable(getResources().getDrawable(
                                 R.drawable.label_blue_buy));
                     }
+                    if (mSTApplication.isServerPause()) {
+                        mSTApplication.ReversalPauseState();
+                        pausebtn.setImageDrawable(getResources().getDrawable(
+                                R.drawable.button_blue_pause));
+                    }
                     mSTApplication.stop();
                     startbtn.setImageDrawable(getResources().getDrawable(
                             R.drawable.button_blue_start));
@@ -170,24 +195,6 @@ public class MainStock extends Activity implements Observer {
                 }
             }
         });
-
-        final ImageButton pausebtn = (ImageButton) findViewById(R.id.btn_pause);
-        pausebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Log.e(TAG, "stopbtn " + android.os.Process.myTid());
-                if (mSTApplication.isServerPause()) {
-                    mSTApplication.pause();
-                    pausebtn.setImageDrawable(getResources().getDrawable(
-                            R.drawable.button_blue_pause));
-                } else {
-                    mSTApplication.pause();
-                    pausebtn.setImageDrawable(getResources().getDrawable(
-                            R.drawable.button_blue_start));
-                }
-            }
-        });
-
         final ImageButton lookCode = (ImageButton) findViewById(R.id.lookCode);
         mCodeText = (TextView) findViewById(R.id.codeText);
         lookCode.setOnClickListener(new View.OnClickListener() {
@@ -311,11 +318,10 @@ public class MainStock extends Activity implements Observer {
 
             float mh = mSTApplication.GetMaxMacd();
             float ml = mSTApplication.GetMinMacd();
-            // Log.e(TAG, "h" + mSTApplication.GetHighValue() + "l"
-            // + mSTApplication.GetLowValue());
+
             float vmh = mSTApplication.GetHighValue();
             float vml = mSTApplication.GetLowValue();
-
+            Log.e(TAG, "SET h:" + vmh + " l:" + vml);
             mDKline.setPValue(vmh, vml);
 
             VauleMaxMin kmm = new VauleMaxMin(vmh, vml);
@@ -332,6 +338,7 @@ public class MainStock extends Activity implements Observer {
             Log.e(TAG, "addMACD  H L: " + mh + ":" + ml);
             if (macd_len > 0) {//ok
                 ;
+
                 mDMACD.setPValue(mh, ml);
                 VauleMaxMin mmm = new VauleMaxMin(mh, ml);
                 Message mmessage = mHandler.obtainMessage(HANDLE_UPDATE_MACD_MAXMIN,
