@@ -2,7 +2,10 @@ package com.mine.temprature;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends Activity {
+    private static final int REQUEST_CODE = 1;
     TextView temprature;
     List<Map<String, String>> mSearchListData = null;
     SimpleAdapter mSearchAdapter = null;
@@ -61,6 +65,11 @@ public class MainActivity extends Activity {
     protected void setUpViews() {
         temprature = findViewById(R.id.id_temprature);
         mListSearch = (ListView) findViewById(R.id.id_listView);
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        Log.e("ZTAG", "+" + currentapiVersion);
+        if (currentapiVersion >= 23) {
+            requestAlertWindowPermission();
+        }
     }
 
     private void updateNotes() {
@@ -73,6 +82,22 @@ public class MainActivity extends Activity {
                 android.R.id.text2});
         mListSearch.setAdapter(mSearchAdapter);
 //        notesAdapter.setNotes(notes);
+    }
+
+    private void requestAlertWindowPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (Settings.canDrawOverlays(this)) {
+                Log.i("ZTAG", "onActivityResult granted");
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
