@@ -47,6 +47,7 @@
             style="@style/text_18_ffffff"
             android:layout_width="fill_parent"
             android:layout_height="40.0dp"
+            android:inputType="number"
             android:background="@color/green"
             android:hint="total score:"
             android:visibility="visible" />
