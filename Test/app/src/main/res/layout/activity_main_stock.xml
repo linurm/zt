@@ -122,6 +122,15 @@
         android:text="0" />
 
     <TextView
+        android:id="@+id/stock_gain_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/stock_market_v"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/stock_market_v"
+        android:text="0" />
+
+    <TextView
         android:id="@+id/stock_value_v"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

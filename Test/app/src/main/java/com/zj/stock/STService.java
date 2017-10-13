@@ -28,6 +28,7 @@ public class STService extends Service implements Observer {
     private float kdj_9h = 0, kdj_9l = 100;
     private MyServiceBinder mBinder = new MyServiceBinder();
     private Stock2Client mClient = null;
+    private float initBuyPrice = 0;
     // private Thread mGetDataThread = new Thread() {
     private Runnable getdataable = new Runnable() {
         // Socket client;
@@ -41,6 +42,7 @@ public class STService extends Service implements Observer {
                 mUD.stock_market = 0;
                 mUD.stock_num = 0;
                 mUD.balance = mUD.stock_value;
+                mUD.gains = ((open_close == 1 ? mSD.open : mSD.close) - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
             }
         }
 
@@ -48,6 +50,7 @@ public class STService extends Service implements Observer {
             mUD.stock_num = (int) (mUD.stock_value / (mSD.open) / 100);
             mUD.stock_market = (mSD.open) * mUD.stock_num * 100;
             mUD.balance = mUD.stock_value - mUD.stock_market;
+            mUD.stock_buy_price = mSD.open;
             haveStock = true;
         }
 
@@ -56,6 +59,7 @@ public class STService extends Service implements Observer {
                 mUD.stock_value = mUD.balance + mUD.stock_num * (mSD.open)
                         * 100;
                 mUD.stock_market = (mSD.open) * mUD.stock_num * 100;
+                mUD.gains = (mSD.open - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
             }
         }
 

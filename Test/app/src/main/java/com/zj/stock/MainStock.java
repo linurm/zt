@@ -30,6 +30,7 @@ public class MainStock extends Activity implements Observer {
     // private PaintTheKLine ptk = null;
     public STApplication mSTApplication;
     TextView mTextView;
+    TextView mGainView;
     TextView mHTextView;
     TextView mOTextView;
     TextView mCTextView;
@@ -76,6 +77,7 @@ public class MainStock extends Activity implements Observer {
                     mSTValue.setText("" + mUD.stock_value);
                     mSTMarket.setText("" + mUD.stock_market);
                     mBalance.setText("" + mUD.balance);
+                    mGainView.setText(""+mUD.gains);
                     break;
                 case HANDLE_UPDATE_MACD_MAXMIN:
                     VauleMaxMin mmm = (VauleMaxMin) msg.obj;
@@ -109,6 +111,7 @@ public class MainStock extends Activity implements Observer {
         mSTApplication.addObserver(this);
 
         mTextView = (TextView) findViewById(R.id.textView1);
+        mGainView = (TextView) findViewById(R.id.stock_gain_v);
 
         mHTextView = (TextView) findViewById(R.id.high_value);
         mOTextView = (TextView) findViewById(R.id.open_value);
@@ -142,6 +145,7 @@ public class MainStock extends Activity implements Observer {
                 Log.i(TAG, "buybtn");
                 if (mSTApplication.haveStock()) {
                     mSTApplication.sell();
+//                    mGainView.setText();
                     transactionbtn.setImageDrawable(getResources().getDrawable(
                             R.drawable.buy));
                 } else {
