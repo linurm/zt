@@ -15,6 +15,7 @@ public class STService extends Service implements Observer {
 
     private final String TAG = "STService";
     private final boolean DEBUG = true;
+    private final float STOP_LOSS_PRICE = 3;
     private final int kdj_n = 9;
     public STApplication mSTApplication;
     private int DIS_NUM = 0;
@@ -34,15 +35,35 @@ public class STService extends Service implements Observer {
         // Socket client;
         private StockData recent_sd = null;
 
+        private void sellStopLoss(StockData mSD) {
+            if (mUD.stock_num != 0) {
+                if ((mUD.stock_buy_price - mSD.low) / mUD.stock_buy_price > STOP_LOSS_PRICE / 100) {
+
+                    float sell_price = (mUD.stock_buy_price - mUD.stock_buy_price * STOP_LOSS_PRICE / 100);
+                    haveStock = false;
+                    mUD.stock_value = mUD.balance + mUD.stock_num
+                            * (sell_price) * 100;
+                    mUD.stock_market = 0;
+                    mUD.stock_num = 0;
+                    mUD.balance = mUD.stock_value;
+                    mUD.gains = ((sell_price) - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
+                }
+
+            }
+        }
+
         private void sellStock(StockData mSD, int open_close) {
             if (mUD.stock_num != 0) {
+//                if ((mUD.stock_buy_price - mSD.low) / mUD.stock_buy_price > STOP_LOSS_PRICE / 100) {
                 haveStock = false;
+//                    float sell_price = (mUD.stock_buy_price - mUD.stock_buy_price * STOP_LOSS_PRICE / 100);
                 mUD.stock_value = mUD.balance + mUD.stock_num
                         * (open_close == 1 ? mSD.open : mSD.close) * 100;
                 mUD.stock_market = 0;
                 mUD.stock_num = 0;
                 mUD.balance = mUD.stock_value;
                 mUD.gains = ((open_close == 1 ? mSD.open : mSD.close) - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
+//                }
             }
         }
 
@@ -212,7 +233,7 @@ public class STService extends Service implements Observer {
                         mSTApplication.setMACDMaxMin(macd_h, macd_l);
                         mSTApplication.SetKDJValue(kdj_h, kdj_l);
                         mSTApplication.display();
-
+                        sellStopLoss(recent_sd);
                         if (UserState == EnumState.BUY) {
                             buyStock(recent_sd);
                             UserState = EnumState.IDLE;

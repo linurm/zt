@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -256,17 +256,22 @@
         android:layout_toRightOf="@+id/balance"
         android:text="0" />
 
+    <!--<ImageButton-->
+    <!--android:id="@+id/btn_start"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_marginBottom="596dp"-->
+    <!--android:layout_marginStart="578dp"-->
+    <!--android:background="@layout/btn_start" />-->
     <ImageButton
         android:id="@+id/btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/btn_pause"
-        android:layout_alignLeft="@+id/btn_pause"
         android:layout_below="@+id/balance"
-        android:layout_toStartOf="@+id/close_value"
-        android:background="@layout/btn_start"
-        android:contentDescription="@string/pause"
-        android:text="@string/start" />
+        android:layout_marginStart="460dp"
+        android:background="@layout/btn_start" />
 
     <ImageButton
         android:id="@+id/btn_transaction"
@@ -274,19 +279,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/balance_v"
         android:layout_toEndOf="@+id/low"
-        android:background="@layout/btn_transaction"
-        android:contentDescription="@string/pause"
-        android:text="@string/buy" />
+        android:background="@layout/btn_transaction" />
 
     <ImageButton
         android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/kdj"
-        android:layout_toStartOf="@+id/close_value"
-        android:background="@layout/btn_pause"
-        android:contentDescription="@string/pause"
-        android:text="@string/pause" />
+        android:layout_below="@+id/btn_start"
+        android:layout_marginStart="460dp"
+        android:background="@layout/btn_pause" />
 
     <ImageButton
         android:id="@+id/btn_change"
@@ -295,9 +296,7 @@
         android:layout_below="@+id/btn_pause"
         android:layout_marginTop="24dp"
         android:layout_toEndOf="@+id/low"
-        android:background="@layout/btn_pause"
-        android:contentDescription="@string/pause"
-        android:text="@string/pause" />
+        android:background="@layout/btn_pause" />
 
     <ImageButton
         android:id="@+id/lookCode"

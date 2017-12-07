@@ -322,6 +322,7 @@ public class STApplication extends Application implements Observable {
 //        // mAPService =
 //        //startService(intent);
 //        notifyObservers(ST_SERVICE_START);
+
     }
 
     @Override
