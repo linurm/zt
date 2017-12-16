@@ -112,7 +112,7 @@ public class STApplication extends Application implements Observable {
 
     }
 
-    public synchronized void SetValue(float maxVulome, float highValue,
+    public synchronized void setValue(float maxVulome, float highValue,
                                       float lowValue) {
         this.maxVolume = maxVulome;
         this.highValue = highValue;
@@ -125,7 +125,7 @@ public class STApplication extends Application implements Observable {
         this.minMacd = macd_l;
     }
 
-    public synchronized void SetKDJValue(float highValue, float lowValue) {
+    public synchronized void setKDJMaxMin(float highValue, float lowValue) {
         this.KDJhigh = highValue;
         this.KDJlow = lowValue;
     }

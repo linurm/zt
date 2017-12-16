@@ -281,7 +281,7 @@ public class MenuInflater {
         private char itemAlphabeticShortcut;
         private char itemNumericShortcut;
         /**
-         * Sync to attrs.xml enum:
+         * Sync to abs__attrs.xml enum:
          * - 0: none
          * - 1: all
          * - 2: exclusive
@@ -291,7 +291,7 @@ public class MenuInflater {
         private boolean itemVisible;
         private boolean itemEnabled;
         /**
-         * Sync to attrs.xml enum, values in MenuItem:
+         * Sync to abs__attrs.xml enum, values in MenuItem:
          * - 0: never
          * - 1: ifRoom
          * - 2: always

@@ -314,41 +314,41 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name="zj.zfenlly.main.BootUpReceiver"
-            android:enabled="true"
-            android:priority="1000">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <data android:scheme="file" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
-                <data android:scheme="file" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_STATE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="zj.intent.RESTART" />
-            </intent-filter>
+        <!--<receiver-->
+            <!--android:name="zj.zfenlly.main.BootUpReceiver"-->
+            <!--android:enabled="true"-->
+            <!--android:priority="1000">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MEDIA_MOUNTED" />-->
+                <!--<data android:scheme="file" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MEDIA_UNMOUNTED" />-->
+                <!--<data android:scheme="file" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.hardware.usb.action.USB_STATE" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="zj.intent.RESTART" />-->
+            <!--</intent-filter>-->
 
-            <intent-filter>
-                <action android:name="zj.intent.monitor" />
-            </intent-filter>
-        </receiver>
+            <!--<intent-filter>-->
+                <!--<action android:name="zj.intent.monitor" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
-        <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+        <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
 
         <meta-data
             android:name="IFLYTEK_APPKEY"

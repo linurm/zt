@@ -89,7 +89,7 @@ public interface Menu {
     static final int FIRST = 1;
 
     // Implementation note: Keep these CATEGORY_* in sync with the category enum
-    // in attrs.xml
+    // in abs__attrs.xml
 
     /**
      * Category code for the order integer for items/groups that are part of a

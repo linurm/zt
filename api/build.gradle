@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
     }
 }
@@ -30,8 +30,8 @@ android {
         options.addStringOption('encoding', 'UTF-8')
         options.addStringOption('charSet', 'UTF-8')
     }
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.1'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -88,9 +88,9 @@ greendao {
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     compile project(':other:slidingmenu')
-    compile project(':other:xUtils-master:xUtilslibrary')
+    compile project(':other:xUtilslibrary')
     compile project(':other:pulltorefresh')
-    compile project(':EventBus')
+    compile project(':other:EventBus')
 //    compile project(':DaoCore')
     compile 'org.greenrobot:greendao:3.2.2'
     // add library

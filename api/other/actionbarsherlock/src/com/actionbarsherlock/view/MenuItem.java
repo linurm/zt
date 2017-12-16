@@ -37,7 +37,7 @@ import android.view.View;
  */
 public interface MenuItem {
     /*
-     * These should be kept in sync with attrs.xml enum constants for showAsAction
+     * These should be kept in sync with abs__attrs.xml enum constants for showAsAction
      */
     /**
      * Never show this item as a button in an Action Bar.

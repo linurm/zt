@@ -91,8 +91,8 @@ public class STService extends Service implements Observer {
             GetDataFromNet stockUtil = new GetDataFromNet();
 
             List<StockData> sd = null;
-            float k, kp, rsv, pre_k = 50, d, j, pre_d = 50;
-            float ema12, ema26, dif = 0, dea = 0, bar = 0, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
+//            float k, kp, rsv, pre_k = 50, d, j, pre_d = 50;
+//            float ema12, ema26, dif = 0, dea = 0, bar = 0, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
             MACDData pre_macd = null;
             MACDData first_macd = null;
             MACDData now_macd = null;
@@ -229,9 +229,9 @@ public class STService extends Service implements Observer {
                         }
                         recent_sd = sd.get(l + 1);//get
                         mSTApplication.setCodeText(recent_sd.date + recent_sd.name + recent_sd.code);
-                        mSTApplication.SetValue(maxvolume, highValue, lowValue);
+                        mSTApplication.setValue(maxvolume, highValue, lowValue);
                         mSTApplication.setMACDMaxMin(macd_h, macd_l);
-                        mSTApplication.SetKDJValue(kdj_h, kdj_l);
+                        mSTApplication.setKDJMaxMin(kdj_h, kdj_l);
                         mSTApplication.display();
                         sellStopLoss(recent_sd);
                         if (UserState == EnumState.BUY) {

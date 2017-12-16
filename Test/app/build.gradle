@@ -10,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.2"
     def date = new Date()
     def offset = date.getTime() / 1000
     def code = offset.intValue()
@@ -20,7 +20,6 @@ android {
         targetSdkVersion 25
         versionCode  code
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     def apkName
     buildTypes {
