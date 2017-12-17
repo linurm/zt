@@ -14,9 +14,12 @@ import java.util.List;
 public class STService extends Service implements Observer {
 
     private final String TAG = "STService";
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private final float STOP_LOSS_PRICE = 3;
-    private final int kdj_n = 9;
+    private final int kdj_9 = 9;
+    private final int avg_5 = 5;
+    private final int avg_10 = 10;
+    private final int avg_20 = 20;
     public STApplication mSTApplication;
     private int DIS_NUM = 0;
     private volatile boolean isRunning = false;
@@ -27,6 +30,7 @@ public class STService extends Service implements Observer {
     private UserData mUD;
     private float kdj_h = 0, kdj_l = 100;
     private float kdj_9h = 0, kdj_9l = 100;
+    private float avg_close5 = 0, avg_close10 = 0, avg_close20 = 0;
     private MyServiceBinder mBinder = new MyServiceBinder();
     private Stock2Client mClient = null;
     private float initBuyPrice = 0;
@@ -117,6 +121,7 @@ public class STService extends Service implements Observer {
                     // kp = 50;// (2 / 3) * 50 + (1 / 3) * rsv;
                     mSTApplication.clearKDJ();
                     mSTApplication.clearMACD();
+                    mSTApplication.clearAvg();
                     Log.e(TAG, "clear total_num: " + total_num);
 
 
@@ -131,6 +136,9 @@ public class STService extends Service implements Observer {
                         kdj_9h = 0;
                         kdj_9l = 100;
                         kdj_h = 100;
+                        avg_close5 = 0;
+                        avg_close10 = 0;
+                        avg_close20 = 0;
                         kdj_l = 0;
                         int time_internal = 0;
                         int l = 0;
@@ -141,17 +149,17 @@ public class STService extends Service implements Observer {
                             time_internal = 10;
                         }
                         // get from i + DIS_NUM - 1 to i
-                        Log.e(TAG, "cMACD  ++++++++++++++: " + i + "/" + total_num);
+//                        Log.e(TAG, "cMACD  ++++++++++++++: " + i + "/" + total_num);
 //                        mSTApplication.clearMACD();
                         for (l = i + DIS_NUM - 1, first = 0; l >= i; l--, first++) {
-                            Log.e(TAG, "l:" + l + " /" + i);
+//                            Log.e(TAG, "l:" + l + "/" + i + "/" + total_num);
                             if (l >= total_num) {//skip{
                                 l = total_num;
                                 continue;
                             }
-//                            Log.e(TAG, "bMACD l:" + l);
+                            Log.e(TAG, " l:" + l);
                             StockData s = sd.get(l);
-                            if (l == total_num - 1) {
+                            if (l == total_num - 1) {//first
                                 pre_macd = new MACDData(s.close, s.close, 0, 0, 0, 0);
                                 pre_kdj = new KDJData();
                             } else {
@@ -160,12 +168,23 @@ public class STService extends Service implements Observer {
                                 }
                             }
 
-                            if (kdj_n > l - i) {
+                            if (kdj_9 > l - i) {
                                 kdj_9h = (s.high > kdj_9h) ? s.high : kdj_9h;
                                 kdj_9l = (s.low < kdj_9l) ? s.low : kdj_9l;
                             }
-                            Log.e(TAG, "addKDJ new + : " + kdj_9h + " " + kdj_9l + " l:" + l + " i:" + i);
+                            if (avg_5 > l - i) {
 
+                                avg_close5 += s.close;
+//                                Log.e("ZTAG", "===================== " + l + " : " + s.close+"    "+avg_close5);
+                            }
+                            if (avg_10 > l - i) {
+                                avg_close10 += s.close;
+                            }
+                            if (avg_20 > l - i) {
+                                avg_close20 += s.close;
+                            }
+//                            Log.e(TAG, "addKDJ new + : " + kdj_9h + " " + kdj_9l + " l:" + l + " i:" + i);
+//                            Log.e(TAG, "5: " + avg_close5 + " 10: " + avg_close10 + " 20: " + avg_close20);
                             now_macd = new MACDData(s, pre_macd, l);
                             if (first == 0) {
                                 first_macd = now_macd;
@@ -174,26 +193,28 @@ public class STService extends Service implements Observer {
                             macd_h = (macd_h > now_macd.maxV ? macd_h : now_macd.maxV);
                             macd_l = (macd_l < now_macd.minV ? macd_l : now_macd.minV);
 
-                            Log.e(TAG, "bMACD  new " + l + ": " + now_macd.toString());
-                            // kdj
-//                            now_kdj =
 
-                            if (l > total_num - 1 - kdj_n) {
+                            if (kdj_9 > total_num - 1 - l) {
                                 pre_kdj = new KDJData();
                             } else {
                                 pre_kdj = new KDJData(s, pre_kdj, kdj_9h, kdj_9l);
                             }
-                            Log.e(TAG, "aKDJ  " + l + ": " + pre_kdj.toString());
 
                             if (l == i) {
-//                                if (i > total_num - 1 - kdj_n) {
                                 mSTApplication.addKDJ(pre_kdj);
-//                                } else {
-//                                    mSTApplication.addKDJ(now_kdj);
-//                                }
+
+                                if (total_num - l >= 20) {
+                                    mSTApplication.addAvg(new AvgValue(avg_close5 / 5, avg_close10 / 10, avg_close20 / 20));
+                                } else if (total_num - l >= 10) {
+                                    mSTApplication.addAvg(new AvgValue(avg_close5 / 5, avg_close10 / 10, 0));
+                                } else if (total_num - l >= 5) {
+                                    mSTApplication.addAvg(new AvgValue(avg_close5 / 5, 0, 0));
+                                } else {
+                                    mSTApplication.addAvg(new AvgValue(0, 0, 0));
+                                }
 // macd
                                 mSTApplication.addMACD(now_macd);
-                                Log.e(TAG, "bMACD  add " + l + ": " + now_macd.toString());
+//                                Log.e(TAG, "bMACD  add " + l + ": " + now_macd.toString());
                                 if (l + DIS_NUM < total_num - 1) {// -1 for
                                     // first
 //                                    mSTApplication.removeFirstKDJ();
@@ -233,7 +254,7 @@ public class STService extends Service implements Observer {
                         mSTApplication.setMACDMaxMin(macd_h, macd_l);
                         mSTApplication.setKDJMaxMin(kdj_h, kdj_l);
                         mSTApplication.display();
-                        sellStopLoss(recent_sd);
+
                         if (UserState == EnumState.BUY) {
                             buyStock(recent_sd);
                             UserState = EnumState.IDLE;
@@ -247,7 +268,7 @@ public class STService extends Service implements Observer {
                         if (i == 0) {
                             sellStock(recent_sd, 0);// close value
                         }
-
+                        sellStopLoss(recent_sd);
                         mSTApplication.setUserData(mUD);
                         if (!isRunning) {
                             sellStock(recent_sd, 0);// close value

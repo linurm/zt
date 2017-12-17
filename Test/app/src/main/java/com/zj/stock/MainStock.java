@@ -77,7 +77,7 @@ public class MainStock extends Activity implements Observer {
                     mSTValue.setText("" + mUD.stock_value);
                     mSTMarket.setText("" + mUD.stock_market);
                     mBalance.setText("" + mUD.balance);
-                    mGainView.setText(""+mUD.gains);
+                    mGainView.setText("" + mUD.gains);
                     break;
                 case HANDLE_UPDATE_MACD_MAXMIN:
                     VauleMaxMin mmm = (VauleMaxMin) msg.obj;
@@ -295,6 +295,8 @@ public class MainStock extends Activity implements Observer {
         int kdj_len;
         List<MACDData> mMACDs = mSTApplication.getMACDList();
         int macd_len;
+        int avg_len;
+        List<AvgValue> mAvgs = mSTApplication.getAvgList();
         mDKline.clearList();
         mDVolume.clearList();
         mDKDJ.clearList();
@@ -303,7 +305,9 @@ public class MainStock extends Activity implements Observer {
             StockData sd1 = null;
             StockData pre_sd = null;
             KDJData kdj = null;
+            AvgValue avg = null;
             KDJData pre_kdj = null;
+            AvgValue pre_avg = null;
             MACDData now_macd = null, pre_macd = null, macd = null;
 //            float macd_l = 100; float macd_h = 0;
 
@@ -325,7 +329,7 @@ public class MainStock extends Activity implements Observer {
 
             float vmh = mSTApplication.GetHighValue();
             float vml = mSTApplication.GetLowValue();
-            Log.e(TAG, "SET h:" + vmh + " l:" + vml);
+//            Log.e(TAG, "SET h:" + vmh + " l:" + vml);
             mDKline.setPValue(vmh, vml);
 
             VauleMaxMin kmm = new VauleMaxMin(vmh, vml);
@@ -338,40 +342,34 @@ public class MainStock extends Activity implements Observer {
             pre_sd = sd1;
             kdj_len = mKDJs.size();// 3
             macd_len = mMACDs.size();
-            // k_len = kdj_len;
-            Log.e(TAG, "addMACD  H L: " + mh + ":" + ml);
-            if (macd_len > 0) {//ok
-                ;
+            avg_len = mAvgs.size();
 
+
+            if (macd_len > 0) {//max and min
                 mDMACD.setPValue(mh, ml);
                 VauleMaxMin mmm = new VauleMaxMin(mh, ml);
                 Message mmessage = mHandler.obtainMessage(HANDLE_UPDATE_MACD_MAXMIN,
                         mmm);
                 mHandler.sendMessage(mmessage);
-                /*
-                now_macd = (MACDData) mMACDs.get(macd_len - 1);
-                if (macd_len == 1) {
-                    pre_macd = new MACDData(0, 0, 0, 0, 0, 0);
-                } else {
-                    pre_macd = (MACDData) mMACDs.get(macd_len - 2);
-                }
-                if (DEBUG)
-                    Log.e(TAG, "bMACD macd_len: " + (macd_len - 1) + now_macd.toString());
-                mDMACD.addMACD(pre_macd, now_macd, macd_len - 1);//right*/
             }
-            if (kdj_len > 0) {
-                // mKDJs.getLast();
-//                mDKDJ.setPValue(mSTApplication.GetKDJH(), mSTApplication.GetKDJL());
+            if (kdj_len > 0) {//max and min
                 mDKDJ.setPValue(110, -10);
                 kdj = (KDJData) mKDJs.get(kdj_len - 1);// 2
-                // mKDJs.removeLast();
                 if (kdj_len == 1) {// left
-                    // Log.e(TAG, "qqq: kkk");
                     pre_kdj = new KDJData();
                 } else {
                     pre_kdj = (KDJData) mKDJs.get(kdj_len - 2);// 2
                 }
                 mDKDJ.addKDJ(pre_kdj, kdj, len - 1);
+            }
+            if (avg_len > 0) {
+                avg = mAvgs.get(avg_len - 1);
+                if (avg_len == 1) {// left
+                    pre_avg = new AvgValue(0, 0, 0);
+                } else {
+                    pre_avg =  mAvgs.get(avg_len - 2);// 2
+                }
+                mDKline.addAvg(pre_avg, avg, len - 1);
             }
             mDVolume.addVolume(sd1, len - 1, mv);
 
@@ -385,19 +383,6 @@ public class MainStock extends Activity implements Observer {
                 if (DEBUG)
                     Log.e("TAG", "s " + sd2.date);
                 mDKline.addKline(sd2, len - 2);
-                /*if (macd_len > 0) {
-                    macd = pre_macd;
-                    if (macd_len == 2) {// left
-                        // Log.e(TAG, "qqq: kkk");
-                        pre_macd = new MACDData(0, 0, 0, 0, 0, 0);
-                    } else {
-                        pre_macd = (MACDData) mMACDs.get(macd_len - 2);// 1
-                    }
-                    // mKDJs.removeLast();
-                    if (DEBUG)
-                        Log.e(TAG, (macd_len - 2) + " bMACD macd_len: " + macd.toString());
-                    mDMACD.addMACD(pre_macd, macd, len - 2);
-                }*/
                 if (kdj_len > 0) {
                     kdj = pre_kdj;
                     if (kdj_len == 2) {// left
@@ -406,9 +391,16 @@ public class MainStock extends Activity implements Observer {
                     } else {
                         pre_kdj = (KDJData) mKDJs.get(kdj_len - 3);// 1
                     }
-                    // mKDJs.removeLast();
-
                     mDKDJ.addKDJ(pre_kdj, kdj, len - 2);
+                }
+                if (avg_len > 0) {
+                    avg = pre_avg;
+                    if (avg_len == 2) {// left
+                        pre_avg = new AvgValue(0, 0, 0);
+                    } else {
+                        pre_avg = (AvgValue) mAvgs.get(avg_len - 3);// 1
+                    }
+                    mDKline.addAvg(pre_avg, avg, len - 2);
                 }
                 pre_sd = sd2;
                 mDVolume.addVolume(sd2, len - 2, mv);
@@ -418,17 +410,13 @@ public class MainStock extends Activity implements Observer {
 
 
                 float price = 100 * (fn - fl) / fl;
-
                 String as = Utils.f2String(price) + "%";//gain
-
                 Message gmessage = mHandler.obtainMessage(HANDLE_UPDATE_GAINS, as);
                 mHandler.sendMessage(gmessage);
-
                 int num = (macd_len > mDKline.dayNum) ? (macd_len - mDKline.dayNum) : 0;
                 for (int i = macd_len - 1; i >= num; i--) {
                     if (macd_len > 0) {
                         macd = mMACDs.get(i);// 0
-                        // mKDJs.removeLast();
                         if (i == 0) {// left
                             pre_macd = new MACDData(0, 0, 0, 0, 0, 0);
                         } else {
@@ -438,7 +426,6 @@ public class MainStock extends Activity implements Observer {
                         if (DEBUG)
                             Log.e(TAG, "bMACD for: " + (index) + macd.toString());
                         mDMACD.addMACD(pre_macd, macd, index);
-//                        macd = pre_macd;
                     }
                 }
 
@@ -447,24 +434,9 @@ public class MainStock extends Activity implements Observer {
                     sd3 = list.get(i);// third right
                     if (DEBUG)
                         Log.e("TAG", "  " + sd3.date);
-                    // sd2 = list.get(i);
-                    // kl1 = new KLine(sd3.open, sd3.high, sd3.low, sd3.close);
                     mDKline.addKline(sd3, i);
-                    /*if (macd_len > 0) {
-                        macd = pre_macd;
-                        // mKDJs.removeLast();
-                        if ((i == 0) && (macd_len == len)) {// left
-                            pre_macd = new MACDData(0, 0, 0, 0, 0, 0);
-                        } else {
-                            pre_macd = (MACDData) mMACDs.get(j - 1);// 0
-                        }
-                        if (DEBUG)
-                            Log.e(TAG, i + " bMACD macd_len: " + macd.toString());
-                        mDMACD.addMACD(pre_macd, macd, i);
-                    }*/
                     if (kdj_len > 0) {
                         kdj = pre_kdj;
-                        // mKDJs.removeLast();
                         if ((i == 0) && (kdj_len == len)) {// left
                             pre_kdj = new KDJData();
                         } else {
@@ -475,22 +447,23 @@ public class MainStock extends Activity implements Observer {
                                     + pre_kdj.k + " " + kdj.k);
                         mDKDJ.addKDJ(pre_kdj, kdj, i);
                     }
+                    if (avg_len > 0) {
+                        avg = pre_avg;
+                        if ((i == 0) && (avg_len == len)) {// left
+                            pre_avg = new AvgValue(0, 0, 0);
+                        } else {
+                            pre_avg =  mAvgs.get(j - 1);// 1
+                        }
+                        mDKline.addAvg(pre_avg, avg, i);
+                    }
                     pre_sd = sd3;
                     mDVolume.addVolume(sd3, i, mv);
-
                 }
-                // sd1 = list.get(1);
-                // sd2 = list.get(0);
-                // kl1 = new KLine(sd1.open, sd1.high, sd1.low, sd1.close);
-                // mDKline.addKline(kl1, 1);
-                // kl1 = new KLine(sd2.open, sd2.high, sd2.low, sd2.close);
-                // mDKline.addKline(kl1, 0);
             }
 
             if (len > 20) {
                 ;// display kdj
             }
-            // Log.e(TAG, "open " + sd1.open);
             mDKline.postInvalidate();
             mDVolume.postInvalidate();
             mDKDJ.postInvalidate();

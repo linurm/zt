@@ -27,11 +27,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.key
-            apkName = "test_" + code + "_release.apk";
+            apkName = "test_" + code + "_release.apk"
         }
         debug {
             signingConfig signingConfigs.key
-            apkName = "test_" + code + "_debug.apk";
+            apkName = "test_" + code + "_debug.apk"
         }
     }
     android.applicationVariants.all { variant ->

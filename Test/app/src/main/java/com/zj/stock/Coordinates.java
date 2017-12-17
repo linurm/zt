@@ -63,9 +63,9 @@ public class Coordinates extends View {
         mBluePaint = new Paint();
         mYellowPaint = new Paint();
         mPurplePaint = new Paint();
-        mBluePaint.setColor(Color.BLUE);
-        mYellowPaint.setColor(Color.YELLOW);
-        mPurplePaint.setColor(Color.MAGENTA);
+        mBluePaint.setColor(getResources().getColor(R.color.blue));
+        mYellowPaint.setColor(getResources().getColor(R.color.yellow));
+        mPurplePaint.setColor(getResources().getColor(R.color.megenta));
 
     }
 
@@ -281,26 +281,16 @@ public class Coordinates extends View {
         x_right = (x_left + 2 * mOnev);// right
         x_middle = (x_left + mOnev);// middle
 
-        // y_high = 150 - (kl.mhigh - kl.mopen) * 150 * 5 / (2 * kl.mopen);
-        // y2 = 150 - (kl.mlow - kl.mopen) * 150 * 5 / (2 * kl.mopen);
-        // y3 = 150 - (kl.mopen - kl.mopen) * 150 * 5 / (2 * kl.mopen);
-        // y4 = 150 - (kl.mclose - kl.mopen) * 150 * 5 / (2 * kl.mopen);
         if (mHParam == 0 || mLParam == 0) {
             Log.i(TAG, "mParamValue is not set");
             return;
         }
         mParam = (float) ((hParam) / (mHParam - mLParam));
-        // y_high = 120 - (kl.high / mParamValue - 1) * 120 * 4;// high 1/4=25%
-        // y2 = 120 - (kl.low / mParamValue - 1) * 120 * 4;// low
-        // y3 = 120 - (kl.open / mParamValue - 1) * 120 * 4;// open
-        // y4 = 120 - (kl.close / mParamValue - 1) * 120 * 4;// close
 
         y_high = (hParam) - ((kl.high - mLParam) * mParam);// high 1/4=25%
         y_low = (hParam) - ((kl.low - mLParam) * mParam);// low
         y_open = hParam - ((kl.open - mLParam) * mParam);// open
         y_close = hParam - ((kl.close - mLParam) * mParam);// close
-        // y_high=0;
-        // y2=300;
 
         if (y_high == y_low)
             y_high = y_high + V_PAD;
@@ -327,6 +317,51 @@ public class Coordinates extends View {
             points2[0] = new PointF(x_left, y_open);
             points2[1] = new PointF(x_right, y_open);
             addLine(points2, mRedPaint);
+        }
+    }
+
+    public void addAvg(AvgValue avg1, AvgValue avg2, int n) {
+        float middle, middle_next, y1, y2, y3, y4, y5, y6;
+
+        if (avg1 == null || avg2 == null)
+            return;
+        if (mHParam == 0 || mLParam == 0) {
+            Log.i(TAG, "mParamValue is not set");
+            return;
+        }
+
+        middle = (float) (mOnem * (2 * n - 1));// middle
+        middle_next = (float) (mOnem * (2 * n + 1));// middle next
+
+        mParam = (hParam / (mHParam - mLParam));
+
+        /////////////////////////////////////////////////////////////
+        Log.e("ZTAG", "-------------: " + n);
+
+        y1 = (avg1.avg_v5 != 0) ? ((hParam) - ((avg1.avg_v5 - mLParam) * mParam)) : 0;// high 1/4=25%
+        y2 = (avg2.avg_v5 != 0) ? ((hParam) - ((avg2.avg_v5 - mLParam) * mParam)) : 0;// low
+        y3 = (avg1.avg_v10 != 0) ? ((hParam) - ((avg1.avg_v10 - mLParam) * mParam)) : 0;// high 1/4=25%
+        y4 = (avg2.avg_v10 != 0) ? ((hParam) - ((avg2.avg_v10 - mLParam) * mParam)) : 0;// low
+        y5 = (avg1.avg_v20 != 0) ? ((hParam) - ((avg1.avg_v20 - mLParam) * mParam)) : 0;// high 1/4=25%
+        y6 = (avg2.avg_v20 != 0) ? ((hParam) - ((avg2.avg_v20 - mLParam) * mParam)) : 0;// low
+
+        if ((y1 != 0)&&(y2 != 0)) {
+            PointF[] pointv5 = new PointF[2];
+            pointv5[0] = new PointF(middle, y1);
+            pointv5[1] = new PointF(middle_next, y2);
+            addLine(pointv5, mBluePaint);
+        }
+        if ((y3 != 0)&&(y4 != 0)) {
+            PointF[] pointv10 = new PointF[2];
+            pointv10[0] = new PointF(middle, y3);
+            pointv10[1] = new PointF(middle_next, y4);
+            addLine(pointv10, mYellowPaint);
+        }
+        if ((y5 != 0)&&(y6 != 0)) {
+            PointF[] pointv20 = new PointF[5];
+            pointv20[0] = new PointF(middle, y5);
+            pointv20[1] = new PointF(middle_next, y6);
+            addLine(pointv20, mPurplePaint);
         }
     }
 

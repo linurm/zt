@@ -48,7 +48,7 @@ public class STApplication extends Application implements Observable {
     private LinkedList mKDJlist = new LinkedList();
     // private List<KDJData> mKDJData = new ArrayList<KDJData>();
     private List<MACDData> mMACDlist = new ArrayList<MACDData>();
-
+    private List<AvgValue> mAvglist = new ArrayList<AvgValue>();
     private boolean display_done = true;
     private float maxVolume = 0;
     private float maxMacd = 0;
@@ -179,17 +179,26 @@ public class STApplication extends Application implements Observable {
     public synchronized void clearMACD() {
         mMACDlist.clear();
     }
+    public synchronized void clearAvg() {
+        mAvglist.clear();
+    }
 
     @SuppressWarnings("rawtypes")
     public synchronized List<MACDData> getMACDList() {
         return mMACDlist;
+    }
+    public synchronized List<AvgValue> getAvgList() {
+        return mAvglist;
     }
 
     @SuppressWarnings("unchecked")
     public synchronized void addMACD(MACDData find) {
         mMACDlist.add(find);
     }
-
+    public synchronized void addAvg(AvgValue find) {
+//        Log.e("ZTAG", find.toString() + ":::::::::::::");
+        mAvglist.add(find);
+    }
 //    public synchronized void removeFirstMACD() {
 //        mMACDlist.removeFirst();
 //        // m

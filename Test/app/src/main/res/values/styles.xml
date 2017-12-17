@@ -17,7 +17,7 @@
     </style>
 
     <style name="anim_view">
-        <item name="@android:windowEnterAnimation">@anim/anim_view_in</item>
-        <item name="@android:windowExitAnimation">@anim/anim_view_out</item>
+        <item name="android:windowEnterAnimation">@anim/anim_view_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_view_out</item>
     </style>
 </resources>
