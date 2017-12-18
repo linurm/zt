@@ -421,6 +421,10 @@ public class STApplication extends Application implements Observable {
         notifyObservers(ST_GET_ONE);
     }
 
+    public void displayEnd(){
+        notifyObservers(ST_GET_LAST);
+    }
+
     private void notifyObservers(Object arg) {
         // Log.i(TAG, "notifyObservers(" + arg + ")");
         for (Observer obs : mObservers) {

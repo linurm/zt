@@ -226,7 +226,7 @@ public class Coordinates extends View {
             mLParam = mLParam * (float) 0.9;
             mHParam = mHParam * (float) 1.1;
         }
-        Log.e(TAG, "SET P" + h + ":" + l);
+//        Log.e(TAG, "SET P" + h + ":" + l);
         // mParam = (float) (280) / (mHParam - mLParam);
     }
 
@@ -336,7 +336,7 @@ public class Coordinates extends View {
         mParam = (hParam / (mHParam - mLParam));
 
         /////////////////////////////////////////////////////////////
-        Log.e("ZTAG", "-------------: " + n);
+//        Log.e("ZTAG", "-------------: " + n);
 
         y1 = (avg1.avg_v5 != 0) ? ((hParam) - ((avg1.avg_v5 - mLParam) * mParam)) : 0;// high 1/4=25%
         y2 = (avg2.avg_v5 != 0) ? ((hParam) - ((avg2.avg_v5 - mLParam) * mParam)) : 0;// low

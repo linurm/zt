@@ -42,11 +42,10 @@ public class STService extends Service implements Observer {
         private void sellStopLoss(StockData mSD) {
             if (mUD.stock_num != 0) {
                 if ((mUD.stock_buy_price - mSD.low) / mUD.stock_buy_price > STOP_LOSS_PRICE / 100) {
-
                     float sell_price = (mUD.stock_buy_price - mUD.stock_buy_price * STOP_LOSS_PRICE / 100);
+                    if (sell_price >= mSD.high) sell_price = mSD.high;
                     haveStock = false;
-                    mUD.stock_value = mUD.balance + mUD.stock_num
-                            * (sell_price) * 100;
+                    mUD.stock_value = mUD.balance + mUD.stock_num * (sell_price) * 100;
                     mUD.stock_market = 0;
                     mUD.stock_num = 0;
                     mUD.balance = mUD.stock_value;
@@ -157,7 +156,7 @@ public class STService extends Service implements Observer {
                                 l = total_num;
                                 continue;
                             }
-                            Log.e(TAG, " l:" + l);
+//                            Log.e(TAG, " l:" + l);
                             StockData s = sd.get(l);
                             if (l == total_num - 1) {//first
                                 pre_macd = new MACDData(s.close, s.close, 0, 0, 0, 0);
@@ -291,6 +290,7 @@ public class STService extends Service implements Observer {
             }
 
             mGetDataThread = null;
+            mSTApplication.displayEnd();
             Log.i(TAG, "thread exit");
         }
     };

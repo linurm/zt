@@ -24,6 +24,7 @@ public class MainStock extends Activity implements Observer {
     private static final int HANDLE_UPDATE_MACD_MAXMIN = 3;
     private static final int HANDLE_UPDATE_VOLUME_MAXMIN = 4;
     private static final int HANDLE_UPDATE_KLINE_MAXMIN = 5;
+    private static final int HANDLE_UPDATE_CODE_END = 6;
     private final boolean DEBUG = false;
     // private Context mContext = this;
     // private DownloadYahooData dlyd = null;
@@ -67,6 +68,9 @@ public class MainStock extends Activity implements Observer {
                     mOTextView.setText(sd.open + "");
                     mLTextView.setText(sd.low + "");
                     mCTextView.setText(sd.close + "");
+                    break;
+                case HANDLE_UPDATE_CODE_END:
+                    mCodeText.setText(mSTApplication.getCodeText());
                     break;
                 case HANDLE_UPDATE_GAINS:
                     String s = (String) msg.obj;
@@ -287,6 +291,10 @@ public class MainStock extends Activity implements Observer {
         }
 
     }
+    public void updateEnd(){
+        Message vmessage = mHandler.obtainMessage(HANDLE_UPDATE_CODE_END);
+        mHandler.sendMessage(vmessage);
+    }
 
     @SuppressWarnings("null")
     public void updateDisplay() {
@@ -485,7 +493,7 @@ public class MainStock extends Activity implements Observer {
         } else if (qualifier.equals(STApplication.ST_GET_MIDDLE)) {
             ;// updateWifiList();
         } else if (qualifier.equals(STApplication.ST_GET_LAST)) {
-            ;// updateWifiList();
+            updateEnd();// updateWifiList();
         }
     }
 
