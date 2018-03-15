@@ -40,8 +40,6 @@ public class Coordinates extends View {
     public Coordinates(Context context) {
         super(context, null);
         initColorPaint();
-
-
     }
 
     public Coordinates(Context context, AttributeSet attrs) {

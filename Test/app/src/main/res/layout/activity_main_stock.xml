@@ -277,8 +277,9 @@
         android:id="@+id/btn_transaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/balance_v"
-        android:layout_toEndOf="@+id/low"
+        android:layout_marginEnd="19dp"
         android:background="@layout/btn_transaction" />
 
     <ImageButton
@@ -293,9 +294,8 @@
         android:id="@+id/btn_change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_pause"
-        android:layout_marginTop="24dp"
-        android:layout_toEndOf="@+id/low"
+        android:layout_alignBottom="@+id/ml"
+        android:layout_alignStart="@+id/btn_transaction"
         android:background="@layout/btn_pause" />
 
     <ImageButton
