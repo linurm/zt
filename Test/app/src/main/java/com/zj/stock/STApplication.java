@@ -158,8 +158,8 @@ public class STApplication extends Application implements Observable {
         return this.lowValue;
     }
 
-    public void setUserData(UserData mUUD) {
-        userData = mUUD;
+    public void setUserData(UserData mUD) {
+        userData = mUD;
         UserDataPereference.setUserData(this, userData);
         notifyObservers(ST_USER_DATA);
     }

@@ -9,13 +9,15 @@ import android.util.Log;
 
 import com.zj.test.EnumState;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class STService extends Service implements Observer {
 
     private final String TAG = "STService";
     private final boolean DEBUG = false;
-    private final float STOP_LOSS_PRICE = 3;
+    private final float STOP_LOSS_PRICE = 6;
     private final int kdj_9 = 9;
     private final int avg_5 = 5;
     private final int avg_10 = 10;
@@ -49,41 +51,53 @@ public class STService extends Service implements Observer {
                     mUD.stock_market = 0;
                     mUD.stock_num = 0;
                     mUD.balance = mUD.stock_value;
-                    mUD.gains = ((sell_price) - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
+//                    mUD.gains = ((sell_price) - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
+                    BigDecimal d = new BigDecimal((sell_price - mUD.stock_buy_price) * 100);      //存款
+                    BigDecimal r = new BigDecimal(1 / mUD.stock_buy_price);   //利息
+                    BigDecimal i = d.multiply(r).setScale(2, RoundingMode.HALF_EVEN);     //使用银行家算法
+                    String format = new BigDecimal(String.valueOf(i)).toString();
+                    mUD.gains = Float.valueOf(format);
                 }
 
             }
         }
 
-        private void sellStock(StockData mSD, int open_close) {
+        private void sellStock(StockData mSd, boolean isOpenValueSell) {
             if (mUD.stock_num != 0) {
 //                if ((mUD.stock_buy_price - mSD.low) / mUD.stock_buy_price > STOP_LOSS_PRICE / 100) {
                 haveStock = false;
 //                    float sell_price = (mUD.stock_buy_price - mUD.stock_buy_price * STOP_LOSS_PRICE / 100);
-                mUD.stock_value = mUD.balance + mUD.stock_num
-                        * (open_close == 1 ? mSD.open : mSD.close) * 100;
+                mUD.stock_value = mUD.balance + mUD.stock_num * (isOpenValueSell ? mSd.open : mSd.close) * 100;
                 mUD.stock_market = 0;
                 mUD.stock_num = 0;
                 mUD.balance = mUD.stock_value;
-                mUD.gains = ((open_close == 1 ? mSD.open : mSD.close) - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
 //                }
+                BigDecimal d = new BigDecimal(((isOpenValueSell ? mSd.open : mSd.close) - mUD.stock_buy_price));
+                BigDecimal r = new BigDecimal(100 / mUD.stock_buy_price);
+                BigDecimal i = d.multiply(r).setScale(2, RoundingMode.HALF_EVEN);
+                String format = new BigDecimal(String.valueOf(i)).toString();
+                mUD.gains = Float.valueOf(format);
             }
         }
 
         private void buyStock(StockData mSD) {
-            mUD.stock_num = (int) (mUD.stock_value / (mSD.open) / 100);
-            mUD.stock_market = (mSD.open) * mUD.stock_num * 100;
+            mUD.stock_num = (int) (mUD.stock_value / (mSD.close) / 100);
+            mUD.stock_market = (mSD.close) * mUD.stock_num * 100;
             mUD.balance = mUD.stock_value - mUD.stock_market;
-            mUD.stock_buy_price = mSD.open;
+            mUD.stock_buy_price = mSD.close;
             haveStock = true;
         }
 
         private void updateStock(StockData mSD) {
             if (mUD.stock_num != 0) {
-                mUD.stock_value = mUD.balance + mUD.stock_num * (mSD.open)
-                        * 100;
-                mUD.stock_market = (mSD.open) * mUD.stock_num * 100;
-                mUD.gains = (mSD.open - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
+                mUD.stock_value = mUD.balance + mUD.stock_num * (mSD.close) * 100;
+                mUD.stock_market = (mSD.close) * mUD.stock_num * 100;
+//                mUD.gains = (mSD.close - mUD.stock_buy_price) / mUD.stock_buy_price * 100;
+                BigDecimal d = new BigDecimal((mSD.close - mUD.stock_buy_price) * 100);      //存款
+                BigDecimal r = new BigDecimal(1 / mUD.stock_buy_price);   //利息
+                BigDecimal i = d.multiply(r).setScale(2, RoundingMode.HALF_EVEN);     //使用银行家算法
+                String format = new BigDecimal(String.valueOf(i)).toString();
+                mUD.gains = Float.valueOf(format);
             }
         }
 
@@ -92,7 +106,6 @@ public class STService extends Service implements Observer {
             // rs.Poll(1);
             // Log.i(TAG, "mTcpPollThread thread run");
             GetDataFromNet stockUtil = new GetDataFromNet();
-
             List<StockData> sd = null;
 //            float k, kp, rsv, pre_k = 50, d, j, pre_d = 50;
 //            float ema12, ema26, dif = 0, dea = 0, bar = 0, pre_ema12 = 0, pre_ema26 = 0, pre_dea = 0;
@@ -219,14 +232,10 @@ public class STService extends Service implements Observer {
 //                                    mSTApplication.removeFirstKDJ();
 //                                    mSTApplication.removeFirstMACD();
                                 }
-
                             }
-                            maxvolume = (s.volume > maxvolume) ? s.volume
-                                    : maxvolume;
-                            highValue = (s.high > highValue) ? s.high
-                                    : highValue;
+                            maxvolume = (s.volume > maxvolume) ? s.volume : maxvolume;
+                            highValue = (s.high > highValue) ? s.high : highValue;
                             lowValue = (s.low < lowValue) ? s.low : lowValue;
-
                             //
                             kdj_h = (s.high > kdj_h) ? s.high : kdj_h;
                             kdj_l = (s.low < kdj_l) ? s.low : kdj_l;
@@ -253,34 +262,39 @@ public class STService extends Service implements Observer {
                         mSTApplication.setMACDMaxMin(macd_h, macd_l);
                         mSTApplication.setKDJMaxMin(kdj_h, kdj_l);
                         mSTApplication.display();
-
-                        if (UserState == EnumState.BUY) {
-                            buyStock(recent_sd);
-                            UserState = EnumState.IDLE;
-                        } else if (UserState == EnumState.SELL) {
-                            sellStock(recent_sd, 1);// open value
-                            UserState = EnumState.IDLE;
-                        } else if (UserState == EnumState.IDLE) {
+                        if (UserState == EnumState.IDLE) {
                             updateStock(recent_sd);
                         }
-
-                        if (i == 0) {
-                            sellStock(recent_sd, 0);// close value
-                        }
-                        sellStopLoss(recent_sd);
                         mSTApplication.setUserData(mUD);
-                        if (!isRunning) {
-                            sellStock(recent_sd, 0);// close value
-                            break;
-                        }
                         int e = 0;
                         while ((e++ < 20) && (isRunning)) {
                             Thread.sleep(time_internal);//50
                         }
+                        e = e;
 //                        Log.e("TAG", "SS" + android.os.Process.myTid());
                         while (!mSTApplication.IsDisplayDone() || isPause) {
                             Thread.sleep(100);
                         }
+                        if (UserState == EnumState.BUY) {
+                            buyStock(recent_sd);
+                            UserState = EnumState.IDLE;
+                        }
+                        if (UserState == EnumState.SELL) {
+                            sellStock(recent_sd, false);// close value
+                            UserState = EnumState.IDLE;
+                        }
+                        if (UserState == EnumState.IDLE) {
+                            updateStock(recent_sd);
+                        }
+                        if (i == 0) {
+                            sellStock(recent_sd, false);// close value
+                        }
+                        sellStopLoss(recent_sd);
+                        if (!isRunning) {
+                            sellStock(recent_sd, false);// close value
+                            break;
+                        }
+                        mSTApplication.setUserData(mUD);
                     }
                     isRunning = false;
                     // }

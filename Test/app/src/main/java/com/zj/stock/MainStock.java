@@ -81,7 +81,7 @@ public class MainStock extends Activity implements Observer {
                     mSTValue.setText("" + mUD.stock_value);
                     mSTMarket.setText("" + mUD.stock_market);
                     mBalance.setText("" + mUD.balance);
-                    mGainView.setText("" + mUD.gains);
+                    mGainView.setText(mUD.gains + "%");
                     break;
                 case HANDLE_UPDATE_MACD_MAXMIN:
                     VauleMaxMin mmm = (VauleMaxMin) msg.obj;
@@ -208,7 +208,6 @@ public class MainStock extends Activity implements Observer {
         lookCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (isLookCode) {
                     isLookCode = false;
                     mCodeText.setText("");
@@ -222,27 +221,26 @@ public class MainStock extends Activity implements Observer {
 //                }
             }
         });
-        final ImageButton changebtn = (ImageButton) findViewById(R.id.btn_change);
-
-        changebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSTApplication.isServerRun()) {
-                    if (mSTApplication.haveStock()) {
-                        mSTApplication.sell();
-                        transactionbtn.setImageDrawable(getResources().getDrawable(
-                                R.drawable.label_blue_buy));
-                    }
-                    mSTApplication.stop();
-                    startbtn.setImageDrawable(getResources().getDrawable(
-                            R.drawable.button_blue_start));
-                    startbtn.setImageDrawable(getResources().getDrawable(
-                            R.drawable.button_blue_stop));
-                    mSTApplication.start();
-
-                }
-            }
-        });
+//        final ImageButton changebtn = (ImageButton) findViewById(R.id.btn_change);
+//        changebtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mSTApplication.isServerRun()) {
+//                    if (mSTApplication.haveStock()) {
+//                        mSTApplication.sell();
+//                        transactionbtn.setImageDrawable(getResources().getDrawable(
+//                                R.drawable.label_blue_buy));
+//                    }
+//                    mSTApplication.stop();
+//                    startbtn.setImageDrawable(getResources().getDrawable(
+//                            R.drawable.button_blue_start));
+//                    startbtn.setImageDrawable(getResources().getDrawable(
+//                            R.drawable.button_blue_stop));
+//                    mSTApplication.start();
+//
+//                }
+//            }
+//        });
 
 
         int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
@@ -291,7 +289,8 @@ public class MainStock extends Activity implements Observer {
         }
 
     }
-    public void updateEnd(){
+
+    public void updateEnd() {
         Message vmessage = mHandler.obtainMessage(HANDLE_UPDATE_CODE_END);
         mHandler.sendMessage(vmessage);
     }
@@ -328,8 +327,7 @@ public class MainStock extends Activity implements Observer {
             float mv = mSTApplication.GetMaxVolume();
 
             VauleMaxMin vmm = new VauleMaxMin(mv, 0);
-            Message vmessage = mHandler.obtainMessage(HANDLE_UPDATE_VOLUME_MAXMIN,
-                    vmm);
+            Message vmessage = mHandler.obtainMessage(HANDLE_UPDATE_VOLUME_MAXMIN, vmm);
             mHandler.sendMessage(vmessage);
 
             float mh = mSTApplication.GetMaxMacd();
@@ -341,8 +339,7 @@ public class MainStock extends Activity implements Observer {
             mDKline.setPValue(vmh, vml);
 
             VauleMaxMin kmm = new VauleMaxMin(vmh, vml);
-            Message kmessage = mHandler.obtainMessage(HANDLE_UPDATE_KLINE_MAXMIN,
-                    kmm);
+            Message kmessage = mHandler.obtainMessage(HANDLE_UPDATE_KLINE_MAXMIN, kmm);
             mHandler.sendMessage(kmessage);
 
             mDKline.addKline(sd1, len - 1);//add right kline
@@ -375,16 +372,13 @@ public class MainStock extends Activity implements Observer {
                 if (avg_len == 1) {// left
                     pre_avg = new AvgValue(0, 0, 0);
                 } else {
-                    pre_avg =  mAvgs.get(avg_len - 2);// 2
+                    pre_avg = mAvgs.get(avg_len - 2);// 2
                 }
                 mDKline.addAvg(pre_avg, avg, len - 1);
             }
             mDVolume.addVolume(sd1, len - 1, mv);
-
-            Message tmessage = mHandler.obtainMessage(HANDLE_UPDATE_TEXTVIEW,
-                    sd1);
+            Message tmessage = mHandler.obtainMessage(HANDLE_UPDATE_TEXTVIEW, sd1);
             mHandler.sendMessage(tmessage);
-
             if (len > 1) {//2,3,4,...
                 StockData sd2;
                 sd2 = list.get(len - 2);// second right
@@ -413,9 +407,8 @@ public class MainStock extends Activity implements Observer {
                 pre_sd = sd2;
                 mDVolume.addVolume(sd2, len - 2, mv);
                 float fn, fl;
-                fn = sd1.open;
+                fn = sd1.close;
                 fl = sd2.close;
-
 
                 float price = 100 * (fn - fl) / fl;
                 String as = Utils.f2String(price) + "%";//gain
@@ -460,7 +453,7 @@ public class MainStock extends Activity implements Observer {
                         if ((i == 0) && (avg_len == len)) {// left
                             pre_avg = new AvgValue(0, 0, 0);
                         } else {
-                            pre_avg =  mAvgs.get(j - 1);// 1
+                            pre_avg = mAvgs.get(j - 1);// 1
                         }
                         mDKline.addAvg(pre_avg, avg, i);
                     }

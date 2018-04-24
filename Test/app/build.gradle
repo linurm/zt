@@ -18,8 +18,8 @@ android {
         applicationId "com.zj.stock"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode  code
         versionName "1.0"
+        signingConfig signingConfigs.key
     }
     def apkName
     buildTypes {
@@ -40,6 +40,8 @@ android {
                 outputFileName = apkName
             }
         }
+    }
+    productFlavors {
     }
 }
 
