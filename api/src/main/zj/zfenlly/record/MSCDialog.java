@@ -44,6 +44,7 @@ public class MSCDialog extends Dialog {
         Log.e("22222222", "" + mContext);
         return true;
     }
+
     public boolean addMSCDate() {
 
         if (contentView == null) {
@@ -119,10 +120,12 @@ public class MSCDialog extends Dialog {
             this.negativeButtonClickListener = listener;
             return this;
         }
+
         public Builder setDatePickerButton(String DataPickerText, DialogInterface.OnClickListener listener) {
             this.dataPickClickListener = listener;
             return this;
         }
+
         public MSCDialog create() {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -173,6 +176,7 @@ public class MSCDialog extends Dialog {
                 ((Button) layout.findViewById(R.id.datepick)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         dataPickClickListener.onClick(dialog, 0);
                     }
                 });

@@ -1,6 +1,4 @@
-include ':other:slidingmenu'
 include ':other:xUtilslibrary'
-include ':other:actionbarsherlock'
 include ':other:pulltorefresh'
 include ':other:EventBus'
 //project(':DaoCore').projectDir = new File('other/DaoCore')

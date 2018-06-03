@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'org.greenrobot:greendao-gradle-plugin:3.2.2' // add plugin
     }
 }
@@ -31,7 +31,7 @@ android {
         options.addStringOption('charSet', 'UTF-8')
     }
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
@@ -87,14 +87,13 @@ greendao {
 }
 dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
-    compile project(':other:slidingmenu')
     compile project(':other:xUtilslibrary')
     compile project(':other:pulltorefresh')
     compile project(':other:EventBus')
-//    compile project(':DaoCore')
+    //    compile project(':DaoCore')
     compile 'org.greenrobot:greendao:3.2.2'
     // add library
-   // compile files('libs/com.teamlava.castlestory1.2.5.1g.jar')
+    // compile files('libs/com.teamlava.castlestory1.2.5.1g.jar')
 }
 
 //task clean(type: Delete) {

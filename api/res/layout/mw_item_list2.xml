@@ -16,7 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/t_score"
-        android:layout_marginStart="@dimen/abs__action_bar_default_height"
         android:text="TextView2" />
     <CheckedTextView
         android:id="@+id/wb2_date"

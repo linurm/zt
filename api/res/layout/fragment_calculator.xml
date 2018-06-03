@@ -21,16 +21,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/value_from"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="@string/value_from" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/value_to"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="@string/value_to" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,16 +42,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.10"
                 android:ems="10"
-                android:inputType="numberDecimal"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:inputType="numberDecimal"/>
 
             <TextView
                 android:id="@+id/textView15"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.10"
-                android:text="%"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="%" />
 
             <EditText
                 android:id="@+id/edit_to"
@@ -61,16 +57,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.11"
                 android:ems="10"
-                android:inputType="numberDecimal"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:inputType="numberDecimal" />
 
             <TextView
                 android:id="@+id/textView16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.10"
-                android:text="%"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="%" />
         </LinearLayout>
 
         <LinearLayout
@@ -83,8 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="@string/from_introduce"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Small" />
+                android:text="@string/from_introduce" />
 
         </LinearLayout>
 
@@ -100,23 +93,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:layout_weight="0.23"
-                android:text="@string/value_equal"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="@string/value_equal" />
 
             <TextView
                 android:id="@+id/result_calculate"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
-                android:layout_weight="0.44"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:layout_weight="0.44" />
 
             <TextView
                 android:id="@+id/textView19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.16"
-                android:text="%"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="%"/>
         </LinearLayout>
 
         <LinearLayout
@@ -128,8 +118,7 @@
                 android:id="@+id/button_calculate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/caculate_button"
-                android:textAppearance="@style/TextAppearance.Sherlock.Light.Widget.PopupMenu.Large" />
+                android:text="@string/caculate_button"/>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
