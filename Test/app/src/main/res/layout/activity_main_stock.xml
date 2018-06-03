@@ -125,9 +125,9 @@
         android:id="@+id/stock_gain_v"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/stock_market_v"
+        android:layout_alignBaseline="@+id/stock_gain"
         android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@+id/stock_market_v"
+        android:layout_toRightOf="@+id/stock_gain"
         android:text="0" />
 
     <TextView
@@ -140,28 +140,18 @@
         android:text="0" />
 
     <TextView
-        android:id="@+id/high"
+        android:id="@+id/codeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/kline"
-        android:layout_marginLeft="120dp"
         android:layout_toRightOf="@+id/kline"
-        android:text="最高价:" />
-
-    <TextView
-        android:id="@+id/low"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/high"
-        android:layout_marginLeft="120dp"
-        android:layout_toRightOf="@+id/kline"
-        android:text="最低价:" />
+        android:text="TextView" />
 
     <TextView
         android:id="@+id/open"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/kline"
+        android:layout_below="@+id/codeText"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/kline"
         android:text="开盘价:" />
@@ -174,6 +164,24 @@
         android:layout_below="@+id/open"
         android:layout_toRightOf="@+id/kline"
         android:text="收盘价:" />
+
+    <TextView
+        android:id="@+id/high"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/close"
+        android:layout_below="@+id/close"
+        android:layout_toRightOf="@+id/kline"
+        android:text="最高价:" />
+
+    <TextView
+        android:id="@+id/low"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/close"
+        android:layout_below="@+id/high"
+        android:layout_toRightOf="@+id/kline"
+        android:text="最低价:" />
 
     <TextView
         android:id="@+id/high_value"
@@ -220,7 +228,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/close"
-        android:layout_below="@+id/close"
+        android:layout_below="@+id/low"
         android:text="@string/gains" />
 
     <TextView
@@ -238,13 +246,19 @@
         android:layout_alignLeft="@+id/stock_value"
         android:layout_below="@+id/stock_value"
         android:text="@string/stock_market" />
-
+    <TextView
+        android:id="@+id/stock_gain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/stock_value"
+        android:layout_below="@+id/stock_market"
+        android:text="@string/stock_gain" />
     <TextView
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/stock_market"
-        android:layout_below="@+id/stock_market"
+        android:layout_below="@+id/stock_gain"
         android:text="@string/money" />
 
     <TextView
@@ -270,50 +284,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/balance"
-        android:layout_marginStart="460dp"
+        android:layout_marginStart="454dp"
         android:background="@layout/btn_start" />
 
     <ImageButton
         android:id="@+id/btn_transaction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/balance_v"
-        android:layout_toEndOf="@+id/low"
+        android:layout_marginEnd="30dp"
         android:background="@layout/btn_transaction" />
 
     <ImageButton
         android:id="@+id/btn_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_start"
-        android:layout_marginStart="460dp"
+        android:layout_below="@+id/btn_transaction"
+        android:layout_marginStart="454dp"
         android:background="@layout/btn_pause" />
 
-    <ImageButton
-        android:id="@+id/btn_change"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_pause"
-        android:layout_marginTop="24dp"
-        android:layout_toEndOf="@+id/low"
-        android:background="@layout/btn_pause" />
+    <!--<ImageButton-->
+    <!--android:id="@+id/btn_change"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/btn_transaction"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_marginEnd="30dp"-->
+    <!--android:background="@layout/btn_pause" />-->
 
     <ImageButton
         android:id="@+id/lookCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/codeText"
-        android:layout_alignStart="@+id/balance"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/btn_transaction"
+        android:layout_marginEnd="30dp"
         android:background="@android:drawable/star_big_on" />
-
-    <TextView
-        android:id="@+id/codeText"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/macd"
-        android:layout_toStartOf="@+id/open"
-        android:text="TextView" />
 
 
 </RelativeLayout>
